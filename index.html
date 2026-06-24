@@ -253,26 +253,26 @@
             <!-- Menu Item Management Modal -->
             <div id="menuItemModal" class="hidden" style="position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: 1100; backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 20px;">
                 <div class="glass-panel" style="width: 100%; max-width: 350px; background: white; padding: 25px;">
-                    <h2 style="margin-bottom: 20px;">Thêm món mới</h2>
+                    <h2 style="margin-bottom: 20px;">Th?m m?n m?i</h2>
                     <div style="display: grid; gap: 15px;">
                         <div>
-                            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Tên món</label>
-                            <input type="text" id="editItemName" placeholder="VD: Phở Bò" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--surface-border); margin-top: 5px;">
+                            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">T?n m?n</label>
+                            <input type="text" id="editItemName" placeholder="VD: Ph? B?" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--surface-border); margin-top: 5px;">
                         </div>
                         <div>
-                            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Giá tiền (VNĐ)</label>
+                            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Gi? ti?n (VN?)</label>
                             <input type="number" id="editItemPrice" placeholder="VD: 55000" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--surface-border); margin-top: 5px;">
                         </div>
                         <div>
-                            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Danh mục</label>
+                            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Danh m?c</label>
                             <select id="editItemCat" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--surface-border); margin-top: 5px; background: white;">
-                                <option value="nuoc">Món nước</option>
-                                <option value="kho">Món khô</option>
-                                <option value="xao">Món xào</option>
+                                <option value="nuoc">M?n n??c</option>
+                                <option value="kho">M?n kh?</option>
+                                <option value="xao">M?n x?o</option>
                             </select>
                         </div>
                         <div>
-                            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Hình ảnh món ăn</label>
+                            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">H?nh ?nh m?n ?n</label>
                             <input type="file" id="editItemFile" accept="image/*" style="width: 100%; padding: 10px; border-radius: 12px; border: 1px solid var(--surface-border); margin-top: 5px; font-size: 0.8rem;">
                             <div id="imagePreview" style="margin-top: 10px; display: none; text-align: center;">
                                 <img src="" style="width: 100px; height: 100px; border-radius: 12px; object-fit: cover; border: 1px solid var(--surface-border);">
@@ -280,13 +280,28 @@
                         </div>
 
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
-                            <button onclick="closeMenuModal()" class="btn" style="border: none; color: var(--text-secondary);">Hủy</button>
-                            <button onclick="saveMenuItem()" class="btn btn-primary">Lưu món</button>
+                            <button onclick="closeMenuModal()" class="btn" style="border: none; color: var(--text-secondary);">H?y</button>
+                            <button onclick="saveMenuItem()" class="btn btn-primary">L?u m?n</button>
                         </div>
                     </div>
                 </div>
             </div>
-
+            <!-- Category Management Modal -->
+            <div id="categoryModal" class="hidden" style="position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: 1100; backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 20px;">
+                <div class="glass-panel" style="width: 100%; max-width: 350px; background: white; padding: 25px;">
+                    <h2 id="categoryModalTitle" style="margin-bottom: 20px;">Thêm danh mục</h2>
+                    <div style="display: grid; gap: 15px;">
+                        <div>
+                            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Tên danh mục</label>
+                            <input type="text" id="categoryNameInput" placeholder="VD: Món khô" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--surface-border); margin-top: 5px;">
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                            <button onclick="closeCategoryModal()" class="btn" style="border: none; color: var(--text-secondary);">Hủy</button>
+                            <button onclick="saveCategoryModal()" class="btn btn-primary">Lưu danh mục</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             </div> <!-- Close main-panel -->
     </div> <!-- Close app-container -->
 

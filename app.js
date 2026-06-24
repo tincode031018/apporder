@@ -158,18 +158,21 @@ function setupEventListeners() {
     });
 
     // User Start Order
-    document.getElementById('startOrderBtn').addEventListener('click', () => {
-        if (state.currentTableId) {
-            const table = state.tables.find(t => t.id === state.currentTableId);
-            if (table.status === 'empty') {
-                table.status = 'occupied';
-                saveState();
-            }
-            document.getElementById('userTableTitle').innerText = `Bàn ${state.currentTableId.toString().padStart(2, '0')}`;
-            window.switchView('userMenu');
+    const startOrderBtn = document.getElementById('startOrderBtn');
+    if (startOrderBtn) {
+        startOrderBtn.addEventListener('click', () => {
+            if (state.currentTableId) {
+                const table = state.tables.find(t => t.id === state.currentTableId);
+                if (table.status === 'empty') {
+                    table.status = 'occupied';
+                    saveState();
+                }
+                document.getElementById('userTableTitle').innerText = `B?n ${state.currentTableId.toString().padStart(2, '0')}`;
+                window.switchView('userMenu');
 
-        }
-    });
+            }
+        });
+    }
 
     // Logout
     document.getElementById('logoutBtn').setAttribute('onclick', 'handleLogout()');
@@ -437,7 +440,7 @@ function renderMenu(category) {
         const card = document.createElement('div');
         card.className = 'menu-card';
         card.innerHTML = `
-            <img src="${item.img}" alt="${item.name}">
+            ${item.img ? `<img src="${item.img}" alt="${item.name}">` : `<div style="width: 100%; aspect-ratio: 1 / 1; background: #f1f5f9; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 0.8rem;">No image</div>`}
             <div class="menu-card-content">
                 <h4 style="font-size: 0.9rem; margin-bottom: 5px;">${item.name}</h4>
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;">
@@ -774,7 +777,7 @@ window.saveMenuItem = async () => {
             name,
             price,
             cat,
-            img: imgUrl || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400'
+            ...(imgUrl ? { img: imgUrl } : {})
         };
         
         await db.collection("menu").doc(id).set(newItem);
@@ -847,30 +850,66 @@ function renderAdminCats() {
     });
 }
 
-window.addCategory = async () => {
-    const name = prompt('Tên danh mục mới:', 'Món nước');
-    if (!name) return;
-    const id = name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-');
-    
-    if (state.categories.find(c => c.id === id)) {
-        return alert('Danh mục này đã tồn tại');
-    }
-    
-    await db.collection("categories").doc(id).set({ id, name });
-    showToast('Đã thêm danh mục mới');
+
+window.categoryModalMode = 'add';
+window.categoryModalId = null;
+
+window.openCategoryModal = (mode, category = null) => {
+    window.categoryModalMode = mode;
+    window.categoryModalId = category ? category.id : null;
+    const modal = document.getElementById('categoryModal');
+    const title = document.getElementById('categoryModalTitle');
+    const input = document.getElementById('categoryNameInput');
+    title.innerText = mode === 'edit' ? 'Đổi tên danh mục' : 'Thêm danh mục';
+    input.value = category ? category.name : '';
+    modal.classList.remove('hidden');
+    setTimeout(() => input.focus(), 50);
 };
 
-window.editCategory = async (id) => {
+window.closeCategoryModal = () => {
+    document.getElementById('categoryModal').classList.add('hidden');
+};
+
+window.saveCategoryModal = async () => {
+    const input = document.getElementById('categoryNameInput');
+    const name = input.value.trim();
+    if (!name) return alert('Vui lòng nhập tên danh mục');
+
+    const id = name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-');
+
+    if (window.categoryModalMode === 'add') {
+        if (state.categories.find(c => c.id === id)) {
+            return alert('Danh mục này đã tồn tại');
+        }
+        await db.collection("categories").doc(id).set({ id, name });
+        showToast('Đã thêm danh mục mới');
+    } else {
+        const current = state.categories.find(c => c.id === window.categoryModalId);
+        if (!current) return;
+        if (id !== window.categoryModalId && state.categories.find(c => c.id === id)) {
+            return alert('Tên này đã có danh mục khác dùng rồi');
+        }
+        await db.collection("categories").doc(window.categoryModalId).update({ name });
+        if (id !== window.categoryModalId) {
+            await db.collection("categories").doc(window.categoryModalId).delete();
+            await db.collection("categories").doc(id).set({ id, name });
+        }
+        showToast('Đã đổi tên danh mục');
+    }
+
+    closeCategoryModal();
+};
+
+window.addCategory = () => openCategoryModal('add');
+
+window.editCategory = (id) => {
     const cat = state.categories.find(c => c.id === id);
     if (!cat) return;
-    const name = prompt('Đổi tên danh m?c:', cat.name);
-    if (!name || name.trim() === cat.name) return;
-    await db.collection("categories").doc(id).update({ name: name.trim() });
-    showToast('?? Đổi tên danh m?c');
+    openCategoryModal('edit', cat);
 };
 
 window.deleteCategory = async (id) => {
-    if (confirm('Xóa danh m?c n?y s? ?nh h??ng ??n c?c m?n ?ang thu?c danh m?c n?y. X?c nh?n x?a?')) {
+    if (confirm('Xóa danh mục này sẽ ảnh hưởng đến các món đang thuộc danh mục này. Xác nhận xóa?')) {
         await db.collection("categories").doc(id).delete();
         showToast('Đã xóa danh mục');
     }
