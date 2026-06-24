@@ -1,18 +1,21 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, onSnapshot, doc, setDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+
 // --- Firebase Configuration ---
-// BẠN CẦN THAY THẾ CÁC THÔNG SỐ DƯỚI ĐÂY BẰNG CẤU HÌNH CỦA BẠN TỪ FIREBASE CONSOLE
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBqhQrmJlZ1iDnbXsfe1APnjM_Q_M-AwgY",
+  authDomain: "apporder-48db7.firebaseapp.com",
+  projectId: "apporder-48db7",
+  storageBucket: "apporder-48db7.firebasestorage.app",
+  messagingSenderId: "332354886514",
+  appId: "1:332354886514:web:44a233b7270c2e782c9beb"
 };
 
 // Initialize Firebase
 let db;
 let storage;
-const { initializeApp, getFirestore, collection, onSnapshot, doc, setDoc, updateDoc, deleteDoc, getStorage, ref, uploadBytes, getDownloadURL } = window.FirebaseLib;
+// const { initializeApp, getFirestore, collection, onSnapshot, doc, setDoc, updateDoc, deleteDoc, getStorage, ref, uploadBytes, getDownloadURL } = window.FirebaseLib;
 
 try {
     const app = initializeApp(firebaseConfig);
@@ -409,7 +412,7 @@ window.openTableActions = function(tableId) {
 
 
 
-function closeTableActions() {
+window.closeTableActions = function() {
     const overlay = document.getElementById('tableActionOverlay');
     const sheet = document.getElementById('tableActionSheet');
     sheet.style.transform = 'translateY(100%)';
@@ -501,27 +504,20 @@ function closeCart() {
     setTimeout(() => cartOverlay.classList.add('hidden'), 300);
 }
 
-window.checkout = function() {
+window.checkout = async function() {
     if (state.cart.length === 0) return alert('Giỏ hàng trống!');
     
-    // Find the correct table in the state
-    const tableIndex = state.tables.findIndex(t => t.id === state.currentTableId);
-    if (tableIndex === -1) {
-        return alert('Không xác định được bàn. Vui lòng chọn lại bàn.');
-    }
+    const table = state.tables.find(t => t.id === state.currentTableId);
+    if (!table) return alert('Không xác định được bàn.');
     
-    const table = state.tables[tableIndex];
-    if (!table.orders) table.orders = [];
+    const updatedOrders = [...(table.orders || [])];
 
-    console.log('Checkout for table:', table.id, 'Cart:', state.cart);
-
-    // Merge cart items into table orders
     state.cart.forEach(cartItem => {
-        const existing = table.orders.find(o => o.id === cartItem.id);
+        const existing = updatedOrders.find(o => o.id === cartItem.id);
         if (existing) {
             existing.qty += cartItem.qty;
         } else {
-            table.orders.push({ 
+            updatedOrders.push({ 
                 id: cartItem.id, 
                 name: cartItem.name, 
                 price: cartItem.price, 
@@ -530,19 +526,16 @@ window.checkout = function() {
         }
     });
 
-    table.status = 'occupied';
+    await updateDoc(doc(db, "tables", table.id.toString()), {
+        orders: updatedOrders,
+        status: 'occupied'
+    });
     
-    // Clear and close
     state.cart = [];
     updateCartUI();
-    saveState();
-    
-    // Refresh the grid and show feedback
-    renderTableSelection();
     closeCart();
     showToast('Đặt món thành công!');
     
-    // Force a small delay then switch view to show the updated table
     setTimeout(() => {
         window.switchView('tableSelection');
     }, 100);
@@ -634,7 +627,7 @@ function updateStats() {
 }
 
 // --- Admin: Table Management ---
-function addTable() {
+window.addTable = async () => {
     const newId = state.tables.length > 0 ? Math.max(...state.tables.map(t => t.id)) + 1 : 1;
     const i = state.tables.length;
     const newTable = {
@@ -644,32 +637,15 @@ function addTable() {
         y: Math.floor(i / 3) * 100 + 60,
         orders: []
     };
-    state.tables.push(newTable);
-    saveState();
-    
-    // Update UI
-    renderTableSelection();
-    if (views.admin.classList.contains('active')) {
-        resizeCanvas();
-        drawFloorPlan();
-    }
-    updateStats();
+    await setDoc(doc(db, "tables", newId.toString()), newTable);
     showToast(`Đã thêm Bàn ${newId}`);
 }
 
-function removeTable() {
+window.removeTable = async () => {
     if (state.tables.length === 0) return;
-    
-    const removed = state.tables.pop();
-    saveState();
-    
-    renderTableSelection();
-    if (views.admin.classList.contains('active')) {
-        resizeCanvas();
-        drawFloorPlan();
-    }
-    updateStats();
-    showToast(`Đã xóa Bàn ${removed.id}`);
+    const lastTable = state.tables[state.tables.length - 1];
+    await deleteDoc(doc(db, "tables", lastTable.id.toString()));
+    showToast(`Đã xóa Bàn ${lastTable.id}`);
 }
 
 function resizeCanvas() {
@@ -738,7 +714,7 @@ window.closeMenuModal = () => {
     document.getElementById('menuItemModal').classList.add('hidden');
 };
 
-window.saveMenuItem = () => {
+window.saveMenuItem = async () => {
     const name = document.getElementById('editItemName').value;
     const price = parseInt(document.getElementById('editItemPrice').value);
     const cat = document.getElementById('editItemCat').value;
@@ -748,38 +724,44 @@ window.saveMenuItem = () => {
         return alert('Vui lòng nhập đầy đủ tên và giá món');
     }
     
-    const saveNewItem = (imgData) => {
+    const saveToFirestore = async (imgUrl) => {
+        const id = Date.now().toString();
         const newItem = {
-            id: Date.now(),
+            id,
             name,
             price,
             cat,
-            img: imgData || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400'
+            img: imgUrl || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400'
         };
         
-        state.menu.push(newItem);
-        saveState();
-        renderAdminMenu();
+        await setDoc(doc(db, "menu", id), newItem);
         closeMenuModal();
         showToast('Đã thêm món mới');
     };
 
     if (fileInput.files && fileInput.files[0]) {
-        const reader = new FileReader();
-        reader.onload = (e) => saveNewItem(e.target.result);
-        reader.readAsDataURL(fileInput.files[0]);
+        const file = fileInput.files[0];
+        const storageRef = ref(storage, 'menu/' + Date.now() + '_' + file.name);
+        try {
+            showToast('Đang tải ảnh lên...');
+            const snapshot = await uploadBytes(storageRef, file);
+            const downloadURL = await getDownloadURL(snapshot.ref);
+            saveToFirestore(downloadURL);
+        } catch (error) {
+            console.error("Upload failed", error);
+            alert("Lỗi khi tải ảnh lên Firebase Storage");
+        }
     } else {
-        saveNewItem();
+        saveToFirestore();
     }
 };
 
 
 
-window.deleteMenuItem = (id) => {
+window.deleteMenuItem = async (id) => {
     if (confirm('Xóa món này?')) {
-        state.menu = state.menu.filter(m => m.id !== id);
-        saveState();
-        renderAdminMenu();
+        await deleteDoc(doc(db, "menu", id.toString()));
+        showToast('Đã xóa món');
     }
 };
 
@@ -807,7 +789,7 @@ function renderAdminCats() {
     });
 }
 
-window.addCategory = () => {
+window.addCategory = async () => {
     const name = prompt('Tên danh mục mới:');
     if (!name) return;
     const id = name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-');
@@ -816,20 +798,15 @@ window.addCategory = () => {
         return alert('Danh mục này đã tồn tại');
     }
     
-    state.categories.push({ id, name });
-    saveState();
-    renderAdminCats();
-    renderCategoryFilters();
+    await setDoc(doc(db, "categories", id), { id, name });
     showToast('Đã thêm danh mục mới');
 };
 
-window.deleteCategory = (id) => {
+window.deleteCategory = async (id) => {
     if (id === 'main') return alert('Không thể xóa danh mục mặc định');
     if (confirm('Xóa danh mục này sẽ ảnh hưởng đến các món đang thuộc danh mục này. Xác nhận xóa?')) {
-        state.categories = state.categories.filter(c => c.id !== id);
-        saveState();
-        renderAdminCats();
-        renderCategoryFilters();
+        await deleteDoc(doc(db, "categories", id));
+        showToast('Đã xóa danh mục');
     }
 };
 
