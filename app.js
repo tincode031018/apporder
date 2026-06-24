@@ -1,6 +1,3 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, onSnapshot, doc, setDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
 // --- Firebase Configuration ---
 const firebaseConfig = {
@@ -18,9 +15,9 @@ let storage;
 // const { initializeApp, getFirestore, collection, onSnapshot, doc, setDoc, updateDoc, deleteDoc, getStorage, ref, uploadBytes, getDownloadURL } = window.FirebaseLib;
 
 try {
-    const app = initializeApp(firebaseConfig);
-    db = getFirestore(app);
-    storage = getStorage(app);
+    const app = firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+    storage = firebase.storage();
 } catch (e) {
     console.warn("Firebase config is missing or invalid. App will use dummy data or fail.");
 }
@@ -35,9 +32,9 @@ const INITIAL_TABLES = Array.from({ length: 12 }, (_, i) => ({
 }));
 
 const INITIAL_CATS = [
-    { id: 'main', name: 'Món chính' },
-    { id: 'drink', name: 'Đồ uống' },
-    { id: 'dessert', name: 'Tráng miệng' }
+    { id: 'nuoc', name: 'Món nước' },
+    { id: 'kho', name: 'Món khô' },
+    { id: 'xao', name: 'Món xào' }
 ];
 
 // --- App State ---
@@ -53,37 +50,39 @@ let state = {
 // --- Real-time Sync ---
 function syncWithFirebase() {
     // Sync Tables
-    onSnapshot(collection(db, "tables"), (snapshot) => {
+    db.collection("tables").onSnapshot((snapshot) => {
         let tables = snapshot.docs.map(doc => doc.data()).sort((a, b) => a.id - b.id);
         if (tables.length === 0) {
             // Seed initial tables if empty
-            INITIAL_TABLES.forEach(t => setDoc(doc(db, "tables", t.id.toString()), t));
+            INITIAL_TABLES.forEach(t => db.collection("tables").doc(t.id.toString()).set(t));
         } else {
             state.tables = tables;
             renderTableSelection();
+            updateFloorStats();
             if (views.admin.classList.contains('active')) {
                  drawFloorPlan();
-                 updateStats();
             }
         }
     });
 
     // Sync Menu
-    onSnapshot(collection(db, "menu"), (snapshot) => {
+    db.collection("menu").onSnapshot((snapshot) => {
         state.menu = snapshot.docs.map(doc => doc.data());
         renderAdminMenu();
         renderMenu(document.querySelector('.cat-btn.active')?.dataset.cat || 'all');
+        updateMenuStats();
     });
 
     // Sync Categories
-    onSnapshot(collection(db, "categories"), (snapshot) => {
+    db.collection("categories").onSnapshot((snapshot) => {
         let cats = snapshot.docs.map(doc => doc.data());
         if (cats.length === 0) {
-            INITIAL_CATS.forEach(c => setDoc(doc(db, "categories", c.id), c));
+            INITIAL_CATS.forEach(c => db.collection("categories").doc(c.id).set(c));
         } else {
             state.categories = cats;
             renderAdminCats();
             renderCategoryFilters();
+            updateCategoryStats();
         }
     });
 }
@@ -232,7 +231,7 @@ window.handleActionBook = async () => {
     const table = state.tables.find(t => t.id === state.currentTableId);
     if (!table) return;
     const newStatus = table.status === 'booked' ? 'empty' : 'booked';
-    await updateDoc(doc(db, "tables", table.id.toString()), { status: newStatus });
+    await db.collection("tables").doc(table.id.toString()).update({ status: newStatus });
     closeTableActions();
     showToast(`Đã ${newStatus === 'booked' ? 'đặt' : 'hủy đặt'} bàn ${table.id}`);
 };
@@ -245,7 +244,7 @@ window.handleActionCheckout = async () => {
     }
     const total = table.orders.reduce((acc, curr) => acc + (curr.price * curr.qty), 0);
     if (confirm(`Tính tiền Bàn ${table.id}?\nTổng cộng: ${total.toLocaleString()}đ`)) {
-        await updateDoc(doc(db, "tables", table.id.toString()), { 
+        await db.collection("tables").doc(table.id.toString()).update({ 
             status: 'empty',
             orders: []
         });
@@ -279,6 +278,7 @@ window.handleAdminTab = (tab) => {
         document.getElementById('adminMenuMgmtTab').classList.add('hidden');
         document.getElementById('adminCatMgmtTab').classList.add('hidden');
         initCanvas();
+        updateFloorStats();
     } else if (target === 'menumgmt') {
         document.getElementById('adminFloorPlanTab').classList.add('hidden');
         document.getElementById('adminMenuMgmtTab').classList.remove('hidden');
@@ -289,6 +289,7 @@ window.handleAdminTab = (tab) => {
         document.getElementById('adminMenuMgmtTab').classList.add('hidden');
         document.getElementById('adminCatMgmtTab').classList.remove('hidden');
         renderAdminCats();
+        updateCategoryStats();
     }
 };
 
@@ -308,6 +309,12 @@ function switchView(viewName) {
     if (viewName === 'userMenu') {
         renderCategoryFilters();
         renderMenu('all');
+    }
+
+    if (viewName === 'admin') {
+        updateFloorStats();
+        updateMenuStats();
+        updateCategoryStats();
     }
 
     if (viewName !== 'login') {
@@ -426,17 +433,16 @@ function renderMenu(category) {
     const items = category === 'all' ? state.menu : state.menu.filter(m => m.cat === category);
     
     items.forEach(item => {
+        const isOut = item.isOutOfStock || item.outOfStock || item.status === 'out' || item.status === 'soldout';
         const card = document.createElement('div');
         card.className = 'menu-card';
         card.innerHTML = `
             <img src="${item.img}" alt="${item.name}">
             <div class="menu-card-content">
                 <h4 style="font-size: 0.9rem; margin-bottom: 5px;">${item.name}</h4>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span class="price">${item.price.toLocaleString()}đ</span>
-                    <button class="btn btn-primary" onclick="addToCart(${item.id})" style="padding: 5px 10px; border-radius: 8px;">
-                        <i class="fa-solid fa-plus"></i>
-                    </button>
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;">
+                    <span class="price">${item.price.toLocaleString()}?</span>
+                    ${isOut ? '<span style="font-size: 0.7rem; font-weight: 700; color: var(--danger);">HẾT MÓN</span>' : '<button class="btn btn-primary" onclick="addToCart(' + item.id + ')" style="padding: 5px 10px; border-radius: 8px;"><i class="fa-solid fa-plus"></i></button>'}
                 </div>
             </div>
         `;
@@ -526,7 +532,7 @@ window.checkout = async function() {
         }
     });
 
-    await updateDoc(doc(db, "tables", table.id.toString()), {
+    await db.collection("tables").doc(table.id.toString()).update({
         orders: updatedOrders,
         status: 'occupied'
     });
@@ -615,15 +621,41 @@ function drawFloorPlan() {
 }
 
 function updateStats() {
+    updateFloorStats();
+}
+
+function updateFloorStats() {
     const empty = state.tables.filter(t => t.status === 'empty').length;
     const booked = state.tables.filter(t => t.status === 'booked').length;
     const occupied = state.tables.filter(t => t.status === 'occupied').length;
+    const total = state.tables.length;
     
-    if (document.getElementById('statEmpty')) {
-        document.getElementById('statEmpty').innerText = empty;
-        document.getElementById('statBooked').innerText = booked;
-        document.getElementById('statOccupied').innerText = occupied;
-    }
+    const totalEl = document.getElementById('floorStatTotal');
+    const emptyEl = document.getElementById('floorStatEmpty');
+    const bookedEl = document.getElementById('floorStatBooked');
+    const occupiedEl = document.getElementById('floorStatOccupied');
+    if (totalEl) totalEl.innerText = total;
+    if (emptyEl) emptyEl.innerText = empty;
+    if (bookedEl) bookedEl.innerText = booked;
+    if (occupiedEl) occupiedEl.innerText = occupied;
+}
+
+function updateMenuStats() {
+    const total = state.menu.length;
+    const soldOut = state.menu.filter(item => item.isOutOfStock || item.outOfStock || item.status === 'out' || item.status === 'soldout').length;
+    const special = state.menu.filter(item => item.isSpecial || item.special || item.featured).length;
+    
+    const totalEl = document.getElementById('menuStatTotal');
+    const soldOutEl = document.getElementById('menuStatSoldOut');
+    const specialEl = document.getElementById('menuStatSpecial');
+    if (totalEl) totalEl.innerText = total;
+    if (soldOutEl) soldOutEl.innerText = soldOut;
+    if (specialEl) specialEl.innerText = special;
+}
+
+function updateCategoryStats() {
+    const totalEl = document.getElementById('catStatTotal');
+    if (totalEl) totalEl.innerText = state.categories.length;
 }
 
 // --- Admin: Table Management ---
@@ -637,14 +669,14 @@ window.addTable = async () => {
         y: Math.floor(i / 3) * 100 + 60,
         orders: []
     };
-    await setDoc(doc(db, "tables", newId.toString()), newTable);
+    await db.collection("tables").doc(newId.toString()).set(newTable);
     showToast(`Đã thêm Bàn ${newId}`);
 }
 
 window.removeTable = async () => {
     if (state.tables.length === 0) return;
     const lastTable = state.tables[state.tables.length - 1];
-    await deleteDoc(doc(db, "tables", lastTable.id.toString()));
+    await db.collection("tables").doc(lastTable.id.toString()).delete();
     showToast(`Đã xóa Bàn ${lastTable.id}`);
 }
 
@@ -674,6 +706,8 @@ function renderAdminMenu() {
     const list = document.getElementById('adminMenuList');
     list.innerHTML = '';
     state.menu.forEach(item => {
+        const isSpecial = !!(item.isSpecial || item.special || item.featured);
+        const isOut = !!(item.isOutOfStock || item.outOfStock || item.status === 'out' || item.status === 'soldout');
         const row = document.createElement('div');
         row.className = 'glass-panel';
         row.style.display = 'flex';
@@ -682,9 +716,17 @@ function renderAdminMenu() {
         row.style.alignItems = 'center';
         row.innerHTML = `
             <img src="${item.img}" style="width: 50px; height: 50px; border-radius: 10px; object-fit: cover;">
-            <div style="flex: 1;">
+            <div style="flex: 1; min-width: 0;">
                 <div style="font-weight: 600;">${item.name}</div>
-                <div style="font-size: 0.8rem; opacity: 0.7;">${item.price.toLocaleString()}đ • ${item.cat}</div>
+                <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 2px;">${item.price.toLocaleString()}đ • ${item.cat}</div>
+                <div style="display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap;">
+                    <button class="btn" onclick="toggleMenuFlag('${item.id}', 'isOutOfStock')" style="padding: 5px 10px; border: 1px solid var(--danger); color: ${isOut ? 'white' : 'var(--danger)'}; background: ${isOut ? 'var(--danger)' : 'transparent'};">
+                        Hết món
+                    </button>
+                    <button class="btn" onclick="toggleMenuFlag('${item.id}', 'isSpecial')" style="padding: 5px 10px; border: 1px solid var(--warning); color: ${isSpecial ? 'white' : 'var(--warning)'}; background: ${isSpecial ? 'var(--warning)' : 'transparent'};">
+                        Đặc biệt
+                    </button>
+                </div>
             </div>
             <button class="btn" onclick="deleteMenuItem(${item.id})" style="color: var(--danger); border: none; background: none; padding: 5px;">
                 <i class="fa-solid fa-trash"></i>
@@ -692,6 +734,7 @@ function renderAdminMenu() {
         `;
         list.appendChild(row);
     });
+    updateMenuStats();
 }
 
 window.addMenuItem = function() {
@@ -734,18 +777,18 @@ window.saveMenuItem = async () => {
             img: imgUrl || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400'
         };
         
-        await setDoc(doc(db, "menu", id), newItem);
+        await db.collection("menu").doc(id).set(newItem);
         closeMenuModal();
         showToast('Đã thêm món mới');
     };
 
     if (fileInput.files && fileInput.files[0]) {
         const file = fileInput.files[0];
-        const storageRef = ref(storage, 'menu/' + Date.now() + '_' + file.name);
+        const storageRef = storage.ref('menu/' + Date.now() + '_' + file.name);
         try {
             showToast('Đang tải ảnh lên...');
-            const snapshot = await uploadBytes(storageRef, file);
-            const downloadURL = await getDownloadURL(snapshot.ref);
+            const snapshot = await storageRef.put(file);
+            const downloadURL = await snapshot.ref.getDownloadURL();
             saveToFirestore(downloadURL);
         } catch (error) {
             console.error("Upload failed", error);
@@ -760,11 +803,23 @@ window.saveMenuItem = async () => {
 
 window.deleteMenuItem = async (id) => {
     if (confirm('Xóa món này?')) {
-        await deleteDoc(doc(db, "menu", id.toString()));
+        await db.collection("menu").doc(id.toString()).delete();
         showToast('Đã xóa món');
+        updateMenuStats();
     }
 };
 
+window.toggleMenuFlag = async (id, field) => {
+    const item = state.menu.find(m => m.id.toString() === id.toString());
+    if (!item) return;
+    const patch = {};
+    patch[field] = !item[field];
+    await db.collection("menu").doc(id.toString()).update(patch);
+    showToast(patch[field] ? 'Đã cập nhật món' : 'Đã bỏ trạng thái');
+    updateMenuStats();
+};
+
+// --- Admin: Category Management ---
 // --- Admin: Category Management ---
 function renderAdminCats() {
     const list = document.getElementById('adminCatList');
@@ -773,15 +828,18 @@ function renderAdminCats() {
         const row = document.createElement('div');
         row.className = 'glass-panel';
         row.style.display = 'flex';
-        row.style.gap = '15px';
+        row.style.gap = '12px';
         row.style.padding = '15px';
         row.style.alignItems = 'center';
         row.innerHTML = `
-            <div style="flex: 1;">
+            <div style="flex: 1; min-width: 0;">
                 <div style="font-weight: 600;">${cat.name}</div>
-                <div style="font-size: 0.8rem; opacity: 0.7;">ID: ${cat.id}</div>
+                <div style="font-size: 0.8rem; opacity: 0.7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">ID: ${cat.id}</div>
             </div>
-            <button class="btn" onclick="deleteCategory('${cat.id}')" style="color: var(--danger); border: none; background: none; padding: 5px;">
+            <button class="btn" onclick="editCategory('${cat.id}')" title="Đổi tên" style="color: var(--primary); border: none; background: none; padding: 5px;">
+                <i class="fa-solid fa-pen"></i>
+            </button>
+            <button class="btn" onclick="deleteCategory('${cat.id}')" title="Xóa" style="color: var(--danger); border: none; background: none; padding: 5px;">
                 <i class="fa-solid fa-trash"></i>
             </button>
         `;
@@ -790,7 +848,7 @@ function renderAdminCats() {
 }
 
 window.addCategory = async () => {
-    const name = prompt('Tên danh mục mới:');
+    const name = prompt('Tên danh mục mới:', 'Món nước');
     if (!name) return;
     const id = name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-');
     
@@ -798,14 +856,22 @@ window.addCategory = async () => {
         return alert('Danh mục này đã tồn tại');
     }
     
-    await setDoc(doc(db, "categories", id), { id, name });
+    await db.collection("categories").doc(id).set({ id, name });
     showToast('Đã thêm danh mục mới');
 };
 
+window.editCategory = async (id) => {
+    const cat = state.categories.find(c => c.id === id);
+    if (!cat) return;
+    const name = prompt('Đổi tên danh m?c:', cat.name);
+    if (!name || name.trim() === cat.name) return;
+    await db.collection("categories").doc(id).update({ name: name.trim() });
+    showToast('?? Đổi tên danh m?c');
+};
+
 window.deleteCategory = async (id) => {
-    if (id === 'main') return alert('Không thể xóa danh mục mặc định');
-    if (confirm('Xóa danh mục này sẽ ảnh hưởng đến các món đang thuộc danh mục này. Xác nhận xóa?')) {
-        await deleteDoc(doc(db, "categories", id));
+    if (confirm('Xóa danh m?c n?y s? ?nh h??ng ??n c?c m?n ?ang thu?c danh m?c n?y. X?c nh?n x?a?')) {
+        await db.collection("categories").doc(id).delete();
         showToast('Đã xóa danh mục');
     }
 };

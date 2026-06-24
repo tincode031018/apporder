@@ -131,7 +131,15 @@
                     </div>
                 </div>
                 <p>Trạng thái bàn thời gian thực</p>
-                
+                <div class="glass-panel" style="margin: 15px 0 20px; padding: 16px;">
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; text-align: center;">
+                        <div><div style="font-size: 1.2rem; font-weight: 700;" id="floorStatTotal">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Tổng số bàn</div></div>
+                        <div><div style="font-size: 1.2rem; font-weight: 700;" id="floorStatEmpty">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Bàn trống</div></div>
+                        <div><div style="font-size: 1.2rem; font-weight: 700;" id="floorStatBooked">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Bàn đã đặt</div></div>
+                        <div><div style="font-size: 1.2rem; font-weight: 700;" id="floorStatOccupied">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Bàn có khách</div></div>
+                    </div>
+                </div>
+
                 <div class="canvas-container" style="margin: 20px 0;">
                     <canvas id="floorPlanCanvas"></canvas>
                 </div>
@@ -154,6 +162,14 @@
                     <h1>Quản lý món</h1>
                     <button id="addMenuItemBtn" onclick="addMenuItem()" class="btn btn-primary" style="padding: 8px 15px;"><i class="fa-solid fa-plus"></i> Thêm món</button>
                 </div>
+                <div class="glass-panel" style="margin-bottom: 20px; padding: 16px;">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center;">
+                        <div><div style="font-size: 1.2rem; font-weight: 700;" id="menuStatTotal">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Tổng số món</div></div>
+                        <div><div style="font-size: 1.2rem; font-weight: 700;" id="menuStatSoldOut">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Món hết</div></div>
+                        <div><div style="font-size: 1.2rem; font-weight: 700;" id="menuStatSpecial">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Món đặc biệt</div></div>
+                    </div>
+                </div>
+
                 <div id="adminMenuList" style="display: grid; gap: 15px; max-height: 500px; overflow-y: auto; padding-right: 5px;">
                     <!-- Menu items for Admin to edit -->
                 </div>
@@ -164,6 +180,12 @@
                     <h1>Quản lý danh mục</h1>
                     <button onclick="addCategory()" class="btn btn-primary" style="padding: 8px 15px;"><i class="fa-solid fa-plus"></i> Thêm danh mục</button>
                 </div>
+                <div class="glass-panel" style="margin-bottom: 20px; padding: 16px;">
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 10px; text-align: center;">
+                        <div><div style="font-size: 1.2rem; font-weight: 700;" id="catStatTotal">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Tổng số danh mục</div></div>
+                    </div>
+                </div>
+
                 <div id="adminCatList" style="display: grid; gap: 15px;">
                     <!-- Categories for Admin to edit -->
                 </div>
@@ -171,14 +193,6 @@
 
 
 
-            <div class="glass-panel">
-                <h3 style="margin-bottom: 15px;">Thống kê nhanh</h3>
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center;">
-                    <div><div style="font-size: 1.2rem; font-weight: 700;" id="statEmpty">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Trống</div></div>
-                    <div><div style="font-size: 1.2rem; font-weight: 700;" id="statBooked">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Đặt trước</div></div>
-                    <div><div style="font-size: 1.2rem; font-weight: 700;" id="statOccupied">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Có khách</div></div>
-                </div>
-            </div>
         </section>
 
 
@@ -252,9 +266,9 @@
                         <div>
                             <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Danh mục</label>
                             <select id="editItemCat" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--surface-border); margin-top: 5px; background: white;">
-                                <option value="main">Món chính</option>
-                                <option value="drink">Đồ uống</option>
-                                <option value="dessert">Tráng miệng</option>
+                                <option value="nuoc">Món nước</option>
+                                <option value="kho">Món khô</option>
+                                <option value="xao">Món xào</option>
                             </select>
                         </div>
                         <div>
@@ -282,6 +296,9 @@
         Đặt món thành công!
     </div>
 
-    <script type="module" src="app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
