@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GastroOrder - Đặt Món Thông Minh</title>
-    <link rel="stylesheet" href="style.css">
+    <title>GastroOrder - Hệ Thống Đặt Món & Quản Lý Nhà Hàng Cao Cấp</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=20260911-theme">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -14,59 +17,93 @@
     </div>
 
     <div class="app-container">
-        <div class="main-panel">
+        <div class="main-panel login-mode">
             <div id="app">
         <!-- Navigation -->
         <nav id="mainNav" class="hidden">
             <div class="brand">
-                <span style="font-weight: 700; color: var(--primary);">Gastro</span>Order
+                <img src="logo.png" alt="Quán Nhậu Lá" style="height: 38px; width: auto; object-fit: contain; border-radius: 8px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));">
+                <span style="font-size: 1.15rem; font-weight: 800; letter-spacing: -0.02em;">Quán Nhậu Lá</span>
             </div>
-            <div class="nav-actions">
-                <button id="logoutBtn" onclick="handleLogout()" class="btn" style="padding: 8px;"><i class="fa-solid fa-right-from-bracket"></i></button>
-
+            <div class="nav-actions" style="display: flex; align-items: center; gap: 10px;">
+                <div id="navUserBadge" style="display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.04); padding: 6px 14px; border-radius: 20px; border: 1px solid var(--surface-glass-border); font-size: 0.85rem;">
+                    <span id="navRoleIcon"><i class="fa-solid fa-user"></i></span>
+                    <span id="navStaffName" style="font-weight: 600; color: var(--text-primary);">Phục vụ</span>
+                    <span id="navRoleTag" style="font-size: 0.72rem; padding: 2px 8px; border-radius: 8px; background: var(--primary-glow); color: var(--primary); font-weight: 700;">STAFF</span>
+                </div>
+                <button id="themeToggleBtn" onclick="window.toggleTheme()" class="btn theme-toggle-btn" title="Chế giao diện sáng/tối" style="padding: 9px 14px; border-radius: 12px;"><i class="fa-solid fa-moon"></i></button>
+                <button id="logoutBtn" onclick="handleLogout()" class="btn" title="Đăng xuất" style="padding: 9px 14px; border-radius: 12px;"><i class="fa-solid fa-right-from-bracket"></i></button>
             </div>
         </nav>
 
         <!-- View: Login / Entry -->
         <section id="loginView" class="view active">
-            <div style="text-align: center; margin-top: 20px; margin-bottom: 40px;">
-                <div style="font-size: 3rem; color: var(--primary); margin-bottom: 15px;">
-                    <i class="fa-solid fa-utensils"></i>
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 6px;">
+                <button id="themeToggleLogin" onclick="window.toggleTheme()" class="btn theme-toggle-btn" title="Chế giao diện sáng/tối" style="padding: 8px 13px; border-radius: 12px; font-size: 0.85rem;">
+                    <i class="fa-solid fa-moon"></i> <span>Dark</span>
+                </button>
+            </div>
+            <div class="login-brand-header" style="text-align: center; margin-top: 10px; margin-bottom: 30px;">
+                <div class="login-logo-wrapper" style="margin-bottom: 15px; display: inline-block; position: relative;">
+                    <img src="logo.png" alt="Quán Nhậu Lá" style="width: 140px; height: 140px; object-fit: contain; filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.45)); transition: transform 0.3s ease;">
                 </div>
-                <h1>Chào mừng bạn</h1>
-                <p>Vui lòng chọn vai trò để tiếp tục</p>
+                <h1 style="font-size: 2rem; margin-bottom: 6px; font-weight: 800; letter-spacing: -0.02em;">Quán Nhậu Lá</h1>
+                <p style="color: var(--accent); font-weight: 600; font-size: 0.95rem; letter-spacing: 0.05em; text-transform: uppercase;">Vui Là Chính - Đặt Món Thông Minh</p>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 4px;">Vui lòng chọn vai trò để tiếp tục</p>
             </div>
 
             <div class="glass-panel" style="margin-bottom: 20px;">
                 <h3 style="margin-bottom: 15px;">Bạn là ai?</h3>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                    <button class="btn glass-panel role-btn" data-role="user" style="flex-direction: column; gap: 10px; padding: 30px 10px;">
-                        <i class="fa-solid fa-user-tag" style="font-size: 1.5rem; color: var(--primary);"></i>
-                        Nhân viên
+                <div class="role-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+                    <button class="btn glass-panel role-btn" data-role="user" style="flex-direction: column; gap: 8px; padding: 18px 4px;">
+                        <i class="fa-solid fa-user-tag" style="font-size: 1.3rem; color: var(--primary);"></i>
+                        <span style="font-size: 0.85rem;">Phục vụ</span>
                     </button>
-                    <button class="btn glass-panel role-btn" data-role="admin" style="flex-direction: column; gap: 10px; padding: 30px 10px;">
-                        <i class="fa-solid fa-user-shield" style="font-size: 1.5rem; color: var(--accent);"></i>
-                        Quản trị viên
+                    <button class="btn glass-panel role-btn" data-role="cashier" style="flex-direction: column; gap: 8px; padding: 18px 4px;">
+                        <i class="fa-solid fa-cash-register" style="font-size: 1.3rem; color: #10b981;"></i>
+                        <span style="font-size: 0.85rem;">Thu ngân</span>
+                    </button>
+                    <button class="btn glass-panel role-btn" data-role="kitchen" style="flex-direction: column; gap: 8px; padding: 18px 4px;">
+                        <i class="fa-solid fa-fire-burner" style="font-size: 1.3rem; color: #f97316;"></i>
+                        <span style="font-size: 0.85rem;">Bếp KDS</span>
+                    </button>
+                    <button class="btn glass-panel role-btn" data-role="admin" style="flex-direction: column; gap: 8px; padding: 18px 4px;">
+                        <i class="fa-solid fa-user-shield" style="font-size: 1.3rem; color: var(--accent);"></i>
+                        <span style="font-size: 0.85rem;">Quản trị</span>
                     </button>
                 </div>
             </div>
 
+<div class="login-panels-grid">
             <div id="staffLogin" class="glass-panel hidden">
-                <h3 style="margin-bottom: 15px;">Mã truy cập Nhân viên</h3>
-                <input type="password" id="staffCode" placeholder="Nhập mã (1111)" style="width: 100%; padding: 15px; border-radius: 12px; border: 1px solid var(--surface-border); background: var(--bg-color); color: var(--text-primary); margin-bottom: 15px;">
-                <button id="loginStaffBtn" class="btn btn-primary" style="width: 100%;">Tiếp tục</button>
+                <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-user-tag" style="color: var(--primary); margin-right: 8px;"></i>Mã truy cập Phục vụ</h3>
+                <input type="password" id="staffCode" placeholder="Nhập mã PIN" style="width: 100%; padding: 15px; border-radius: 12px; margin-bottom: 15px;">
+                <button id="loginStaffBtn" class="btn btn-primary" style="width: 100%;">Tiếp tục phục vụ</button>
+            </div>
+
+            <div id="cashierLogin" class="glass-panel hidden">
+                <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-cash-register" style="color: #10b981; margin-right: 8px;"></i>Mã truy cập Thu ngân</h3>
+                <input type="password" id="cashierCode" placeholder="Nhập mã PIN" style="width: 100%; padding: 15px; border-radius: 12px; margin-bottom: 15px;">
+                <button id="loginCashierBtn" class="btn btn-primary" style="width: 100%; background: linear-gradient(135deg, #10b981, #059669);">Vào bàn Thu ngân</button>
+            </div>
+
+            <div id="kitchenLogin" class="glass-panel hidden">
+                <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-fire-burner" style="color: #f97316; margin-right: 8px;"></i>Mã truy cập Bếp (KDS)</h3>
+                <input type="password" id="kitchenCode" placeholder="Nhập mã PIN" style="width: 100%; padding: 15px; border-radius: 12px; margin-bottom: 15px;">
+                <button id="loginKitchenBtn" class="btn btn-primary" style="width: 100%; background: linear-gradient(135deg, #f97316, #ea580c);">Vào màn hình Bếp</button>
             </div>
             
             <div id="adminLogin" class="glass-panel hidden">
-                <h3 style="margin-bottom: 15px;">Mã truy cập Admin</h3>
-                <input type="password" id="adminCode" placeholder="Nhập mã (1234)" style="width: 100%; padding: 15px; border-radius: 12px; border: 1px solid var(--surface-border); background: var(--bg-color); color: var(--text-primary); margin-bottom: 15px;">
-                <button id="loginAdminBtn" class="btn btn-primary" style="width: 100%;">Truy cập Dashboard</button>
+                <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-user-shield" style="color: var(--accent); margin-right: 8px;"></i>Mã truy cập Admin</h3>
+                <input type="password" id="adminCode" placeholder="Nhập mã PIN" style="width: 100%; padding: 15px; border-radius: 12px; margin-bottom: 15px;">
+                <button id="loginAdminBtn" class="btn btn-primary" style="width: 100%;">Truy cập Dashboard Quản trị</button>
             </div>
+        </div>
         </section>
 
         <section id="tableSelectionView" class="view">
             <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 5px;">
-                <button onclick="window.switchView('login')" class="btn" style="padding: 10px; border: none; background: #f8fafc; color: var(--text-secondary); cursor: pointer;">
+                <button onclick="window.switchView('login')" class="btn" style="padding: 9px 13px; border-radius: 12px;" title="Quay lại">
                     <i class="fa-solid fa-chevron-left"></i>
                 </button>
                 <div>
@@ -87,7 +124,7 @@
         <section id="userMenuView" class="view">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <div style="display: flex; align-items: center; gap: 15px;">
-                    <button onclick="window.switchView('tableSelection')" class="btn" style="padding: 10px; border: none; background: #f8fafc; color: var(--text-secondary); cursor: pointer;">
+                    <button onclick="window.switchView('tableSelection')" class="btn" style="padding: 9px 13px; border-radius: 12px;" title="Quay lại">
                         <i class="fa-solid fa-chevron-left"></i>
                     </button>
                     <div>
@@ -96,47 +133,528 @@
                     </div>
                 </div>
                 <div id="cartStatus" style="position: relative; cursor: pointer;">
-
                     <i class="fa-solid fa-cart-shopping" style="font-size: 1.5rem;"></i>
                     <span id="cartCount" style="position: absolute; top: -8px; right: -8px; background: var(--danger); color: white; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700;">0</span>
                 </div>
             </div>
 
-            <div id="categoryFilterContainer" class="categories" style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: none;">
-                <!-- Filter buttons generated by JS -->
-            </div>
+            <div class="user-menu-layout">
+                <!-- Left Catalog Column -->
+                <div class="menu-catalog-section">
+                    <div class="menu-toolbar">
+                        <div id="categoryFilterContainer" class="categories">
+                            <!-- Filter buttons generated by JS -->
+                        </div>
+                        <div class="menu-view-toggle" role="group" aria-label="Kiểu hiển thị món ăn">
+                            <button class="btn active" id="menuGridViewBtn" type="button" onclick="setMenuView('grid')" title="Hiển thị dạng lưới"><i class="fa-solid fa-grip"></i><span>Lưới</span></button>
+                            <button class="btn" id="menuListViewBtn" type="button" onclick="setMenuView('list')" title="Hiển thị dạng danh sách"><i class="fa-solid fa-list"></i><span>Danh sách</span></button>
+                        </div>
+                    </div>
 
+                    <div id="menuContainer" class="menu-grid" style="margin-top: 15px;">
+                        <!-- Menu items generated by JS -->
+                    </div>
+                </div>
 
-            <div id="menuContainer" class="menu-grid">
-                <!-- Menu items generated by JS -->
+                <!-- Right Sticky Cart Sidebar for Desktop POS -->
+                <aside class="desktop-cart-panel">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--surface-border); padding-bottom: 10px;">
+                        <h3 style="margin: 0; font-size: 1.15rem;"><i class="fa-solid fa-receipt" style="color: var(--primary); margin-right: 8px;"></i>Đơn hiện tại</h3>
+                        <span id="desktopCartBadge" style="background: var(--primary-glow); color: var(--primary); font-weight: 700; font-size: 0.85rem; padding: 4px 10px; border-radius: 12px;">0 món</span>
+                    </div>
+
+                    <div id="desktopCartList" style="flex: 1; overflow-y: auto; max-height: 420px; margin-bottom: 15px; padding-right: 4px;">
+                        <div style="text-align: center; color: var(--text-secondary); padding: 40px 10px; font-size: 0.9rem;">
+                            <i class="fa-solid fa-basket-shopping" style="font-size: 2.2rem; opacity: 0.3; margin-bottom: 10px; display: block;"></i>
+                            Chưa chọn món nào
+                        </div>
+                    </div>
+
+                    <div style="border-top: 1px solid var(--surface-border); padding-top: 15px; margin-top: auto;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <span style="font-size: 1rem; font-weight: 600; color: var(--text-secondary);">Tổng cộng:</span>
+                            <span id="desktopCartTotal" style="font-size: 1.4rem; font-weight: 700; color: var(--primary);">0đ</span>
+                        </div>
+                        <button onclick="checkout()" class="btn btn-primary" style="width: 100%; padding: 14px; font-size: 1rem; font-weight: 700;">
+                            <i class="fa-solid fa-circle-check"></i> Xác nhận
+                        </button>
+                    </div>
+                </aside>
             </div>
         </section>
 
-        <!-- View: Admin Dashboard -->
-        <section id="adminDashboardView" class="view">
-            <div style="display: flex; gap: 20px; margin-bottom: 25px; border-bottom: 1px solid var(--surface-border);">
-                <button class="admin-tab active" data-tab="floorplan" onclick="handleAdminTab(this)" style="padding: 10px 0; border: none; background: none; font-weight: 600; cursor: pointer; color: var(--primary); border-bottom: 2px solid var(--primary);">Sơ đồ bàn</button>
-                <button class="admin-tab" data-tab="menumgmt" onclick="handleAdminTab(this)" style="padding: 10px 0; border: none; background: none; font-weight: 600; cursor: pointer; color: var(--text-secondary);">Thực đơn</button>
-                <button class="admin-tab" data-tab="catmgmt" onclick="handleAdminTab(this)" style="padding: 10px 0; border: none; background: none; font-weight: 600; cursor: pointer; color: var(--text-secondary);">Danh mục</button>
-
-
+        <!-- View: Kitchen Display System (KDS) -->
+        <section id="kitchenView" class="view">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="width: 42px; height: 42px; border-radius: 12px; background: rgba(249, 115, 22, 0.2); display: flex; align-items: center; justify-content: center; color: #f97316; font-size: 1.3rem;">
+                        <i class="fa-solid fa-fire-burner"></i>
+                    </div>
+                    <div>
+                        <h1 style="margin-bottom: 0;">Màn hình Bếp (KDS)</h1>
+                        <p style="font-size: 0.85rem; opacity: 0.7;">Tiếp nhận & chế biến đơn hàng theo thứ tự ưu tiên</p>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <span id="kdsPendingBadge" style="background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.85rem;">
+                        <i class="fa-solid fa-bell"></i> 0 món chờ
+                    </span>
+                    <div class="collection-view-toggle" data-scope="kds" role="group" aria-label="Kiểu hiển thị đơn bếp">
+                        <button class="btn" type="button" data-view="grid" onclick="setCollectionView('kds', 'grid')" title="Dạng lưới"><i class="fa-solid fa-grip"></i></button>
+                        <button class="btn" type="button" data-view="list" onclick="setCollectionView('kds', 'list')" title="Dạng danh sách"><i class="fa-solid fa-list"></i></button>
+                    </div>
+                    <button onclick="renderKitchenOrders()" class="btn" style="padding: 8px 14px;" title="Làm mới"><i class="fa-solid fa-rotate"></i></button>
+                </div>
             </div>
 
-            <div id="adminFloorPlanTab">
+            <!-- KDS Filter tabs -->
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--surface-glass-border); padding-bottom: 10px;">
+                <button class="btn cat-btn active" onclick="filterKds('all', this)">Tất cả</button>
+                <button class="btn cat-btn" onclick="filterKds('pending', this)">Chờ nấu</button>
+                <button class="btn cat-btn" onclick="filterKds('cooking', this)">Đang chế biến</button>
+                <button class="btn cat-btn" onclick="filterKds('ready', this)">Đã xong (Chờ bê)</button>
+            </div>
+
+            <!-- KDS Kanban Board (columns by status) -->
+            <div id="kdsBoard" class="kds-board">
+                <!-- Column: Pending -->
+                <div class="kds-column" data-status="pending">
+                    <div class="kds-column-header kds-col-pending">
+                        <span class="kds-col-title"><i class="fa-solid fa-clock"></i> Chờ nấu</span>
+                        <span class="kds-col-count" id="count-pending">0</span>
+                    </div>
+                    <div class="kds-column-body" id="col-pending"></div>
+                </div>
+                <!-- Column: Cooking -->
+                <div class="kds-column" data-status="cooking">
+                    <div class="kds-column-header kds-col-cooking">
+                        <span class="kds-col-title"><i class="fa-solid fa-fire"></i> Đang chế biến</span>
+                        <span class="kds-col-count" id="count-cooking">0</span>
+                    </div>
+                    <div class="kds-column-body" id="col-cooking"></div>
+                </div>
+                <!-- Column: Ready -->
+                <div class="kds-column" data-status="ready">
+                    <div class="kds-column-header kds-col-ready">
+                        <span class="kds-col-title"><i class="fa-solid fa-bell-concierge"></i> Đã xong (Chờ bê)</span>
+                        <span class="kds-col-count" id="count-ready">0</span>
+                    </div>
+                    <div class="kds-column-body" id="col-ready"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- View: Cashier Desk (Thu Ngân) -->
+        <section id="cashierView" class="view">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(16, 185, 129, 0.2); display: flex; align-items: center; justify-content: center; color: #10b981; font-size: 1.4rem;">
+                        <i class="fa-solid fa-cash-register"></i>
+                    </div>
+                    <div>
+                        <h1 style="margin-bottom: 0;">Quầy Thu Ngân (Cashier Desk)</h1>
+                        <p style="font-size: 0.85rem; opacity: 0.7;">Tiếp nhận thanh toán, xuất hóa đơn & đối soát doanh thu ca</p>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <span id="cashierOccupiedCount" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.85rem;">
+                        <i class="fa-solid fa-utensils"></i> 0 bàn đang ăn
+                    </span>
+                    <button onclick="renderCashierTables()" class="btn" style="padding: 8px 14px;" title="Làm mới"><i class="fa-solid fa-rotate"></i></button>
+                </div>
+            </div>
+
+            <!-- Cashier Day-Shift Summary Cards -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 22px;">
+                <div class="glass-panel" style="padding: 16px;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 6px;">
+                        <span>Tổng tiền thu ca</span>
+                        <i class="fa-solid fa-sack-dollar" style="color: #fbbf24;"></i>
+                    </div>
+                    <div id="cashierShiftTotal" style="font-size: 1.5rem; font-weight: 800; color: #fbbf24;">0đ</div>
+                </div>
+                <div class="glass-panel" style="padding: 16px;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 6px;">
+                        <span>Tiền mặt (Cash)</span>
+                        <i class="fa-solid fa-money-bill-wave" style="color: #34d399;"></i>
+                    </div>
+                    <div id="cashierCashTotal" style="font-size: 1.5rem; font-weight: 800; color: #34d399;">0đ</div>
+                </div>
+                <div class="glass-panel" style="padding: 16px;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 6px;">
+                        <span>Chuyển khoản QR</span>
+                        <i class="fa-solid fa-qrcode" style="color: #818cf8;"></i>
+                    </div>
+                    <div id="cashierQrTotal" style="font-size: 1.5rem; font-weight: 800; color: #818cf8;">0đ</div>
+                </div>
+                <div class="glass-panel" style="padding: 16px;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 6px;">
+                        <span>Số bill đã thanh toán</span>
+                        <i class="fa-solid fa-receipt" style="color: #f472b6;"></i>
+                    </div>
+                    <div id="cashierPaidBillsCount" style="font-size: 1.5rem; font-weight: 800; color: #f472b6;">0</div>
+                </div>
+            </div>
+
+            <!-- Two-Column Cashier Layout: Left is Tables, Right is Settlement Terminal -->
+            <div style="display: grid; grid-template-columns: 1fr 400px; gap: 20px; align-items: start;" class="cashier-layout-grid">
+                <!-- Left: Tables with orders awaiting checkout -->
+                <div>
+                    <h3 style="margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+                        <span><i class="fa-solid fa-table-list" style="color: #10b981; margin-right: 8px;"></i>Danh sách bàn đang có khách</span>
+                        <span style="display: inline-flex; align-items: center; gap: 8px;"><span style="font-size: 0.8rem; font-weight: 500; color: var(--text-secondary);">Nhấp chọn bàn để kết toán</span><span class="collection-view-toggle" data-scope="cashier" role="group" aria-label="Kiểu hiển thị bàn"><button class="btn" type="button" data-view="grid" onclick="setCollectionView('cashier', 'grid')" title="Dạng lưới"><i class="fa-solid fa-grip"></i></button><button class="btn" type="button" data-view="list" onclick="setCollectionView('cashier', 'list')" title="Dạng danh sách"><i class="fa-solid fa-list"></i></button></span></span>
+                    </h3>
+                    <div id="cashierTablesList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px;">
+                        <!-- Generated by JS -->
+                    </div>
+                </div>
+
+                <!-- Right: Checkout Settlement Terminal -->
+                <div class="glass-panel" style="padding: 22px; position: sticky; top: 80px;" id="cashierCheckoutTerminal">
+                    <div style="border-bottom: 1px dashed var(--surface-border); padding-bottom: 15px; margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h2 id="cashierActiveTableTitle" style="margin: 0; font-size: 1.3rem; color: #ffffff;">Chọn một bàn</h2>
+                            <span id="cashierActiveTableBadge" style="font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 10px; background: rgba(255,255,255,0.1);">Chưa chọn</span>
+                        </div>
+                        <div id="cashierActiveStaff" style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;">NV phục vụ: --</div>
+                    </div>
+
+                    <!-- Items list in selected table -->
+                    <div id="cashierActiveItems" style="max-height: 180px; overflow-y: auto; margin-bottom: 15px; padding-right: 5px;">
+                        <div style="text-align: center; color: var(--text-secondary); padding: 30px 10px; font-size: 0.85rem;">
+                            Vui lòng chọn bàn ở danh sách bên trái để kiểm tra chi tiết hóa đơn
+                        </div>
+                    </div>
+
+                    <!-- Discount / Surcharge controls -->
+                    <div style="background: rgba(0,0,0,0.03); border-radius: 12px; padding: 14px; margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.85rem;">
+                            <span style="color: var(--text-secondary);">Tạm tính tiền món:</span>
+                            <span id="cashierSubtotal" style="font-weight: 700; color: var(--text-primary);">0đ</span>
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px;">
+                            <span style="font-size: 0.85rem; color: var(--text-secondary);">Giảm giá (%):</span>
+                            <input type="number" id="cashierDiscountPercent" min="0" max="100" value="0" style="width: 70px; padding: 6px 10px; border-radius: 8px; text-align: center;" oninput="recalcCashierFinalTotal()">
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px;">
+                            <span style="font-size: 0.85rem; color: var(--text-secondary);">Phụ thu / Tip (đ):</span>
+                            <input type="number" id="cashierSurcharge" min="0" value="0" step="5000" style="width: 100px; padding: 6px 10px; border-radius: 8px; text-align: right;" oninput="recalcCashierFinalTotal()">
+                        </div>
+                        <div style="display: flex; justify-content: space-between; border-top: 1px dashed var(--surface-border); padding-top: 10px; margin-top: 8px;">
+                            <span style="font-weight: 700; font-size: 1rem; color: var(--text-primary);">KHÁCH CẦN TRẢ:</span>
+                            <span id="cashierFinalTotal" style="font-size: 1.35rem; font-weight: 800; color: #f59e0b;">0đ</span>
+                        </div>
+                    </div>
+
+                    <!-- Payment Methods -->
+                    <div style="margin-bottom: 16px;">
+                        <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 8px;">Phương thức thanh toán:</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <button id="payMethodCashBtn" class="btn active" onclick="setCashierPaymentMethod('cash')" style="background: rgba(16, 185, 129, 0.2); border-color: #10b981; color: #34d399;">
+                                <i class="fa-solid fa-money-bill"></i> Tiền mặt
+                            </button>
+                            <button id="payMethodQrBtn" class="btn" onclick="setCashierPaymentMethod('qr')" style="background: rgba(255,255,255,0.05);">
+                                <i class="fa-solid fa-qrcode"></i> VietQR động
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic VietQR Container (Show when QR selected) -->
+                    <div id="cashierQrContainer" class="hidden" style="text-align: center; background: white; padding: 14px; border-radius: 14px; margin-bottom: 16px;">
+                        <div id="cashierQrTitle" style="color: #0f172a; font-weight: 700; font-size: 0.85rem; margin-bottom: 6px;">QUÉT MÃ VIETQR ĐỂ THANH TOÁN</div>
+                        <img id="cashierQrImage" src="" alt="VietQR" style="max-width: 180px; height: auto; border-radius: 8px; margin: 0 auto; display: block;">
+                        <div id="cashierQrCaption" style="color: #64748b; font-size: 0.75rem; margin-top: 6px;">Mã động đã kèm đúng số tiền & nội dung bàn</div>
+                    </div>
+
+                    <!-- Action buttons -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <button class="btn" onclick="previewAndPrintCurrentBill()" style="padding: 12px 10px; font-size: 0.85rem;"><i class="fa-solid fa-print"></i> In hóa đơn</button>
+                        <button class="btn btn-primary" id="cashierSubmitPayBtn" onclick="submitCashierPayment()" style="padding: 12px 10px; background: linear-gradient(135deg, #10b981, #059669); font-size: 0.9rem;">
+                            <i class="fa-solid fa-circle-check"></i> Xác nhận thu tiền
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- View: Admin Dashboard with 5 Modules -->
+        <section id="adminDashboardView" class="view">
+            <!-- Admin Module Dropdown Menu -->
+            <div class="admin-module-bar">
+                <i class="fa-solid fa-table-columns" style="color: var(--primary);"></i>
+                <select id="adminModuleSelect" class="admin-module-select" aria-label="Chọn màn hính" onchange="handleAdminTabSelect(this.value)">
+                    <option value="analytics">📊 Báo cáo &amp; Phân tích</option>
+                    <option value="inventory">📦 Tồn kho &amp; Nguyên liệu</option>
+                    <option value="staff">🛡️ Nhân sự &amp; Phân quyền</option>
+                    <option value="menumgmt">🍽 Thực đơn</option>
+                    <option value="catmgmt">🏷️ Danh mục</option>
+                    <option value="floorplan">🗺️ Sơ đồ bàn</option>
+                    <option value="printer">🖨️ Máy in K80</option>
+                    <option value="paymentqr">▣ Mã QR thanh toán</option>
+                </select>
+            </div>
+
+            <!-- TAB 1: Báo cáo & Phân tích Kinh doanh CFood -->
+            <div id="adminAnalyticsTab">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                    <div>
+                        <h1 style="font-size: 1.25rem;">Báo cáo & Phân tích Kinh doanh</h1>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary);">Hiệu suất doanh thu, lợi nhuận, chi phí nguyên liệu và bán hàng</p>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn" onclick="exportReportData()" style="font-size: 0.82rem; padding: 8px 14px;"><i class="fa-solid fa-file-export"></i> Xuất file</button>
+                        <button class="btn" onclick="openFixedCostModal()" style="font-size: 0.82rem; padding: 8px 14px; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); color: #38bdf8;"><i class="fa-solid fa-sliders"></i> Định phí</button>
+                        <button class="btn btn-primary" onclick="refreshAnalytics()" style="font-size: 0.82rem; padding: 8px 14px;"><i class="fa-solid fa-arrows-rotate"></i> Cập nhật</button>
+                    </div>
+                </div>
+
+                <div class="dashboard-accordion">
+
+                    <!-- Accordion: Doanh thu -->
+                    <div class="accordion-card col-span-2">
+                        <button class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="accordion-icon"><i class="fa-solid fa-coins" style="color: #f59e0b;"></i></span>
+                                <span class="accordion-title">Doanh thu</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="accordion-metric" id="accRevenueMetric" style="color: #f59e0b; font-weight: 800; font-size: 0.95rem;"></span>
+                                <span class="accordion-arrow"><i class="fa-solid fa-chevron-down"></i></span>
+                            </div>
+                        </button>
+                        <div class="accordion-body">
+                            <div class="accordion-body-inner">
+                                <div class="accordion-content" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                    <div>
+                                        <div style="font-size: 0.72rem; color: var(--text-secondary);">Tổng doanh thu</div>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 0.72rem; color: var(--text-secondary);">Giá trị TB / đơn</div>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 0.72rem; color: var(--text-secondary);">Số hóa đơn chốt</div>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 0.72rem; color: var(--text-secondary);">Xu hướng</div>
+                                        <div style="font-size: 0.82rem; color: #10b981;"><i class="fa-solid fa-arrow-trend-up"></i> Tự động từ hóa đơn</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Accordion: Chi phí -->
+                    <div class="accordion-card">
+                        <button class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="accordion-icon"><i class="fa-solid fa-arrow-trend-down" style="color: #f87171;"></i></span>
+                                <span class="accordion-title">Chi phí</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="accordion-metric" id="accCostMetric" style="color: #f87171; font-weight: 800; font-size: 0.95rem;">0đ</span>
+                                <span class="accordion-arrow"><i class="fa-solid fa-chevron-down"></i></span>
+                            </div>
+                        </button>
+                        <div class="accordion-body">
+                            <div class="accordion-body-inner">
+                                <div class="accordion-content" style="display: flex; flex-direction: column; gap: 10px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                                        <span style="font-size: 0.82rem; color: var(--text-secondary);">Giá vốn NVL (COGS)</span>
+                                        <span id="accCogs" style="font-weight: 700; color: #f87171; font-size: 0.92rem;">-0đ</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                                        <span style="font-size: 0.82rem; color: var(--text-secondary);">Quỹ lương nhân sự</span>
+                                        <span id="accPayroll" style="font-weight: 700; color: #f87171; font-size: 0.92rem;">-0đ</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                                        <span style="font-size: 0.82rem; color: var(--text-secondary);">Định phí & Khấu hao</span>
+                                        <span id="accFixedCost" style="font-weight: 700; color: #f87171; font-size: 0.92rem;">-0đ</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                                        <span style="font-size: 0.82rem; font-weight: 700; color: #ffffff;">Tổng chi phí</span>
+                                        <span id="accTotalCost" style="font-weight: 800; color: #f87171; font-size: 1rem;">-0đ</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Accordion: Lợi nhuận -->
+                    <div class="accordion-card">
+                        <button class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="accordion-icon"><i class="fa-solid fa-gem" style="color: #34d399;"></i></span>
+                                <span class="accordion-title">Lợi nhuận</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="accordion-metric" id="accProfitMetric" style="color: #34d399; font-weight: 800; font-size: 0.95rem;">0đ</span>
+                                <span class="accordion-arrow"><i class="fa-solid fa-chevron-down"></i></span>
+                            </div>
+                        </button>
+                        <div class="accordion-body">
+                            <div class="accordion-body-inner">
+                                <div class="accordion-content" style="display: flex; flex-direction: column; gap: 10px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                                        <span style="font-size: 0.82rem; color: var(--text-secondary);">Lợi nhuận gộp</span>
+                                        <span id="accGrossProfit" style="font-weight: 700; color: #34d399; font-size: 0.92rem;">0đ</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                                        <span style="font-size: 0.82rem; color: var(--text-secondary);">Biên lợi nhuận gộp</span>
+                                        <span id="accGrossMargin" style="font-weight: 700; color: #34d399; font-size: 0.92rem;">0%</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background: rgba(16, 185, 129, 0.08); border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.25);">
+                                        <span style="font-size: 0.82rem; font-weight: 700; color: #ffffff;">Lợi nhuận ròng</span>
+                                        <span id="accNetProfit" style="font-weight: 800; color: #34d399; font-size: 1rem;">0đ</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                                        <span style="font-size: 0.82rem; color: var(--text-secondary);">Tỷ suất lợi nhuận ròng</span>
+                                        <span id="accNetMargin" style="font-weight: 700; color: #6ee7b7; font-size: 0.92rem;">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Accordion: Top món bán chạy -->
+                    <div class="accordion-card">
+                        <button class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="accordion-icon"><i class="fa-solid fa-crown" style="color: #fbbf24;"></i></span>
+                                <span class="accordion-title">Top món bán chạy</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="accordion-metric" id="accTopMetric" style="color: #fbbf24; font-weight: 800; font-size: 0.95rem;">-</span>
+                                <span class="accordion-arrow"><i class="fa-solid fa-chevron-down"></i></span>
+                            </div>
+                        </button>
+                        <div class="accordion-body">
+                            <div class="accordion-body-inner">
+                                <div class="accordion-content" id="accTopItemsList" style="display: flex; flex-direction: column; gap: 10px;">
+                                    <!-- Rendered by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Accordion: Hóa đơn gần đây -->
+                    <div class="accordion-card">
+                        <button class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="accordion-icon"><i class="fa-solid fa-clock-rotate-left" style="color: #38bdf8;"></i></span>
+                                <span class="accordion-title">Hóa đơn gần đây</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="accordion-metric" id="accBillsMetric" style="color: #38bdf8; font-weight: 800; font-size: 0.95rem;">0 hóa đơn</span>
+                                <span class="accordion-arrow"><i class="fa-solid fa-chevron-down"></i></span>
+                            </div>
+                        </button>
+                        <div class="accordion-body">
+                            <div class="accordion-body-inner">
+                                <div class="accordion-content" id="accRecentBillsList" style="display: flex; flex-direction: column; gap: 10px;">
+                                    <!-- Rendered by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Accordion: Biểu đồ kế doanh thu -->
+                    <div class="accordion-card col-span-2">
+                        <button class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="accordion-icon"><i class="fa-solid fa-chart-column" style="color: #38bdf8;"></i></span>
+                                <span class="accordion-title">Biểu đồ kế doanh thu</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="accordion-metric" id="accChartMetric" style="color: #38bdf8; font-weight: 800; font-size: 0.95rem;">0đ</span>
+                                <span class="accordion-arrow"><i class="fa-solid fa-chevron-down"></i></span>
+                            </div>
+                        </button>
+                        <div class="accordion-body">
+                            <div class="accordion-body-inner">
+                                <div class="accordion-content">
+                                    <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px;">
+                                        <div style="display: flex; gap: 6px; background: rgba(255,255,255,0.04); padding: 4px; border-radius: 10px; border: 1px solid var(--surface-glass-border);">
+                                            <button class="chart-period-btn active" data-period="day" onclick="setChartPeriod('day')" style="font-size: 0.78rem; padding: 6px 10px; border-radius: 8px; border: none; background: rgba(56, 189, 248, 0.18); color: #38bdf8; font-weight: 700; cursor: pointer;">Ngày</button>
+                                            <button class="chart-period-btn" data-period="week" onclick="setChartPeriod('week')" style="font-size: 0.78rem; padding: 6px 10px; border-radius: 8px; border: none; background: transparent; color: var(--text-secondary); font-weight: 600; cursor: pointer;">Tuần</button>
+                                            <button class="chart-period-btn" data-period="month" onclick="setChartPeriod('month')" style="font-size: 0.78rem; padding: 6px 10px; border-radius: 8px; border: none; background: transparent; color: var(--text-secondary); font-weight: 600; cursor: pointer;">Tháng</button>
+                                            <button class="chart-period-btn" data-period="quarter" onclick="setChartPeriod('quarter')" style="font-size: 0.78rem; padding: 6px 10px; border-radius: 8px; border: none; background: transparent; color: var(--text-secondary); font-weight: 600; cursor: pointer;">Quý</button>
+                                        </div>
+                                        <div style="display: flex; gap: 8px; align-items: center; margin-left: auto;">
+                                            <label style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.78rem; color: var(--text-secondary); cursor: pointer; user-select: none;">
+                                                <input type="checkbox" id="chartCompareToggle" onchange="renderRevenueChart()" style="accent-color: #38bdf8;">
+                                                So sánh kỳ trước
+                                            </label>
+                                            <label style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.78rem; color: var(--text-secondary); cursor: pointer; user-select: none;">
+                                                <input type="checkbox" id="chartDepreciationToggle" onchange="renderRevenueChart()" style="accent-color: #fbbf24;">
+                                                Trừ khấu hao
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div style="position: relative; width: 100%; height: 260px;">
+                                        <canvas id="revenueChartCanvas" style="width: 100%; height: 100%;"></canvas>
+                                    </div>
+                                    <div id="chartLegend" style="display: flex; gap: 16px; margin-top: 10px; font-size: 0.78rem; color: var(--text-secondary);"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: Quản lý Tồn kho & Xuất/Nhập -->
+            <div id="adminInventoryTab" class="hidden">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div>
+                        <h1>Quản lý Tồn kho & Nguyên vật liệu</h1>
+                        <p>Kiểm soát chặt chẽ lượng nhập/xuất, cảnh báo hết hàng và định lượng</p>
+                    </div>
+                    <button onclick="openInventoryModal()" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Nhập nguyên liệu</button>
+                </div>
+
+                <div class="glass-panel" style="margin-bottom: 20px; padding: 16px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; text-align: center;">
+                        <div><div style="font-size: 1.3rem; font-weight: 700;" id="invTotalItems">0</div><div style="font-size: 0.75rem; color: var(--text-secondary);">Nguyên liệu quản lý</div></div>
+                        <div><div style="font-size: 1.3rem; font-weight: 700; color: #ef4444;" id="invLowStock">0</div><div style="font-size: 0.75rem; color: var(--text-secondary);">Cảnh báo sắp hết</div></div>
+                        <div><div style="font-size: 1.3rem; font-weight: 700; color: #34d399;" id="invStockValue">0đ</div><div style="font-size: 0.75rem; color: var(--text-secondary);">Tổng giá trị tồn kho</div></div>
+                    </div>
+                </div>
+
+                <div id="inventoryList" class="admin-grid-list">
+                    <!-- Inventory items rendered by JS -->
+                </div>
+            </div>
+
+            <!-- TAB 3: Quản lý Nhân sự & Phân quyền -->
+            <div id="adminStaffTab" class="hidden">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div>
+                        <h1>Quản lý Nhân sự & Phân quyền</h1>
+                        <p>Hồ sơ nhân viên, mã PIN bảo mật, vai trò, ca làm và tính lương cơ bản</p>
+                    </div>
+                    <button onclick="openStaffModal()" class="btn btn-primary"><i class="fa-solid fa-user-plus"></i> Thêm nhân viên</button>
+                </div>
+
+                <div id="staffListContainer" class="admin-grid-list">
+                    <!-- Staff cards rendered by JS -->
+                </div>
+            </div>
+
+            <!-- TAB 4: Sơ đồ bàn -->
+            <div id="adminFloorPlanTab" class="hidden">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
                     <h1>Sơ đồ quán</h1>
                     <div style="display: flex; gap: 10px;">
-                        <button id="removeTableBtn" class="btn glass-panel" style="padding: 8px 15px; color: var(--danger); border-color: var(--danger);"><i class="fa-solid fa-minus"></i></button>
-                        <button id="addTableBtn" class="btn glass-panel" style="padding: 8px 15px; color: var(--success); border-color: var(--success);"><i class="fa-solid fa-plus"></i></button>
+                        <button id="removeTableBtn" class="btn glass-panel" style="padding: 8px 15px; color: var(--danger); border-color: var(--danger);"><i class="fa-solid fa-minus"></i> Bớt bàn</button>
+                        <button id="addTableBtn" class="btn glass-panel" style="padding: 8px 15px; color: var(--success); border-color: var(--success);"><i class="fa-solid fa-plus"></i> Thêm bàn</button>
                     </div>
                 </div>
                 <p>Trạng thái bàn thời gian thực</p>
                 <div class="glass-panel" style="margin: 15px 0 20px; padding: 16px;">
                     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; text-align: center;">
                         <div><div style="font-size: 1.2rem; font-weight: 700;" id="floorStatTotal">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Tổng số bàn</div></div>
-                        <div><div style="font-size: 1.2rem; font-weight: 700;" id="floorStatEmpty">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Bàn trống</div></div>
-                        <div><div style="font-size: 1.2rem; font-weight: 700;" id="floorStatBooked">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Bàn đã đặt</div></div>
-                        <div><div style="font-size: 1.2rem; font-weight: 700;" id="floorStatOccupied">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Bàn có khách</div></div>
+                        <div><div style="font-size: 1.2rem; font-weight: 700; color: #34d399;" id="floorStatEmpty">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Bàn trống</div></div>
+                        <div><div style="font-size: 1.2rem; font-weight: 700; color: #fbbf24;" id="floorStatBooked">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Bàn đã đặt</div></div>
+                        <div><div style="font-size: 1.2rem; font-weight: 700; color: #f87171;" id="floorStatOccupied">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Bàn có khách</div></div>
                     </div>
                 </div>
 
@@ -157,6 +675,7 @@
                 </div>
             </div>
 
+            <!-- TAB 5: Quản lý món -->
             <div id="adminMenuMgmtTab" class="hidden">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <h1>Quản lý món</h1>
@@ -165,16 +684,17 @@
                 <div class="glass-panel" style="margin-bottom: 20px; padding: 16px;">
                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center;">
                         <div><div style="font-size: 1.2rem; font-weight: 700;" id="menuStatTotal">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Tổng số món</div></div>
-                        <div><div style="font-size: 1.2rem; font-weight: 700;" id="menuStatSoldOut">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Món hết</div></div>
-                        <div><div style="font-size: 1.2rem; font-weight: 700;" id="menuStatSpecial">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Món đặc biệt</div></div>
+                        <div><div style="font-size: 1.2rem; font-weight: 700; color: #ef4444;" id="menuStatSoldOut">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Món hết</div></div>
+                        <div><div style="font-size: 1.2rem; font-weight: 700; color: #fbbf24;" id="menuStatSpecial">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Món đặc biệt</div></div>
                     </div>
                 </div>
 
-                <div id="adminMenuList" style="display: grid; gap: 15px; max-height: 500px; overflow-y: auto; padding-right: 5px;">
+                <div id="adminMenuList" class="admin-grid-list" style="max-height: 600px; overflow-y: auto; padding-right: 5px;">
                     <!-- Menu items for Admin to edit -->
                 </div>
             </div>
 
+            <!-- TAB 6: Quản lý danh mục -->
             <div id="adminCatMgmtTab" class="hidden">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <h1>Quản lý danh mục</h1>
@@ -186,48 +706,109 @@
                     </div>
                 </div>
 
-                <div id="adminCatList" style="display: grid; gap: 15px;">
+                <div id="adminCatList" class="admin-grid-list">
                     <!-- Categories for Admin to edit -->
                 </div>
             </div>
 
+            <!-- TAB 7: Printer setup. Discovery is handled by the trusted local bridge, never by the browser. -->
+            <div id="adminPrinterTab" class="hidden">
+                <div class="admin-page-heading">
+                    <div>
+                        <h1>Máy in hóa đơn K80</h1>
+                        <p>Thiết lập máy in nhiệt trên mạng nội bộ cho máy thu ngân này.</p>
+                    </div>
+                    <span id="printerBridgeStatus" class="status-pill status-pill-neutral">Chưa kiểm tra bridge</span>
+                </div>
 
+                <div class="printer-layout">
+                    <section class="glass-panel printer-card">
+                        <div class="section-title"><i class="fa-solid fa-tower-broadcast"></i><div><h3>Tự động tìm trong mạng LAN</h3><p>Bridge cục bộ sẽ gửi UDP Broadcast và nhận phản hồi từ thiết bị.</p></div></div>
+                        <div class="printer-actions">
+                            <button class="btn btn-primary" onclick="discoverThermalPrinters()"><i class="fa-solid fa-magnifying-glass"></i> Quét máy in</button>
+                            <button class="btn" onclick="checkPrinterBridge()"><i class="fa-solid fa-rotate"></i> Kiểm tra bridge</button>
+                        </div>
+                        <p class="printer-note"><i class="fa-solid fa-circle-info"></i> Trình duyệt không thể gửi UDP trực tiếp. Cần chạy Printer Bridge trên máy thu ngân.</p>
+                    </section>
 
+                    <section class="glass-panel printer-card">
+                        <div class="section-title"><i class="fa-solid fa-sliders"></i><div><h3>Thiết bị đang dùng</h3><p>Chọn một máy in đã tìm thấy hoặc nhập IP thủ công.</p></div></div>
+                        <label for="printerAddressInput">Địa chỉ IP / tên thiết bị</label>
+                        <input id="printerAddressInput" type="text" placeholder="Ví dụ: 192.168.1.120" autocomplete="off">
+                        <div class="printer-actions">
+                            <button class="btn" onclick="savePrinterSettings()"><i class="fa-solid fa-floppy-disk"></i> Lưu trên máy này</button>
+                            <button class="btn" onclick="printThermalTest()"><i class="fa-solid fa-print"></i> In thử K80</button>
+                        </div>
+                    </section>
+                </div>
+                <section class="glass-panel printer-results-panel">
+                    <div class="section-title"><i class="fa-solid fa-list"></i><div><h3>Thiết bị tìm thấy</h3><p id="printerResultHint">Chưa có kết quả quét.</p></div></div>
+                    <div id="printerDiscoveryList" class="printer-discovery-list" aria-live="polite"><div class="empty-state">Nhấn “Quét máy in” sau khi Printer Bridge đang chạy.</div></div>
+                </section>
+            </div>
+
+            <div id="adminPaymentQrTab" class="hidden">
+                <div class="admin-page-heading">
+                    <div><h1>Mã QR thanh toán</h1><p>Ảnh này hiển thị tại quầy thu ngân khi chọn thanh toán QR.</p></div>
+                </div>
+                <section class="glass-panel qr-settings-card">
+                    <div class="section-title"><i class="fa-solid fa-qrcode"></i><div><h3>Cập nhật ảnh QR</h3><p>Dùng ảnh QR cố định của quán; thu ngân vẫn có thể tính tổng tiền và xác nhận giao dịch.</p></div></div>
+                    <div class="qr-settings-content">
+                        <div id="adminQrPreview" class="qr-preview-empty">Chưa có ảnh QR</div>
+                        <div>
+                            <label class="upload-qr-label" for="adminQrImageInput"><i class="fa-solid fa-arrow-up-from-bracket"></i> Chọn ảnh QR</label>
+                            <input id="adminQrImageInput" type="file" accept="image/png,image/jpeg,image/webp" onchange="handleAdminQrUpload(event)">
+                            <p class="printer-note"><i class="fa-solid fa-circle-info"></i> Khuyến nghị PNG hoặc JPG dưới 500 KB để đồng bộ nhanh.</p>
+                            <div class="printer-actions"><button class="btn btn-primary" onclick="savePaymentQrSettings()"><i class="fa-solid fa-floppy-disk"></i> Lưu mã QR</button><button class="btn" onclick="clearPaymentQrSettings()"><i class="fa-solid fa-trash"></i> Gỡ ảnh</button></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
         </section>
 
 
 
             </div> <!-- Close #app -->
 
-            <!-- Table Actions Menu (Bottom Sheet) -->
-            <div id="tableActionOverlay" class="hidden" style="position: absolute; inset: 0; background: rgba(0,0,0,0.3); z-index: 1000; backdrop-filter: blur(4px);">
-                <div id="tableActionSheet" style="position: absolute; bottom: 0; left: 0; right: 0; background: #ffffff; border-top: 1px solid var(--surface-border); border-radius: 24px 24px 0 0; padding: 25px; transform: translateY(100%); transition: transform 0.3s ease;">
-                    <div style="width: 40px; height: 4px; background: #e2e8f0; border-radius: 2px; margin: 0 auto 20px;"></div>
+            <!-- Table Actions Menu (Center Modal Box) -->
+            <div id="tableActionOverlay" class="hidden" style="position: absolute; inset: 0; background: rgba(0,0,0,0.65); z-index: 1200; backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; padding: 20px;">
+                <div id="tableActionSheet" class="modal-box" style="position: relative; width: 100%; max-width: 440px; margin: auto; padding: 24px; border-radius: 20px; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); transform: scale(0.95); opacity: 0;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h2 id="actionTableTitle" style="margin: 0;">Bàn 01</h2>
+                        <h2 id="actionTableTitle" style="margin: 0; font-size: 1.35rem; font-weight: 800; color: #ffffff;">Bàn 01</h2>
                         <div id="actionTableStatus" style="font-size: 0.8rem; font-weight: 600; padding: 4px 12px; border-radius: 20px;">Trống</div>
                     </div>
 
-                    <!-- Table Current Orders Detail -->
-                    <div id="actionOrderDetails" class="glass-panel" style="margin-bottom: 20px; max-height: 150px; overflow-y: auto; padding: 15px; background: #f8fafc; border: none;">
-                        <p style="font-size: 0.8rem; opacity: 0.6; text-align: center;">Chưa có món nào được gọi</p>
+                    <!-- Table Current Orders Detail (Chỉ hiện khi bàn có món) -->
+                    <div id="actionOrderDetails" class="glass-panel" style="margin-bottom: 16px; max-height: 180px; overflow-y: auto; padding: 12px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; display: none;">
                     </div>
                     
-                    <div id="actionTotalInfo" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding: 0 5px;">
+                    <div id="actionTotalInfo" style="display: none; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 5px;">
                         <span style="font-weight: 600; color: var(--text-secondary);">Tổng cộng:</span>
                         <span id="actionTotalAmount" style="font-size: 1.2rem; font-weight: 700; color: var(--primary);">0đ</span>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                    <div id="actionButtonGroup" style="display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 10px;">
+                        <button class="btn btn-primary" id="actionOrderBtn" onclick="handleActionOrder()" style="padding: 14px; font-size: 1rem; width: 100%; font-weight: 700;">
+                            <i class="fa-solid fa-plus-circle"></i> Gọi thêm món cho bàn
+                        </button>
+                    </div>
 
-                        <button class="btn" id="actionOrderBtn" onclick="handleActionOrder()" style="flex-direction: column; padding: 15px 5px; border-color: var(--primary); color: var(--primary); font-size: 0.8rem;">
-                            <i class="fa-solid fa-utensils" style="font-size: 1.2rem; margin-bottom: 5px;"></i> Gọi món
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                        <button class="btn" onclick="openMoveTableModal()" style="padding: 12px 5px; font-size: 0.88rem; border-color: rgba(99, 102, 241, 0.4); color: #818cf8; font-weight: 600;">
+                            <i class="fa-solid fa-arrows-split-up-and-left" style="margin-right: 6px;"></i> Đổi bàn
                         </button>
-                        <button class="btn" id="actionBookBtn" onclick="handleActionBook()" style="flex-direction: column; padding: 15px 5px; border-color: var(--warning); color: var(--warning); font-size: 0.8rem;">
-                            <i class="fa-solid fa-calendar-check" style="font-size: 1.2rem; margin-bottom: 5px;"></i> Đặt bàn
+                        <button class="btn" id="mergeTableBtn" onclick="openMergeTableModal()" style="padding: 12px 5px; font-size: 0.88rem; border-color: rgba(16, 185, 129, 0.4); color: #34d399; font-weight: 600;">
+                            <i class="fa-solid fa-object-group" style="margin-right: 6px;"></i> Ghép bàn
                         </button>
-                        <button class="btn" id="actionCheckoutBtn" onclick="handleActionCheckout()" style="flex-direction: column; padding: 15px 5px; border-color: var(--danger); color: var(--danger); font-size: 0.8rem;">
-                            <i class="fa-solid fa-receipt" style="font-size: 1.2rem; margin-bottom: 5px;"></i> Tính tiền
+                        <button class="btn hidden" id="unmergeTableBtn" onclick="unmergeTable()" style="padding: 12px 5px; font-size: 0.88rem; border-color: rgba(239, 68, 68, 0.4); color: #f87171; font-weight: 600;">
+                            <i class="fa-solid fa-link-slash" style="margin-right: 6px;"></i> Tách bàn
+                        </button>
+                    </div>
+
+                    <!-- Admin only reserve table button -->
+                    <div id="adminTableReserveBtn" class="hidden" style="margin-bottom: 10px;">
+                        <button class="btn" onclick="handleActionBook()" style="width: 100%; padding: 10px; border-color: var(--warning); color: var(--warning); font-size: 0.85rem;">
+                            <i class="fa-solid fa-calendar-check" style="margin-right: 6px;"></i> Đặt bàn trước (Quyền Admin)
                         </button>
                     </div>
 
@@ -245,34 +826,34 @@
                         <span style="font-size: 1.1rem; font-weight: 600;">Tổng cộng:</span>
                         <span id="cartTotalPrice" style="font-size: 1.4rem; font-weight: 700; color: var(--primary);">0đ</span>
                     </div>
-                    <button id="checkoutBtn" onclick="checkout()" class="btn btn-primary" style="width: 100%;">Gửi yêu cầu đặt món</button>
+                    <button id="checkoutBtn" onclick="checkout()" class="btn btn-primary" style="width: 100%; font-weight: 700;"><i class="fa-solid fa-circle-check"></i> Xác nhận</button>
                     <button id="closeCartBtn" class="btn" style="width: 100%; margin-top: 10px; color: var(--text-secondary);">Quay lại</button>
                 </div>
             </div>
 
             <!-- Menu Item Management Modal -->
             <div id="menuItemModal" class="hidden" style="position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: 1100; backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 20px;">
-                <div class="glass-panel" style="width: 100%; max-width: 350px; background: white; padding: 25px;">
-                    <h2 style="margin-bottom: 20px;">Th?m m?n m?i</h2>
+                <div class="glass-panel modal-box">
+                    <h2 style="margin-bottom: 20px;">Thêm món mới</h2>
                     <div style="display: grid; gap: 15px;">
                         <div>
-                            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">T?n m?n</label>
-                            <input type="text" id="editItemName" placeholder="VD: Ph? B?" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--surface-border); margin-top: 5px;">
+                            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Tên món</label>
+                            <input type="text" id="editItemName" placeholder="VD: Phở Bò Đặc Biệt" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--surface-border); margin-top: 5px;">
                         </div>
                         <div>
-                            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Gi? ti?n (VN?)</label>
+                            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Giá tiền (VNĐ)</label>
                             <input type="number" id="editItemPrice" placeholder="VD: 55000" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--surface-border); margin-top: 5px;">
                         </div>
                         <div>
-                            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Danh m?c</label>
-                            <select id="editItemCat" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--surface-border); margin-top: 5px; background: white;">
-                                <option value="nuoc">M?n n??c</option>
-                                <option value="kho">M?n kh?</option>
-                                <option value="xao">M?n x?o</option>
+                            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Danh mục</label>
+                            <select id="editItemCat" style="width: 100%; margin-top: 5px;">
+                                <option value="nuoc">Món nước</option>
+                                <option value="kho">Món khô</option>
+                                <option value="xao">Món xào</option>
                             </select>
                         </div>
                         <div>
-                            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">H?nh ?nh m?n ?n</label>
+                            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Hình ảnh món ăn</label>
                             <input type="file" id="editItemFile" accept="image/*" style="width: 100%; padding: 10px; border-radius: 12px; border: 1px solid var(--surface-border); margin-top: 5px; font-size: 0.8rem;">
                             <div id="imagePreview" style="margin-top: 10px; display: none; text-align: center;">
                                 <img src="" style="width: 100px; height: 100px; border-radius: 12px; object-fit: cover; border: 1px solid var(--surface-border);">
@@ -280,15 +861,15 @@
                         </div>
 
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
-                            <button onclick="closeMenuModal()" class="btn" style="border: none; color: var(--text-secondary);">H?y</button>
-                            <button onclick="saveMenuItem()" class="btn btn-primary">L?u m?n</button>
+                            <button onclick="closeMenuModal()" class="btn" style="border: none; color: var(--text-secondary);">Hủy</button>
+                            <button onclick="saveMenuItem()" class="btn btn-primary">Lưu món</button>
                         </div>
                     </div>
                 </div>
             </div>
             <!-- Category Management Modal -->
             <div id="categoryModal" class="hidden" style="position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: 1100; backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 20px;">
-                <div class="glass-panel" style="width: 100%; max-width: 350px; background: white; padding: 25px;">
+                <div class="glass-panel modal-box">
                     <h2 id="categoryModalTitle" style="margin-bottom: 20px;">Thêm danh mục</h2>
                     <div style="display: grid; gap: 15px;">
                         <div>
@@ -298,6 +879,214 @@
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
                             <button onclick="closeCategoryModal()" class="btn" style="border: none; color: var(--text-secondary);">Hủy</button>
                             <button onclick="saveCategoryModal()" class="btn btn-primary">Lưu danh mục</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Move Table Modal -->
+            <div id="moveTableModal" class="hidden" style="position: absolute; inset: 0; background: rgba(0,0,0,0.6); z-index: 1200; backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 20px;">
+                <div class="glass-panel modal-box">
+                    <h2 style="margin-bottom: 15px;"><i class="fa-solid fa-arrows-split-up-and-left" style="color: #818cf8; margin-right: 8px;"></i>Chuyển bàn</h2>
+                    <p id="moveTableDesc" style="margin-bottom: 18px; font-size: 0.9rem;">Chuyển toàn bộ món từ Bàn hiện tại sang bàn trống khác</p>
+                    <div style="margin-bottom: 20px;">
+                        <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 6px;">Chọn bàn đích cần chuyển đến:</label>
+                        <select id="targetMoveTableSelect" style="width: 100%; padding: 14px; border-radius: 12px; font-weight: 600;">
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <button onclick="closeMoveTableModal()" class="btn" style="border: none; color: var(--text-secondary);">Hủy</button>
+                        <button onclick="confirmMoveTable()" class="btn btn-primary" style="background: linear-gradient(135deg, #6366f1, #4f46e5);"><i class="fa-solid fa-check"></i> Xác nhận chuyển</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Merge Table Modal -->
+            <div id="mergeTableModal" class="hidden" style="position: absolute; inset: 0; background: rgba(0,0,0,0.6); z-index: 1200; backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 20px;">
+                <div class="glass-panel modal-box">
+                    <h2 style="margin-bottom: 15px;"><i class="fa-solid fa-object-group" style="color: #34d399; margin-right: 8px;"></i>Gộp bàn</h2>
+                    <p id="mergeTableDesc" style="margin-bottom: 18px; font-size: 0.9rem;">Gộp toàn bộ món ăn và hóa đơn từ bàn khác vào bàn này</p>
+                    <div style="margin-bottom: 20px;">
+                        <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 6px;">Chọn bàn cần gộp vào đây:</label>
+                        <select id="sourceMergeTableSelect" style="width: 100%; padding: 14px; border-radius: 12px; font-weight: 600;">
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <button onclick="closeMergeTableModal()" class="btn" style="border: none; color: var(--text-secondary);">Hủy</button>
+                        <button onclick="confirmMergeTable()" class="btn btn-primary" style="background: linear-gradient(135deg, #10b981, #059669);"><i class="fa-solid fa-check"></i> Xác nhận gộp</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory Material Modal -->
+            <div id="inventoryModal" class="hidden" style="position: absolute; inset: 0; background: rgba(0,0,0,0.6); z-index: 1200; backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 20px;">
+                <div class="glass-panel modal-box">
+                    <h2 id="inventoryModalTitle" style="margin-bottom: 15px;"><i class="fa-solid fa-box-archive" style="color: var(--primary); margin-right: 8px;"></i>Nguyên vật liệu kho</h2>
+                    <div style="display: grid; gap: 14px;">
+                        <div>
+                            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Tên nguyên liệu</label>
+                            <input type="text" id="invItemName" placeholder="VD: Thịt bò tươi Fillet" style="width: 100%; margin-top: 4px;">
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div>
+                                <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Số lượng tồn</label>
+                                <input type="number" id="invItemQty" placeholder="VD: 15" style="width: 100%; margin-top: 4px;">
+                            </div>
+                            <div>
+                                <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Đơn vị tính</label>
+                                <input type="text" id="invItemUnit" placeholder="kg, lít, gói" style="width: 100%; margin-top: 4px;">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div>
+                                <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Giá vốn / đơn vị (đ)</label>
+                                <input type="number" id="invItemCost" placeholder="VD: 180000" style="width: 100%; margin-top: 4px;">
+                            </div>
+                            <div>
+                                <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Mức báo động tối thiểu</label>
+                                <input type="number" id="invItemMin" placeholder="VD: 5" style="width: 100%; margin-top: 4px;">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px;">
+                            <button onclick="closeInventoryModal()" class="btn" style="border: none; color: var(--text-secondary);">Hủy</button>
+                            <button onclick="saveInventoryItem()" class="btn btn-primary">Lưu kho</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Staff Member Modal -->
+            <div id="staffModal" class="hidden" style="position: absolute; inset: 0; background: rgba(0,0,0,0.6); z-index: 1200; backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 20px;">
+                <div class="glass-panel modal-box">
+                    <h2 id="staffModalTitle" style="margin-bottom: 15px;"><i class="fa-solid fa-user-plus" style="color: var(--accent); margin-right: 8px;"></i>Nhân sự & Phân quyền</h2>
+                    <div style="display: grid; gap: 14px;">
+                        <div>
+                            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Họ và tên nhân viên</label>
+                            <input type="text" id="staffNameInput" placeholder="VD: Nguyễn Văn A" style="width: 100%; margin-top: 4px;">
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div>
+                                <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Vai trò</label>
+                                <select id="staffRoleInput" style="width: 100%; margin-top: 4px;">
+                                    <option value="staff">Phục vụ bàn</option>
+                                    <option value="cashier">Thu ngân (Cashier)</option>
+                                    <option value="kitchen">Bộ phận Bếp</option>
+                                    <option value="admin">Quản trị viên</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Mã PIN đăng nhập</label>
+                                <input type="text" id="staffPinInput" placeholder="VD: 1111" style="width: 100%; margin-top: 4px;">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div>
+                                <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Ca làm việc</label>
+                                <select id="staffShiftInput" style="width: 100%; margin-top: 4px;">
+                                    <option value="Ca sáng (06:00 - 14:00)">Ca sáng (06h-14h)</option>
+                                    <option value="Ca tối (14:00 - 22:00)">Ca tối (14h-22h)</option>
+                                    <option value="Cả ngày (Full-time)">Full-time</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Lương cơ bản (đ/tháng)</label>
+                                <input type="number" id="staffSalaryInput" placeholder="VD: 7500000" style="width: 100%; margin-top: 4px;">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px;">
+                            <button onclick="closeStaffModal()" class="btn" style="border: none; color: var(--text-secondary);">Hủy</button>
+                            <button onclick="saveStaffMember()" class="btn btn-primary">Lưu nhân sự</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<!-- Đổi mã PIN Modal (Admin can change any role's PIN) -->
+            <div id="changePinModal" class="hidden" style="position: absolute; inset: 0; background: rgba(0,0,0,0.6); z-index: 1200; backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 20px;">
+                <div class="glass-panel modal-box" style="max-width: 380px;">
+                    <h2 style="margin-bottom: 8px;"><i class="fa-solid fa-key" style="color: var(--accent); margin-right: 8px;"></i>Đổi mã PIN</h2>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 14px;" id="changePinStaffName">Nhân viên</p>
+                    <div>
+                        <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Mã PIN mới</label>
+                        <input type="text" id="changePinInput" maxlength="6" placeholder="VD: 2222" style="width: 100%; margin-top: 4px;">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 18px;">
+                        <button onclick="closeChangePinModal()" class="btn" style="border: none; color: var(--text-secondary);">Hủy</button>
+                        <button onclick="saveChangePin()" class="btn btn-primary">Lưu mã PIN</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Receipt Detail / Print Modal -->
+            <div id="receiptModal" class="hidden" style="position: absolute; inset: 0; background: rgba(0,0,0,0.7); z-index: 1300; backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; padding: 20px;">
+                <div class="glass-panel modal-box" style="max-width: 420px; background: #0f172a !important; border: 1px solid rgba(255,255,255,0.2) !important;">
+                    <div style="text-align: center; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 15px; margin-bottom: 15px;">
+                        <img src="logo.png" alt="Quán Nhậu Lá" style="height: 48px; width: auto; object-fit: contain; margin-bottom: 6px;">
+                        <h2 style="margin: 0; font-size: 1.25rem; color: #ffffff;">Quán Nhậu Lá</h2>
+                        <p style="font-size: 0.78rem; margin: 3px 0 0; color: var(--accent); font-weight: 600;">Vui Là Chính - Đặt Món Thông Minh</p>
+                        <p style="font-size: 0.75rem; margin: 2px 0 0; color: var(--text-secondary);">PHIẾU THANH TOÁN (HÓA ĐƠN)</p>
+                        <div id="receiptTime" style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;"></div>
+                    </div>
+                    <div id="receiptTableInfo" style="display: flex; justify-content: space-between; font-size: 0.88rem; font-weight: 600; margin-bottom: 10px;">
+                        <span>Bàn: 01</span>
+                        <span>NV: Phục vụ</span>
+                    </div>
+                    <div id="receiptExtraInfo" style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 12px; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 6px;">
+                        <span id="receiptPaymentMethod">PTTT: Tiền mặt</span>
+                        <span id="receiptCashier">TN: Thu ngân</span>
+                    </div>
+                    <div id="receiptItemsContainer" style="max-height: 200px; overflow-y: auto; font-size: 0.88rem; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 12px; margin-bottom: 12px;">
+                        <!-- Items rendered here -->
+                    </div>
+                    <div id="receiptSummaryBreakdown" style="font-size: 0.85rem; margin-bottom: 12px; color: var(--text-secondary);">
+                        <!-- Subtotal, discount, surcharge breakdown -->
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 800; color: #fbbf24; margin-bottom: 20px;">
+                        <span>TỔNG CỘNG:</span>
+                        <span id="receiptTotalAmount">0đ</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <button onclick="closeReceiptModal()" class="btn" style="width: 100%;">Đóng</button>
+                        <button onclick="printReceipt()" class="btn btn-primary" style="width: 100%;"><i class="fa-solid fa-print"></i> In hóa đơn</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fixed Cost & Depreciation Settings Modal -->
+            <div id="fixedCostModal" class="hidden" style="position: absolute; inset: 0; background: rgba(0,0,0,0.75); z-index: 1300; backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; padding: 20px;">
+                <div class="glass-panel modal-box" style="max-width: 480px; width: 100%; background: #0f172a !important; border: 1px solid rgba(255,255,255,0.2) !important;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px;">
+                        <h2 style="margin: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; color: #ffffff;">
+                            <i class="fa-solid fa-sliders" style="color: #38bdf8;"></i> Cài đặt Định phí & Khấu hao
+                        </h2>
+                        <button onclick="closeFixedCostModal()" style="background: none; border: none; color: var(--text-secondary); font-size: 1.4rem; cursor: pointer; line-height: 1;">&times;</button>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 14px;">
+                        <div>
+                            <label style="font-size: 0.82rem; font-weight: 600; color: var(--text-secondary);">1. Tiền thuê mặt bằng (đ/tháng)</label>
+                            <input type="number" id="fixedCostRentInput" oninput="recalcFixedCostModalTotal()" placeholder="VD: 10000000" style="width: 100%; margin-top: 5px; padding: 10px; background: #ffffff; border: 1px solid var(--surface-border); border-radius: 8px; color: #0f172a;">
+                        </div>
+
+                        <div>
+                            <label style="font-size: 0.82rem; font-weight: 600; color: var(--text-secondary);">2. Tiền điện, nước, internet, rác (đ/tháng)</label>
+                            <input type="number" id="fixedCostUtilitiesInput" oninput="recalcFixedCostModalTotal()" placeholder="VD: 3000000" style="width: 100%; margin-top: 5px; padding: 10px; background: #ffffff; border: 1px solid var(--surface-border); border-radius: 8px; color: #0f172a;">
+                        </div>
+
+                        <div>
+                            <label style="font-size: 0.82rem; font-weight: 600; color: var(--text-secondary);">3. Khấu hao máy móc, tủ mát, bàn ghế, CCDC (đ/tháng)</label>
+                            <input type="number" id="fixedCostDepreciationInput" oninput="recalcFixedCostModalTotal()" placeholder="VD: 2000000" style="width: 100%; margin-top: 5px; padding: 10px; background: #ffffff; border: 1px solid var(--surface-border); border-radius: 8px; color: #0f172a;">
+                        </div>
+
+                        <div style="background: rgba(0,0,0,0.03); padding: 14px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                            <span style="font-weight: 600; font-size: 0.9rem; color: var(--text-secondary);">Tổng định phí / tháng:</span>
+                            <span id="fixedCostModalTotal" style="font-weight: 800; font-size: 1.25rem; color: #f59e0b;">0đ</span>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px;">
+                            <button onclick="closeFixedCostModal()" class="btn" style="border: 1px solid var(--surface-border); color: var(--text-secondary);">Hủy</button>
+                            <button onclick="saveFixedCostSettings()" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Lưu cài đặt</button>
                         </div>
                     </div>
                 </div>
@@ -314,6 +1103,13 @@
         <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
-    <script src="app.js"></script>
+    <script charset="utf-8" src="js/firebase.js?v=20260912-utf8fix"></script>
+    <script charset="utf-8" src="js/state.js?v=20260912-utf8fix"></script>
+    <script charset="utf-8" src="js/auth.js?v=20260912-utf8fix"></script>
+    <script charset="utf-8" src="js/menu.js?v=20260912-utf8fix"></script>
+    <script charset="utf-8" src="js/cashier.js?v=20260912-utf8fix"></script>
+    <script charset="utf-8" src="js/admin.js?v=20260912-utf8fix"></script>
+    <script charset="utf-8" src="js/printer.js?v=20260912-utf8fix"></script>
+    <script charset="utf-8" src="js/app.js?v=20260912-utf8fix"></script>
 </body>
 </html>

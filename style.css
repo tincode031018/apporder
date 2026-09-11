@@ -1,26 +1,57 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-    --bg-color: #f1f5f9;
-    --surface-color: rgba(255, 255, 255, 0.8);
-    --surface-border: rgba(0, 0, 0, 0.05);
+    /* Color Palette: Clean White & Warm Amber */
+    --bg-base: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-surface-elevated: #f1f5f9;
+    --surface-glass: rgba(255, 255, 255, 0.85);
+    --surface-glass-border: rgba(0, 0, 0, 0.08);
+    --surface-glass-shine: rgba(0, 0, 0, 0.12);
+    --surface-border: rgba(0, 0, 0, 0.10);
+
     --text-primary: #0f172a;
-    --text-secondary: #64748b;
-    --primary: #4f46e5; /* Premium Indigo */
-    --primary-glow: rgba(79, 70, 229, 0.15);
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+
+    /* Brand Accents */
+    --primary: #f59e0b;
+    --primary-hover: #d97706;
+    --primary-glow: rgba(245, 158, 11, 0.25);
+    --primary-gradient: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
     
+    --accent: #6366f1;
+    --accent-glow: rgba(99, 102, 241, 0.2);
+
     --success: #10b981;
+    --success-bg: rgba(16, 185, 129, 0.10);
+    --success-glow: rgba(16, 185, 129, 0.20);
+
     --warning: #f59e0b;
+    --warning-bg: rgba(245, 158, 11, 0.10);
+    --warning-glow: rgba(245, 158, 11, 0.20);
+
     --danger: #ef4444;
+    --danger-bg: rgba(239, 68, 68, 0.10);
+    --danger-glow: rgba(239, 68, 68, 0.20);
+
+    /* Micro Design Tokens */
+    --glass-blur: blur(24px);
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-xl: 32px;
     
-    --glass-bg: rgba(255, 255, 255, 0.6);
-    --glass-blur: blur(16px);
+    --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.06);
+    --shadow-premium: 0 20px 50px -10px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    --shadow-glow: 0 10px 25px -5px var(--primary-glow);
     
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --safe-area-top: 15px;
+    --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
-
-
+/* Base root font-size reduced to a moderate size (was browser 16px). */
+html {
+    font-size: 14px;
+}
 
 * {
     margin: 0;
@@ -30,92 +61,88 @@
 }
 
 body {
-    font-family: 'Outfit', sans-serif;
-    background-color: var(--bg-color);
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-base);
     color: var(--text-primary);
     line-height: 1.5;
     margin: 0;
     min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* Responsive App */
-@media (max-width: 500px) {
-    .app-container { padding: 0; }
-    .main-panel {
-        max-width: 100%;
-        height: 100vh;
-        max-height: 100vh;
-        border-radius: 0;
-        border: none;
-    }
-}
-
-
-
-/* Background Decoration */
+/* Background Atmosphere Glow */
 .bg-blobs {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     z-index: -1;
     overflow: hidden;
+    pointer-events: none;
+    background: radial-gradient(circle at 10% 20%, rgba(245, 158, 11, 0.06) 0%, transparent 60%),
+                radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.05) 0%, transparent 60%);
 }
 
 .blob {
     position: absolute;
     border-radius: 50%;
-    filter: blur(80px);
+    filter: blur(120px);
     opacity: 0.15;
-    animation: move 20s infinite alternate;
+    animation: floatingOrb 22s infinite alternate ease-in-out;
 }
 
 .blob-1 {
-    width: 350px;
-    height: 350px;
-    background: #c7d2fe; /* Soft Indigo */
-    top: -150px;
-    right: -100px;
+    width: 450px;
+    height: 450px;
+    background: #fbbf24;
+    top: -100px;
+    right: -80px;
 }
 
 .blob-2 {
-    width: 300px;
-    height: 300px;
-    background: #d1fae5; /* Soft Green */
-    bottom: -100px;
-    left: -100px;
-    animation-delay: -5s;
+    width: 500px;
+    height: 500px;
+    background: #818cf8;
+    bottom: -150px;
+    left: -120px;
+    animation-delay: -7s;
 }
 
-
-@keyframes move {
-    from { transform: translate(0, 0) scale(1); }
-    to { transform: translate(50px, 100px) scale(1.1); }
+@keyframes floatingOrb {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(60px, 80px) scale(1.08); }
+    100% { transform: translate(-40px, 40px) scale(0.95); }
 }
 
-/* Main Application Panel */
+/* Main Container Frame */
 .app-container {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    padding: 20px;
+    padding: 24px;
+    width: 100%;
 }
 
 .main-panel {
     position: relative;
     width: 100%;
-    max-width: 450px;
-    height: 850px;
-    max-height: 90vh;
-    background: #ffffff;
-    border: 1px solid var(--surface-border);
-    border-radius: 32px;
+    max-width: 1240px;
+    height: 92vh;
+    min-height: 720px;
+    background: var(--surface-glass);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--surface-glass-border);
+    border-radius: var(--radius-xl);
     overflow: hidden;
-    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-premium);
+    display: flex;
+    flex-direction: column;
 }
-
 
 #app {
     width: 100%;
@@ -123,190 +150,2316 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
     position: relative;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none;  /* IE and Edge */
+    display: flex;
+    flex-direction: column;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.10) transparent;
 }
 
 #app::-webkit-scrollbar {
-    display: none; /* Chrome, Safari and Opera */
+    width: 6px;
+}
+#app::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 10px;
 }
 
-
-
-
-
-
-
-
-/* Glass Components */
+/* Glass Panels */
 .glass-panel {
-    background: #ffffff;
-    backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--surface-border);
-    border-radius: 24px;
-    padding: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--surface-glass-border);
+    border-radius: var(--radius-lg);
+    padding: 22px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    transition: var(--transition);
 }
 
+.glass-panel:hover {
+    border-color: var(--surface-glass-shine);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
 
 /* Buttons */
 .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 12px 24px;
-    border-radius: 16px;
-    border: 1px solid var(--surface-border);
-    background: #ffffff;
+    padding: 12px 22px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--surface-glass-border);
+    background: rgba(255, 255, 255, 0.8);
     color: var(--text-primary);
     font-family: inherit;
     font-weight: 600;
+    font-size: 0.95rem;
     cursor: pointer;
     transition: var(--transition);
     gap: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    user-select: none;
+    text-decoration: none;
 }
 
+.btn:hover {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+    color: var(--text-primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
 
 .btn-primary {
-    background: var(--primary);
-    color: white;
+    background: var(--primary-gradient);
+    color: #ffffff;
+    font-weight: 700;
     border: none;
-    box-shadow: 0 4px 14px 0 var(--primary-glow);
+    box-shadow: 0 6px 20px -2px var(--primary-glow);
 }
 
+.btn-primary:hover {
+    background: linear-gradient(135deg, #fcd34d 0%, #b45309 100%);
+    box-shadow: 0 8px 24px var(--primary-glow);
+    color: #ffffff;
+}
 
 .btn-primary:active {
-    transform: scale(0.95);
+    transform: scale(0.98);
 }
 
-/* Navigation */
+/* Universal Form Controls (Inputs, Selects, Dropdowns) */
+input[type="text"],
+input[type="number"],
+input[type="password"],
+input[type="file"],
+select,
+textarea {
+    width: 100%;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    font-size: 0.92rem;
+    font-family: inherit;
+    transition: var(--transition);
+    outline: none;
+    box-sizing: border-box;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+input[type="text"]::placeholder,
+input[type="number"]::placeholder,
+input[type="password"]::placeholder,
+textarea::placeholder {
+    color: var(--text-muted) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px var(--primary-glow), 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+    background: #ffffff !important;
+}
+
+/* Custom Dropdown Styling for Select Elements */
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23f59e0b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 14px center !important;
+    background-size: 16px 16px !important;
+    padding-right: 42px !important;
+    cursor: pointer;
+}
+
+/* Dropdown Option Items */
+select option {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    padding: 12px 14px !important;
+    font-size: 0.92rem;
+}
+
+select option:hover,
+select option:focus,
+select option:checked {
+    background-color: #f1f5f9 !important;
+    color: #b45309 !important;
+}
+
+/* Top Navigation Bar */
 nav {
-    padding: var(--safe-area-top) 20px 15px;
+    padding: 18px 32px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--surface-border);
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--surface-glass-border);
 }
 
+.brand {
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #0f172a;
+}
 
+.brand span {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.login-logo-wrapper img:hover {
+    transform: scale(1.05) rotate(-2deg);
+}
 
 /* Typography */
-h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; }
-h2 { font-size: 1.4rem; font-weight: 600; margin-bottom: 20px; }
-p { color: var(--text-secondary); font-size: 0.95rem; }
-
-/* Views */
-.view {
-    padding: 20px;
-    flex: 1;
-    display: none;
-    animation: fadeIn 0.4s ease-out;
+h1 {
+    font-size: 1.85rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+    letter-spacing: -0.03em;
+    color: #0f172a;
 }
 
+h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 18px;
+    letter-spacing: -0.02em;
+    color: #1e293b;
+}
+
+h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+/* Views & Animation */
+.view {
+    padding: 28px 36px;
+    flex: 1;
+    display: none;
+    animation: viewFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
 .view.active {
     display: flex;
     flex-direction: column;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+@keyframes viewFadeIn {
+    from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Canvas Container */
-.canvas-container {
-    width: 100%;
-    min-height: 400px;
-    background: #f8fafc;
-    border-radius: 20px;
-    overflow-y: auto;
-    position: relative;
-    border: 1px solid var(--surface-border);
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+/* Login View Styling */
+.main-panel.login-mode,
+body:has(#loginView.active) .main-panel,
+.main-panel:has(#loginView.active) {
+    width: 480px !important;
+    max-width: 90vw !important;
+    height: auto !important;
+    min-height: unset !important;
+    max-height: 92vh !important;
+    margin: auto !important;
+    border-radius: var(--radius-xl) !important;
+    box-shadow: var(--shadow-premium) !important;
 }
 
+#loginView {
+    align-items: stretch;
+    justify-content: center;
+    width: 100%;
+    max-width: 440px;
+    margin: 0 auto;
+    padding: 36px 28px;
+    box-sizing: border-box;
+}
 
-.canvas-container::-webkit-scrollbar {
+.role-btn {
+    border: 1px solid var(--surface-glass-border) !important;
+    background: rgba(255, 255, 255, 0.6) !important;
+    transition: var(--transition) !important;
+}
+
+.role-btn:hover {
+    background: #ffffff !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+}
+
+.role-btn.btn-primary {
+    background: var(--primary-gradient) !important;
+    color: #ffffff !important;
+    font-weight: 800;
+}
+
+.role-btn.btn-primary i {
+    color: #ffffff !important;
+}
+
+/* Form Inputs */
+input[type="text"],
+input[type="password"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--surface-glass-border);
+    background: #ffffff;
+    color: #0f172a;
+    font-family: inherit;
+    font-size: 0.95rem;
+    outline: none;
+    transition: var(--transition);
+}
+
+input:focus, select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-glow);
+    background: #ffffff;
+}
+
+/* Table Selection Grid */
+#tableGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+}
+
+#tableGrid .btn {
+    position: relative;
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid var(--surface-glass-border);
+    padding: 18px 12px;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#tableGrid .btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Status Glow & Accents */
+.empty {
+    border: 1px solid rgba(16, 185, 129, 0.4) !important;
+    background: linear-gradient(180deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.02) 100%) !important;
+    color: #34d399 !important;
+}
+.empty:hover {
+    box-shadow: 0 10px 25px -4px var(--success-glow) !important;
+    border-color: var(--success) !important;
+}
+
+.booked {
+    border: 1px solid rgba(245, 158, 11, 0.45) !important;
+    background: linear-gradient(180deg, rgba(245, 158, 11, 0.12) 0%, rgba(245, 158, 11, 0.02) 100%) !important;
+    color: #fbbf24 !important;
+}
+.booked:hover {
+    box-shadow: 0 10px 25px -4px var(--warning-glow) !important;
+    border-color: var(--warning) !important;
+}
+
+.occupied {
+    border: 1px solid rgba(239, 68, 68, 0.45) !important;
+    background: linear-gradient(180deg, rgba(239, 68, 68, 0.14) 0%, rgba(239, 68, 68, 0.02) 100%) !important;
+    color: #f87171 !important;
+}
+.occupied:hover {
+    box-shadow: 0 10px 25px -4px var(--danger-glow) !important;
+    border-color: var(--danger) !important;
+}
+
+/* User Menu POS Layout (Split Screen) */
+.user-menu-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    width: 100%;
+}
+
+.menu-catalog-section {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Categories Filter Pills */
+.categories {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 14px;
+    scrollbar-width: thin;
+}
+
+.cat-btn {
+    white-space: nowrap;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.7) !important;
+    border: 1px solid var(--surface-glass-border) !important;
+    border-radius: 50px !important;
+    padding: 9px 20px !important;
+    font-size: 0.88rem !important;
+    color: var(--text-secondary) !important;
+}
+
+.cat-btn:hover {
+    color: var(--text-primary) !important;
+    border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+.cat-btn.active {
+    background: var(--primary-gradient) !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    border: none !important;
+    box-shadow: var(--shadow-glow) !important;
+}
+
+/* Menu Grid & Gourmet Dish Cards */
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 20px;
+}
+
+.menu-card {
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--surface-glass-border);
+    transition: var(--transition);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.menu-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(245, 158, 11, 0.4);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1), 0 0 20px rgba(245, 158, 11, 0.1);
+}
+
+.menu-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.menu-card:hover img {
+    transform: scale(1.05);
+}
+
+.menu-card-content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: space-between;
+    background: #ffffff;
+}
+
+.menu-card-content h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 8px;
+    line-height: 1.35;
+}
+
+.price {
+    color: #f59e0b;
+    font-weight: 800;
+    font-size: 1.15rem;
+    letter-spacing: -0.01em;
+}
+
+/* Desktop Cart Sidebar (POS Order Panel) */
+.desktop-cart-panel {
     display: none;
 }
 
+/* Admin Tabs & Navigation Pills */
+.admin-tabs-container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+    margin-bottom: 22px;
+    border-bottom: 1px solid var(--surface-glass-border);
+    padding-bottom: 12px;
+    width: 100%;
+}
 
+.admin-tab {
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    justify-content: center;
+    column-gap: 6px;
+    height: 44px;
+    padding: 0 6px !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    color: var(--text-secondary) !important;
+    background: rgba(255, 255, 255, 0.75) !important;
+    border: 1px solid var(--surface-glass-border) !important;
+    border-radius: var(--radius-sm, 10px) !important;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: var(--transition);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    user-select: none;
+    outline: none;
+    font-family: inherit;
+    text-align: center;
+    width: 100%;
+}
+
+.admin-tab:hover {
+    background: #ffffff !important;
+    color: var(--text-primary) !important;
+    border-color: rgba(0, 0, 0, 0.15) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.admin-tab.active {
+    background: var(--primary-gradient) !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    border: 1px solid transparent !important;
+    box-shadow: 0 6px 20px var(--primary-glow) !important;
+    transform: translateY(-1px);
+}
+
+.admin-tab.active i {
+    color: #ffffff !important;
+}
+
+.admin-tab i {
+    font-size: 0.85rem;
+    transition: var(--transition);
+}
+
+@media (max-width: 992px) {
+    .admin-tabs-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-tabs-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
+    .admin-tab {
+        font-size: 0.74rem !important;
+        padding: 8px 4px !important;
+    }
+}
+
+.admin-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
+    text-align: center;
+}
+
+.admin-grid-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+}
+
+/* Canvas Floor Plan */
+.canvas-container {
+    width: 100%;
+    min-height: 480px;
+    background: #0b0f17;
+    border-radius: var(--radius-lg);
+    overflow-y: auto;
+    position: relative;
+    border: 1px solid var(--surface-glass-border);
+    box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.5);
+}
 
 #floorPlanCanvas {
     width: 100%;
     height: 100%;
     touch-action: none;
+    display: block;
 }
 
-/* Menu Grid */
-.menu-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+/* Overlays & Modals */
+#tableActionOverlay, #cartOverlay, #menuItemModal, #categoryModal {
+    background: rgba(6, 9, 14, 0.75) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
 }
 
-.menu-card {
-    background: #ffffff;
-    border-radius: 20px;
-    overflow: hidden;
-    border: 1px solid var(--surface-border);
-    transition: var(--transition);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-}
-
-
-.menu-card img {
+.modal-box {
     width: 100%;
-    height: 120px;
-    object-fit: cover;
+    max-width: 460px;
+    background: #17202f !important;
+    border: 1px solid var(--surface-glass-shine) !important;
+    padding: 28px;
+    border-radius: var(--radius-xl);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
 }
 
-.menu-card-content {
-    padding: 12px;
+#tableActionSheet, #cartSheet {
+    background: #17202f !important;
+    border-top: 1px solid var(--surface-glass-shine) !important;
 }
 
-.price {
-    color: var(--primary);
+/* Toast */
+#toast {
+    background: var(--primary-gradient) !important;
+    color: #0f172a !important;
+    font-weight: 800 !important;
+    box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Desktop & Large Tablet Experience (>= 992px) */
+@media (min-width: 992px) {
+    .user-menu-layout {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 28px;
+    }
+
+    .desktop-cart-panel {
+        display: flex;
+        flex-direction: column;
+        width: 380px;
+        min-width: 360px;
+        position: sticky;
+        top: 24px;
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--surface-glass-border);
+        border-radius: var(--radius-xl);
+        padding: 24px;
+        box-shadow: var(--shadow-premium);
+        max-height: calc(90vh - 80px);
+    }
+
+    #tableActionOverlay {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #tableActionSheet {
+        position: relative !important;
+        width: 100% !important;
+        max-width: 440px !important;
+        border-radius: var(--radius-xl) !important;
+        border: 1px solid var(--surface-glass-shine) !important;
+        box-shadow: 0 25px 60px rgba(0,0,0,0.7) !important;
+    }
+
+    #cartStatus {
+        display: none;
+    }
+}
+
+/* Mobile Screens (<= 768px) */
+@media (max-width: 768px) {
+    .app-container {
+        padding: 0;
+    }
+
+    .main-panel:not(.login-mode) {
+        max-width: 100%;
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
+        border: none;
+    }
+
+    .main-panel.login-mode {
+        border-radius: var(--radius-lg) !important;
+        margin: auto 16px !important;
+        width: calc(100% - 32px) !important;
+    }
+
+    .view {
+        padding: 18px 16px;
+    }
+
+    nav {
+        padding: 14px 18px;
+    }
+
+    #tableGrid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+
+    .menu-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+    }
+
+    .admin-grid-list {
+        grid-template-columns: 1fr;
+    }
+
+    .cashier-layout-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Ultra Small Mobile (<= 420px) */
+@media (max-width: 420px) {
+    #tableGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .menu-card img {
+        height: 125px;
+    }
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* KDS Status Badge Animation */
+@keyframes pulseGlow {
+    0% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.04); opacity: 1; box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); }
+    100% { transform: scale(1); opacity: 0.9; }
+}
+
+#kdsPendingBadge {
+    animation: pulseGlow 2.5s infinite ease-in-out;
+}
+
+/* ============================================================
+   KITCHEN (KDS) KANBAN BOARD — status columns
+   ============================================================ */
+.kds-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    align-items: start;
+}
+
+.kds-column {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid var(--surface-glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    min-height: 160px;
+    padding: 14px;
+}
+
+.kds-column-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 12px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    margin-bottom: 10px;
+}
+.kds-col-pending { background: rgba(239, 68, 68, 0.14); color: #f87171; }
+.kds-col-cooking { background: rgba(245, 158, 11, 0.14); color: #fbbf24; }
+.kds-col-ready  { background: rgba(16, 185, 129, 0.14); color: #34d399; }
+
+.kds-col-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.kds-col-count {
+    min-width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 800;
+    background: rgba(0, 0, 0, 0.12);
+    color: inherit;
+}
+
+.kds-column-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.kds-card {
+    width: 100%;
+    padding: 13px;
+}
+
+.kds-empty {
+    text-align: center;
+    padding: 26px 8px;
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    border: 1px dashed rgba(0, 0, 0, 0.16);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.4);
+}
+.kds-empty i {
+    font-size: 1.05rem;
+    opacity: 0.4;
+    display: block;
+    margin: 0 auto 6px;
+}
+
+/* ============================================================
+   MOBILE REFINEMENT (≤768px) — Professional & Airy Layout
+   Overrides cramped inline-styled elements via !important.
+   ============================================================ */
+@media (max-width: 768px) {
+    /* ---- Typography sanities ---- */
+    h1 { font-size: 1.45rem !important; margin-bottom: 4px; letter-spacing: -0.02em; }
+    h2 { font-size: 1.2rem !important; }
+    h3 { font-size: 1rem !important; }
+    .view p, .view > div p { font-size: 0.85rem; }
+
+    /* ---- Breathing room for content ---- */
+    .view { padding: 20px 18px !important; }
+    .glass-panel { padding: 18px !important; }
+
+    /* ---- iOS: prevent auto-zoom on input focus (≥16px) ---- */
+    input[type="text"], input[type="number"], input[type="password"], select, textarea {
+        font-size: 16px !important;
+    }
+
+    /* ---- Top nav: compact & clean ---- */
+    nav { padding: 12px 16px; }
+    .brand img { height: 30px !important; }
+    .brand span { font-size: 1.02rem !important; }
+    #navUserBadge { padding: 7px 10px !important; }
+    #navStaffName, #navRoleTag { display: none !important; }
+    #logoutBtn { padding: 9px 13px; border-radius: 10px !important; }
+
+    /* ---- Login view ---- */
+    #loginView { padding: 22px 18px !important; }
+    .login-brand-header h1 { font-size: 1.55rem !important; }
+    .login-logo-wrapper img { width: 108px !important; height: 108px !important; }
+    .role-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+    .role-btn { padding: 18px 6px !important; }
+    .role-btn i { font-size: 1.45rem !important; }
+    .role-btn span { font-size: 0.95rem !important; }
+
+    /* ---- Generic rounded back buttons ---- */
+    #tableSelectionView > div:first-child,
+    #userMenuView > div:first-child,
+    #kitchenView > div:first-child,
+    #cashierView > div:first-child { flex-wrap: wrap; gap: 10px; row-gap: 12px; }
+
+    /* ---- Table selection: roomier 2-col grid ---- */
+    #tableGrid { grid-template-columns: repeat(2, 1fr) !important; gap: 14px !important; }
+    #tableGrid .btn { padding: 12px 8px !important; }
+
+    /* ---- Category pills ---- */
+    .categories { gap: 8px; }
+    .cat-btn { padding: 8px 14px !important; font-size: 0.85rem !important; }
+
+    /* ---- Menu grid: comfy cards ---- */
+    .menu-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 14px !important; }
+    .menu-card img { height: 104px !important; }
+    .menu-card > div { height: 104px !important; aspect-ratio: auto !important; }
+    .menu-card-content { padding: 12px !important; }
+    .menu-card-content h4 { font-size: 0.96rem !important; line-height: 1.32; }
+    .price { font-size: 1.02rem !important; }
+    .menu-card .btn { padding: 9px 12px !important; min-width: 40px; min-height: 36px; }
+
+    /* ---- User menu header cart button ---- */
+    #cartStatus { padding: 10px; border-radius: 14px; }
+    #cartStatus i { font-size: 1.35rem; }
+
+    /* ---- KDS ---- */
+    #kitchenView > div:nth-child(2) { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+    #kitchenView > div:nth-child(2) .cat-btn { white-space: nowrap !important; }
+    #kdsPendingBadge { font-size: 0.82rem !important; }
+
+    /* ---- Cashier ---- */
+    #cashierCheckoutTerminal { position: static !important; padding: 18px !important; }
+    #cashierTablesList { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important; gap: 12px !important; }
+    #cashierShiftTotal, #cashierCashTotal, #cashierQrTotal, #cashierPaidBillsCount { font-size: 1.3rem !important; }
+
+    /* ---- Admin ---- */
+    .admin-tabs-container { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+    .admin-tab { padding: 11px 4px !important; font-size: 0.8rem !important; }
+    #adminAnalyticsTab .glass-panel { padding: 14px !important; }
+    #adminAnalyticsTab [id^="stat"], #adminAnalyticsTab #plRevenue,
+    #adminAnalyticsTab #plCogs, #adminAnalyticsTab #plGrossProfit,
+    #adminAnalyticsTab #plPayroll, #adminAnalyticsTab #plFixedCost,
+    #adminAnalyticsTab #plNetProfit { font-size: 1.3rem !important; }
+    .cashier-layout-grid { grid-template-columns: 1fr !important; }
+
+    /* ---- Bottom sheet cart ---- */
+    #cartSheet { padding: 20px 18px !important; max-height: 88vh !important; overflow-y: auto; }
+    #cartItemsList { max-height: 42vh !important; }
+    #cartSheet h2 { font-size: 1.2rem !important; }
+    #checkoutBtn, #closeCartBtn { padding: 14px !important; font-size: 0.98rem !important; }
+
+    /* ---- Modals ---- */
+    .modal-box { padding: 20px 18px !important; }
+    #tableActionSheet { padding: 20px 18px !important; }
+
+    /* ---- Table action sheet buttons ---- */
+    #actionButtonGroup .btn { padding: 13px !important; font-size: 0.92rem !important; }
+
+    /* ---- Action popup buttons (Đổi/Ghép/Hủy) ---- */
+    #tableActionSheet .btn { padding: 12px 8px !important; font-size: 0.86rem !important; }
+}
+
+/* Ultra Small Mobile (<= 420px) */
+@media (max-width: 420px) {
+    #tableGrid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+    .menu-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+    .menu-card img, .menu-card > div { height: 92px !important; }
+    .menu-card-content h4 { font-size: 0.9rem !important; }
+    .login-brand-header h1 { font-size: 1.4rem !important; }
+    .login-brand-header p { font-size: 0.8rem !important; }
+    #loginView .glass-panel { padding: 16px !important; }
+    .role-btn { padding: 16px 4px !important; }
+    .view { padding: 16px 14px !important; }
+}
+/* ============================================================
+   MOBILE ULTRA-COMPACT (<=768px) - Thu nho chu & panel cho mobile
+   ============================================================ */
+@media (max-width: 768px) {
+    html { font-size: 13.5px; }
+    body { font-size: 0.92rem; }
+    .main-panel:not(.login-mode) { min-height: 0 !important; }
+    .canvas-container { min-height: 320px !important; }
+    h1 { font-size: 1.28rem !important; margin-bottom: 4px !important; }
+    h2 { font-size: 1.08rem !important; margin-bottom: 10px !important; }
+    h3 { font-size: 0.95rem !important; }
+    p { font-size: 0.88rem !important; line-height: 1.45 !important; }
+    .view p, .view > div p, #adminDashboardView p { font-size: 0.8rem !important; }
+    #adminAnalyticsTab h1, #adminInventoryTab h1, #adminStaffTab h1,
+    #adminMenuTab h1, #adminCatTab h1, #adminFloorPlanTab h1 { font-size: 1.15rem !important; }
+    .view { padding: 14px 12px !important; }
+    .glass-panel { padding: 13px !important; border-radius: 15px !important; }
+    .btn { padding: 9px 12px !important; font-size: 0.84rem !important; gap: 5px; border-radius: 10px !important; }
+    .btn-primary { font-size: 0.86rem !important; }
+    input[type="text"], input[type="number"], input[type="password"], select, textarea {
+        padding: 9px 11px !important;
+        font-size: 16px !important;
+        border-radius: 9px !important;
+    }
+    label { font-size: 0.8rem !important; }
+    nav { padding: 9px 12px !important; }
+    .brand img { height: 26px !important; }
+    .brand span { font-size: 0.92rem !important; }
+    #navUserBadge { padding: 5px 8px !important; gap: 6px !important; font-size: 0.75rem !important; }
+    #logoutBtn { padding: 8px 11px !important; }
+    #loginView { padding: 14px 14px !important; }
+    .login-brand-header { margin-top: 4px !important; margin-bottom: 14px !important; }
+    .login-logo-wrapper img { width: 84px !important; height: 84px !important; }
+    .login-brand-header h1 { font-size: 1.25rem !important; }
+    .login-brand-header p { font-size: 0.74rem !important; }
+    #loginView .glass-panel { padding: 13px !important; margin-bottom: 12px !important; }
+    .role-grid { gap: 8px !important; }
+    .role-btn { padding: 11px 4px !important; gap: 5px !important; }
+    .role-btn i { font-size: 1.1rem !important; }
+    .role-btn span { font-size: 0.76rem !important; }
+    #loginView input { padding: 11px !important; margin-bottom: 11px !important; }
+}
+
+/* ============================================================
+   MOBILE ULTRA-COMPACT - Part 2 (<=768px)
+   ============================================================ */
+@media (max-width: 768px) {
+    /* ---- Table selection: cards gon hon ---- */
+    #tableGrid { gap: 10px !important; margin-top: 12px !important; }
+    #tableGrid .btn { height: 96px !important; min-height: 0 !important; padding: 8px 6px !important; border-radius: 12px !important; }
+    #tableGrid .btn > div { font-size: 0.62rem !important; margin-bottom: 1px !important; }
+    #tableGrid .btn > div:first-child { font-size: 0.92rem !important; }
+
+    /* ---- Category pills ---- */
+    .categories { gap: 7px; padding-bottom: 10px; }
+    .cat-btn { padding: 6px 12px !important; font-size: 0.78rem !important; }
+
+    /* ---- Menu grid & cards ---- */
+    .menu-grid { gap: 10px !important; }
+    .menu-card { border-radius: 13px !important; }
+    .menu-card img, .menu-card > div { height: 82px !important; }
+    .menu-card-content { padding: 9px !important; }
+    .menu-card-content h4 { font-size: 0.84rem !important; line-height: 1.3; margin-bottom: 4px !important; }
+    .menu-card .price { font-size: 0.92rem !important; }
+    .menu-card .btn { padding: 5px 9px !important; min-width: 28px; min-height: 28px !important; border-radius: 8px !important; }
+
+    /* ---- Nut gio hang ---- */
+    #cartStatus { padding: 8px !important; border-radius: 12px !important; }
+    #cartStatus i { font-size: 1.1rem !important; }
+    #cartCount { width: 16px !important; height: 16px !important; font-size: 0.62rem !important; }
+
+    /* ---- Header icon kitchen/cashier nho lai ---- */
+    #kitchenView [style*="width: 42px"], #cashierView [style*="width: 44px"] {
+        width: 32px !important; height: 32px !important; font-size: 0.95rem !important;
+    }
+    #kitchenView h1, #cashierView h1 { font-size: 1.08rem !important; }
+    #kdsPendingBadge { padding: 5px 10px !important; font-size: 0.76rem !important; }
+
+    /* ---- KDS: stack columns (tablet) ---- */
+    .kds-board { grid-template-columns: 1fr !important; gap: 12px !important; }
+    /* KDS: Chờ nấu (pending) cards as a 2-column grid on mobile */
+    #col-pending { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+    #col-pending .kds-empty { grid-column: 1 / -1 !important; }
+    .kds-card > div:first-child > div:first-child span:first-child { font-size: 0.98rem !important; }
+    .kds-card > div:first-child > div:nth-child(2) { font-size: 0.95rem !important; }
+    .kds-card [style*="font-size: 1.3rem"] { font-size: 1.05rem !important; }
+    .kds-card .btn { padding: 9px !important; }
+
+    /* ---- Cashier ---- */
+    #cashierTablesList { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+    #cashierTablesList .glass-panel { height: auto !important; min-height: 106px !important; padding: 11px !important; }
+    #cashierCheckoutTerminal { padding: 13px !important; top: 0 !important; }
+    #cashierCheckoutTerminal h2 { font-size: 1.05rem !important; }
+    #cashierFinalTotal { font-size: 1.15rem !important; }
+    #cashierActiveItems { max-height: 160px !important; }
+    #cashierShiftTotal, #cashierCashTotal, #cashierQrTotal, #cashierPaidBillsCount { font-size: 1.15rem !important; }
+
+    /* ---- Admin ---- */
+    .admin-tabs-container { gap: 6px !important; margin-bottom: 14px !important; }
+    .admin-tab { padding: 9px 2px !important; font-size: 0.72rem !important; gap: 4px !important; }
+    .admin-tab i { font-size: 0.74rem !important; }
+    .admin-grid-list { gap: 10px !important; }
+    .admin-stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+    #adminAnalyticsTab [id^="stat"], #adminAnalyticsTab #plRevenue,
+    #adminAnalyticsTab #plCogs, #adminAnalyticsTab #plGrossProfit,
+    #adminAnalyticsTab #plPayroll, #adminAnalyticsTab #plFixedCost,
+    #adminAnalyticsTab #plNetProfit { font-size: 1.15rem !important; }
+    #adminAnalyticsTab .glass-panel { padding: 12px !important; }
+    .canvas-container legend, #adminFloorPlanTab .legend { font-size: 0.72rem !important; }
+
+    /* ---- Cart sheet (bottom sheet) ---- */
+    #cartSheet { padding: 16px 14px !important; max-height: 86vh !important; }
+    #cartSheet h2 { font-size: 1.05rem !important; }
+    #cartItemsList { max-height: 38vh !important; }
+    #cartTotalPrice { font-size: 1.15rem !important; }
+    #checkoutBtn, #closeCartBtn { padding: 12px !important; font-size: 0.92rem !important; }
+
+    /* ---- Modals & action sheet ---- */
+    .modal-box { padding: 16px 14px !important; border-radius: 18px !important; }
+    .modal-box h2 { font-size: 1.02rem !important; margin-bottom: 12px !important; }
+    #tableActionSheet { padding: 16px 14px !important; }
+    #actionButtonGroup .btn { padding: 11px !important; font-size: 0.88rem !important; }
+    #tableActionSheet .btn { padding: 10px 8px !important; font-size: 0.84rem !important; }
+    #tableActionSheet .modal-box { padding: 16px 14px !important; }
+    #fixedCostModal .modal-box { padding: 16px 14px !important; }
+
+    /* ---- Admin inventory/staff/menu rows ---- */
+    #inventoryList .glass-panel, #staffListContainer .glass-panel, #adminMenuList .glass-panel { padding: 12px !important; }
+    #inventoryList [style*="font-size: 1.25rem"] { font-size: 1.1rem !important; }
+    #staffListContainer [style*="width: 44px"] { width: 36px !important; height: 36px !important; font-size: 0.95rem !important; }
+    #adminMenuList > .glass-panel > img { width: 42px !important; height: 42px !important; }
+    .inventory-stat-value, [id^="inv"] { font-size: 1.1rem !important; }
+}
+
+/* ============================================================
+   MOBILE DASHBOARD OPTIMIZED (≤480px)
+   Tối ưu giao diện Dashboard các phân quyền cho mobile nhỏ.
+   - Font 12–14px, dễ đọc.
+   - Grid đều cho card số liệu.
+   - Header cố định, nội dung cuộn.
+   - Không chồng chéo chữ.
+   ============================================================ */
+@media (max-width: 480px) {
+    /* ---- Base Typography: 12–14px compact ---- */
+    html { font-size: 13px !important; }
+    body { font-size: 13px !important; line-height: 1.5 !important; }
+    h1 { font-size: 1.1rem !important; margin-bottom: 3px !important; line-height: 1.3 !important; }
+    h2 { font-size: 1rem !important; margin-bottom: 6px !important; }
+    h3 { font-size: 0.88rem !important; line-height: 1.35 !important; }
+    p { font-size: 0.8rem !important; line-height: 1.4 !important; }
+    .view p, .view > div p, #adminDashboardView p { font-size: 0.75rem !important; line-height: 1.4 !important; }
+
+    /* ---- Fixed header (nav) ---- */
+    nav {
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 200 !important;
+        padding: 8px 10px !important;
+        background: rgba(15, 20, 28, 0.92) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+    }
+    .brand img { height: 24px !important; }
+    .brand span { font-size: 0.85rem !important; }
+    #navUserBadge { padding: 4px 7px !important; gap: 5px !important; font-size: 0.7rem !important; border-radius: 14px !important; }
+    #navStaffName, #navRoleTag { display: none !important; }
+    #logoutBtn { padding: 7px 10px !important; font-size: 0.8rem !important; }
+
+    /* ---- Scrollable content area ---- */
+    #app {
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* ---- View padding compact ---- */
+    .view { padding: 12px 10px !important; }
+    .glass-panel { padding: 10px !important; border-radius: 12px !important; }
+
+    /* ---- Buttons compact ---- */
+    .btn { padding: 7px 10px !important; font-size: 0.78rem !important; gap: 4px !important; border-radius: 8px !important; }
+    .btn-primary { font-size: 0.8rem !important; }
+    .btn i { font-size: 0.75rem !important; }
+
+    /* ---- Inputs ---- */
+    input[type="text"], input[type="number"], input[type="password"], select, textarea {
+        padding: 8px 10px !important;
+        font-size: 16px !important;
+        border-radius: 8px !important;
+    }
+    label { font-size: 0.75rem !important; }
+
+    /* ================================================================
+       LOGIN VIEW
+       ================================================================ */
+    #loginView { padding: 14px 12px !important; }
+    .login-brand-header { margin-top: 4px !important; margin-bottom: 12px !important; }
+    .login-brand-header h1 { font-size: 1.12rem !important; }
+    .login-brand-header p { font-size: 0.72rem !important; }
+    .login-logo-wrapper img { width: 80px !important; height: 80px !important; }
+    .role-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+    .role-btn { padding: 12px 4px !important; gap: 5px !important; }
+    .role-btn i { font-size: 1rem !important; }
+    .role-btn span { font-size: 0.72rem !important; }
+    #loginView .glass-panel { padding: 12px !important; margin-bottom: 10px !important; }
+    #loginView input { padding: 10px !important; margin-bottom: 10px !important; }
+
+    /* ================================================================
+       TABLE SELECTION
+       ================================================================ */
+    #tableGrid { grid-template-columns: repeat(3, 1fr) !important; gap: 8px !important; margin-top: 10px !important; }
+    #tableGrid .btn {
+        height: auto !important;
+        min-height: 72px !important;
+        padding: 8px 4px !important;
+        border-radius: 10px !important;
+        flex-direction: column !important;
+    }
+    #tableGrid .btn > div { font-size: 0.6rem !important; margin-bottom: 1px !important; }
+    #tableGrid .btn > div:first-child { font-size: 0.85rem !important; }
+
+    /* ================================================================
+       MENU VIEW (Phục vụ)
+       ================================================================ */
+    .categories { gap: 6px !important; padding-bottom: 8px !important; }
+    .cat-btn { padding: 5px 10px !important; font-size: 0.72rem !important; }
+    .menu-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+    .menu-card { border-radius: 10px !important; }
+    .menu-card img, .menu-card > div { height: 72px !important; }
+    .menu-card-content { padding: 8px !important; }
+    .menu-card-content h4 { font-size: 0.78rem !important; line-height: 1.25 !important; margin-bottom: 3px !important; }
+    .menu-card .price { font-size: 0.85rem !important; }
+    .menu-card .btn { padding: 5px 8px !important; min-width: 26px !important; min-height: 26px !important; border-radius: 6px !important; }
+    #cartStatus { padding: 7px !important; border-radius: 10px !important; }
+    #cartStatus i { font-size: 1rem !important; }
+    #cartCount { width: 15px !important; height: 15px !important; font-size: 0.6rem !important; }
+
+    /* ================================================================
+       ADMIN DASHBOARD — Tabs
+       ================================================================ */
+    .admin-tabs-container {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 6px !important;
+        margin-bottom: 10px !important;
+        padding-bottom: 8px !important;
+    }
+    .admin-tab {
+        padding: 0 3px !important;
+        font-size: 0.65rem !important;
+        gap: 3px !important;
+        border-radius: 7px !important;
+        line-height: 1.25 !important;
+        white-space: normal !important;
+    }
+    .admin-tab i { font-size: 0.7rem !important; }
+
+    /* ================================================================
+       ADMIN ANALYTICS — KPI Metric Cards
+       Xếp grid 2 cột đều, khoảng cách đều.
+       ================================================================ */
+    #adminAnalyticsTab > div:first-child {
+        flex-direction: column !important;
+        gap: 8px !important;
+        margin-bottom: 10px !important;
+    }
+    #adminAnalyticsTab > div:first-child > div:last-child {
+        display: flex !important;
+        gap: 6px !important;
+    }
+
+    /* KPI grid: 2 columns */
+    #adminAnalyticsTab > div:nth-child(2) {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+        margin-bottom: 14px !important;
+    }
+    #adminAnalyticsTab .glass-panel,
+    #adminAnalyticsTab .accordion-content { padding: 10px 12px !important; }
+    #adminAnalyticsTab .glass-panel > div:first-child {
+        margin-bottom: 5px !important;
+    }
+    #adminAnalyticsTab .glass-panel > div:first-child span {
+        font-size: 0.72rem !important;
+    }
+    #adminAnalyticsTab .glass-panel > div:first-child i {
+        font-size: 0.8rem !important;
+    }
+
+    /* KPI value numbers */
+    #statTotalRevenue, #statGrossProfit, #statNetProfit, #statTotalBills, #statAvgBill {
+        font-size: 1.05rem !important;
+        line-height: 1.3 !important;
+        word-break: break-all !important;
+    }
+    #statNetMargin { font-size: 0.65rem !important; }
+    #adminAnalyticsTab .glass-panel > div:last-child {
+        font-size: 0.62rem !important;
+        margin-top: 2px !important;
+    }
+
+    /* ================================================================
+       ADMIN ANALYTICS — P&L Financial Breakdown
+       Compact rows, tránh chồng chéo.
+       ================================================================ */
+    #adminAnalyticsTab > div:nth-child(3) {
+        padding: 10px !important;
+        margin-bottom: 14px !important;
+    }
+    /* P&L header area */
+    #adminAnalyticsTab > div:nth-child(3) > div:first-child {
+        flex-direction: column !important;
+        gap: 6px !important;
+        margin-bottom: 10px !important;
+    }
+    #adminAnalyticsTab > div:nth-child(3) h3 {
+        font-size: 0.82rem !important;
+        gap: 5px !important;
+    }
+    #adminAnalyticsTab > div:nth-child(3) h3 + p {
+        font-size: 0.65rem !important;
+        line-height: 1.35 !important;
+    }
+    #adminAnalyticsTab > div:nth-child(3) > div:first-child > button {
+        font-size: 0.7rem !important;
+        padding: 6px 10px !important;
+        align-self: flex-start !important;
+    }
+
+    /* P&L each row */
+    #adminAnalyticsTab > div:nth-child(3) > div:nth-child(2) > div {
+        padding: 7px 8px !important;
+        border-radius: 8px !important;
+        flex-wrap: wrap !important;
+        gap: 4px !important;
+    }
+    /* Icon badge in P&L rows */
+    #adminAnalyticsTab > div:nth-child(3) > div:nth-child(2) > div > div:first-child > span {
+        width: 22px !important;
+        height: 22px !important;
+        font-size: 0.72rem !important;
+        border-radius: 5px !important;
+        flex-shrink: 0 !important;
+    }
+    /* P&L row title text */
+    #adminAnalyticsTab > div:nth-child(3) > div:nth-child(2) > div > div:first-child > div > div:first-child {
+        font-size: 0.75rem !important;
+        line-height: 1.3 !important;
+    }
+    /* P&L row description text */
+    #adminAnalyticsTab > div:nth-child(3) > div:nth-child(2) > div > div:first-child > div > div:last-child {
+        font-size: 0.62rem !important;
+        line-height: 1.3 !important;
+    }
+    /* P&L row amounts */
+    #plRevenue, #plCogs, #plGrossProfit, #plPayroll, #plFixedCost {
+        font-size: 0.88rem !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+    }
+    /* Net Profit highlight row */
+    #plNetProfit {
+        font-size: 1rem !important;
+        white-space: nowrap !important;
+    }
+    #plNetMarginStatus { font-size: 0.65rem !important; }
+    #plGrossMargin { font-size: 0.62rem !important; }
+
+    /* Net Profit row — icon smaller */
+    #adminAnalyticsTab > div:nth-child(3) > div:nth-child(2) > div:last-child > div:first-child > span {
+        width: 26px !important;
+        height: 26px !important;
+        font-size: 0.85rem !important;
+    }
+    /* Net Profit row — title smaller */
+    #adminAnalyticsTab > div:nth-child(3) > div:nth-child(2) > div:last-child > div:first-child > div > div:first-child {
+        font-size: 0.78rem !important;
+    }
+
+    /* ================================================================
+       ADMIN ANALYTICS — Top Selling & Recent Bills (2 column grid → stack)
+       ================================================================ */
+    #adminAnalyticsTab > div:nth-child(4) {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+        margin-bottom: 14px !important;
+    }
+    #accTopItemsList { gap: 8px !important; }
+    #accRecentBillsList { max-height: 200px !important; gap: 6px !important; }
+    #accRecentBillsList > div { background: rgba(255, 255, 255, 0.04) !important; }
+
+    /* ================================================================
+       ADMIN — Inventory Tab
+       ================================================================ */
+    #adminInventoryTab > div:first-child {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+    }
+    #adminInventoryTab .glass-panel div[style*="grid-template-columns"] {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 6px !important;
+    }
+    #invTotalItems, #invLowStock, #invStockValue {
+        font-size: 1rem !important;
+    }
+    .admin-grid-list {
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+    }
+
+    /* ================================================================
+       ADMIN — Staff Tab
+       ================================================================ */
+    #adminStaffTab > div:first-child {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+    }
+    #staffListContainer .glass-panel { padding: 10px !important; }
+    #staffListContainer [style*="width: 44px"] { width: 30px !important; height: 30px !important; font-size: 0.85rem !important; }
+
+    /* ================================================================
+       ADMIN — Menu Management Tab
+       ================================================================ */
+    #adminMenuMgmtTab > div:first-child {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 6px !important;
+    }
+    #adminMenuList > .glass-panel > img { width: 36px !important; height: 36px !important; }
+
+    /* ================================================================
+       ADMIN — Floor Plan Tab
+       ================================================================ */
+    #adminFloorPlanTab > div:first-child {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+    }
+    #adminFloorPlanTab > div:first-child > div { gap: 6px !important; }
+    #adminFloorPlanTab > div:first-child > div .btn { padding: 6px 10px !important; font-size: 0.72rem !important; }
+    #adminFloorPlanTab .glass-panel div[style*="grid-template-columns: repeat(4"] {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 6px !important;
+    }
+    #floorStatTotal, #floorStatEmpty, #floorStatBooked, #floorStatOccupied { font-size: 1rem !important; }
+    .canvas-container { min-height: 260px !important; }
+    .legend { gap: 8px !important; flex-wrap: wrap !important; }
+    .legend > div { font-size: 0.68rem !important; }
+
+    /* ================================================================
+       CASHIER VIEW
+       ================================================================ */
+    /* Cashier header */
+    #cashierView > div:first-child {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+        margin-bottom: 12px !important;
+    }
+    #cashierView > div:first-child > div:first-child > div:first-child {
+        width: 30px !important;
+        height: 30px !important;
+        font-size: 0.9rem !important;
+        border-radius: 8px !important;
+    }
+    #cashierView h1 { font-size: 1rem !important; }
+
+    /* Cashier summary cards — grid 2 cols */
+    #cashierView > div:nth-child(2) {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+        margin-bottom: 12px !important;
+    }
+    #cashierShiftTotal, #cashierCashTotal, #cashierQrTotal, #cashierPaidBillsCount {
+        font-size: 1rem !important;
+    }
+    #cashierView > div:nth-child(2) .glass-panel > div:first-child {
+        margin-bottom: 4px !important;
+    }
+    #cashierView > div:nth-child(2) .glass-panel > div:first-child span {
+        font-size: 0.7rem !important;
+    }
+
+    /* Cashier 2-column layout → stack */
+    .cashier-layout-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+    #cashierTablesList { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+    #cashierCheckoutTerminal {
+        position: static !important;
+        padding: 10px !important;
+    }
+    #cashierCheckoutTerminal h2 { font-size: 0.95rem !important; }
+    #cashierFinalTotal { font-size: 1.05rem !important; }
+    #cashierActiveItems { max-height: 140px !important; }
+    #cashierSubtotal { font-size: 0.78rem !important; }
+    #cashierCheckoutTerminal .btn { font-size: 0.78rem !important; padding: 9px 8px !important; }
+
+    /* ================================================================
+       KITCHEN (KDS) VIEW
+       ================================================================ */
+    #kitchenView > div:first-child {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+        margin-bottom: 12px !important;
+    }
+    #kitchenView > div:first-child > div:first-child > div:first-child {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 0.85rem !important;
+        border-radius: 8px !important;
+    }
+    #kitchenView h1 { font-size: 1rem !important; }
+    #kdsPendingBadge { padding: 4px 8px !important; font-size: 0.7rem !important; }
+
+    /* KDS filter tabs — scroll horizontal */
+    #kitchenView > div:nth-child(2) {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        gap: 6px !important;
+        padding-bottom: 6px !important;
+        margin-bottom: 10px !important;
+        flex-wrap: nowrap !important;
+    }
+    #kitchenView > div:nth-child(2) .cat-btn { font-size: 0.7rem !important; padding: 5px 10px !important; white-space: nowrap !important; }
+
+    /* KDS board — compact (small phones) */
+    .kds-board { grid-template-columns: 1fr !important; gap: 8px !important; }
+    .kds-card { padding: 10px !important; }
+    .kds-card .btn { padding: 8px !important; font-size: 0.75rem !important; }
+
+    /* ================================================================
+       CART (Bottom Sheet)
+       ================================================================ */
+    #cartSheet { padding: 14px 12px !important; max-height: 85vh !important; }
+    #cartSheet h2 { font-size: 0.98rem !important; }
+    #cartItemsList { max-height: 35vh !important; }
+    #cartTotalPrice { font-size: 1.05rem !important; }
+    #checkoutBtn, #closeCartBtn { padding: 10px !important; font-size: 0.85rem !important; }
+
+    /* ================================================================
+       MODALS — Compact
+       ================================================================ */
+    .modal-box { padding: 14px 12px !important; border-radius: 14px !important; }
+    .modal-box h2 { font-size: 0.95rem !important; margin-bottom: 10px !important; }
+    #tableActionSheet { padding: 14px 12px !important; }
+    #actionButtonGroup .btn { padding: 10px !important; font-size: 0.82rem !important; }
+    #tableActionSheet .btn { padding: 9px 6px !important; font-size: 0.78rem !important; }
+    #fixedCostModal .modal-box { padding: 14px 12px !important; }
+
+    /* ================================================================
+       ADMIN — Category Tab
+       ================================================================ */
+    #adminCatMgmtTab > div:first-child {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 6px !important;
+    }
+
+    /* ================================================================
+       GENERIC: Prevent text overflow in inline-styled flex rows
+       ================================================================ */
+    [style*="display: flex"][style*="justify-content: space-between"] {
+        flex-wrap: wrap !important;
+        gap: 4px !important;
+    }
+    [style*="font-size: 1.65rem"] { font-size: 1.05rem !important; }
+    [style*="font-size: 1.45rem"] { font-size: 1rem !important; }
+    [style*="font-size: 1.35rem"] { font-size: 0.95rem !important; }
+    [style*="font-size: 1.5rem"] { font-size: 1rem !important; }
+    [style*="font-size: 1.3rem"] { font-size: 1rem !important; }
+    [style*="font-size: 1.25rem"] { font-size: 0.95rem !important; }
+    [style*="font-size: 1.15rem"] { font-size: 0.92rem !important; }
+    [style*="font-size: 1.1rem"] { font-size: 0.9rem !important; }
+    [style*="font-size: 1.05rem"] { font-size: 0.88rem !important; }
+}
+
+/* ============================================================
+   FINANCIAL DASHBOARD ACCORDION
+   ============================================================ */
+.dashboard-accordion {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+@media (min-width: 768px) {
+    .dashboard-accordion {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .dashboard-accordion {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.dashboard-accordion .col-span-2 {
+    grid-column: 1 / -1;
+}
+
+@media (min-width: 1024px) {
+    .dashboard-accordion .col-span-2 {
+        grid-column: span 2;
+    }
+}
+
+.accordion-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--surface-glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.accordion-card:hover {
+    border-color: var(--surface-glass-shine);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.accordion-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    color: #0f172a;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    gap: 12px;
+}
+
+.accordion-header:hover {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.accordion-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.04);
+    font-size: 0.85rem;
+}
+
+.accordion-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.accordion-metric {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.accordion-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    transition: transform 0.3s ease;
+}
+
+.accordion-header[aria-expanded="true"] .accordion-arrow {
+    transform: rotate(180deg);
+}
+
+.accordion-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.accordion-body.open {
+    grid-template-rows: 1fr;
+}
+
+.accordion-body-inner {
+    overflow: hidden;
+}
+
+.accordion-content {
+    padding: 14px;
+}
+
+.chart-period-btn.active {
+    background: rgba(56, 189, 248, 0.18) !important;
+    color: #38bdf8 !important;
+}
+
+#chartLegend .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#chartLegend .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+}
+
+/* ============================================================
+   FINANCIAL DASHBOARD
+   ============================================================ */
+#adminAnalyticsTab {
+    background: transparent;
+    padding: 18px;
+    border-radius: var(--radius-lg);
+    color: var(--text-primary);
+}
+
+#adminAnalyticsTab h1 {
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 800;
+    margin: 0 0 4px;
+}
+
+#adminAnalyticsTab h3 {
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+#adminAnalyticsTab p {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+/* ============================================================
+   ULTRA-NARROW PHONES (≤380px) — Extra squeeze
+   ============================================================ */
+@media (max-width: 380px) {
+    html { font-size: 12px !important; }
+    .admin-tabs-container { grid-template-columns: repeat(2, 1fr) !important; }
+    .admin-tab { font-size: 0.62rem !important; padding: 6px 2px !important; }
+    #tableGrid { grid-template-columns: repeat(2, 1fr) !important; }
+    .menu-card img, .menu-card > div { height: 64px !important; }
+    #cashierView > div:nth-child(2) { grid-template-columns: 1fr !important; }
+    .role-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    .role-btn span { font-size: 0.68rem !important; }
+}
+
+/* Print Receipt Styles */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #receiptModal, #receiptModal * {
+        visibility: visible;
+    }
+    #receiptModal {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: white !important;
+        color: black !important;
+    }
+    .modal-box {
+        background: white !important;
+        color: black !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+    .btn {
+        display: none !important;
+    }
+}
+
+/* ============================================================
+   DARK THEME  (data-theme="dark")
+   All colors flow from CSS variables, so text automatically
+   switches to a high-contrast light color on the dark surfaces.
+   ============================================================ */
+html[data-theme="dark"] {
+    color-scheme: dark;
+
+    /* ---- Dark surfaces ---- */
+    --bg-base: #0b1220;
+    --bg-surface: #111827;
+    --bg-surface-elevated: #1f2937;
+    --surface-glass: rgba(15, 23, 42, 0.88);
+    --surface-glass-border: rgba(255, 255, 255, 0.12);
+    --surface-glass-shine: rgba(255, 255, 255, 0.2);
+    --surface-border: rgba(255, 255, 255, 0.14);
+
+    /* ---- High-contrast light text on dark bg ---- */
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+
+    /* ---- Accent glows ---- */
+    --primary-glow: rgba(245, 158, 11, 0.25);
+    --accent-glow: rgba(99, 102, 241, 0.22);
+    --success-glow: rgba(16, 185, 129, 0.22);
+    --warning-glow: rgba(245, 158, 11, 0.22);
+    --danger-glow: rgba(239, 68, 68, 0.22);
+
+    --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --shadow-premium: 0 20px 50px -10px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08);
+    --shadow-glow: 0 10px 25px -5px var(--primary-glow);
+}
+
+html[data-theme="dark"] body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+}
+
+/* ---- Text that was hardcoded dark in light theme ---- */
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4,
+html[data-theme="dark"] .brand,
+html[data-theme="dark"] .menu-card-content h4,
+html[data-theme="dark"] .accordion-header,
+html[data-theme="dark"] .accordion-title,
+html[data-theme="dark"] .accordion-metric {
+    color: var(--text-primary);
+}
+
+/* ---- Glass / card surfaces ---- */
+html[data-theme="dark"] .main-panel { background: var(--surface-glass); }
+html[data-theme="dark"] nav { background: rgba(15, 23, 42, 0.92); border-bottom-color: var(--surface-glass-border); }
+html[data-theme="dark"] .glass-panel,
+html[data-theme="dark"] .menu-card {
+    background: rgba(17, 24, 39, 0.75);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+html[data-theme="dark"] .menu-card-content { background: rgba(17, 24, 39, 0.85); }
+html[data-theme="dark"] .glass-panel:hover { box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5); }
+html[data-theme="dark"] .accordion-card { background: rgba(17, 24, 39, 0.85); }
+
+/* ---- KDS Kanban columns ---- */
+html[data-theme="dark"] .kds-column { background: rgba(17, 24, 39, 0.6); box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4); }
+html[data-theme="dark"] .kds-empty { background: rgba(17, 24, 39, 0.4); border-color: rgba(255, 255, 255, 0.16); }
+
+/* ---- Buttons & pills ---- */
+html[data-theme="dark"] .btn {
+    background: rgba(30, 41, 59, 0.8);
+    color: var(--text-primary);
+    border-color: var(--surface-glass-border);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+html[data-theme="dark"] .btn:hover {
+    background: #1f2937;
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+html[data-theme="dark"] .role-btn,
+html[data-theme="dark"] .cat-btn {
+    background: rgba(30, 41, 59, 0.7) !important;
+}
+html[data-theme="dark"] .role-btn:hover,
+html[data-theme="dark"] .cat-btn:hover {
+    background: #1f2937 !important;
+    border-color: var(--primary) !important;
+}
+
+/* ---- Admin tabs ---- */
+html[data-theme="dark"] .admin-tab { background: rgba(30, 41, 59, 0.75) !important; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4); }
+html[data-theme="dark"] .admin-tab:hover { background: #1f2937 !important; color: var(--text-primary) !important; }
+
+/* ---- Form controls ---- */
+html[data-theme="dark"] input[type="text"],
+html[data-theme="dark"] input[type="number"],
+html[data-theme="dark"] input[type="password"],
+html[data-theme="dark"] input[type="file"],
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea {
+    background: #1f2937 !important;
+    color: var(--text-primary) !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+}
+html[data-theme="dark"] input:focus,
+html[data-theme="dark"] select:focus,
+html[data-theme="dark"] textarea:focus {
+    background: #1f2937 !important;
+}
+html[data-theme="dark"] select option {
+    background-color: #1f2937 !important;
+    color: var(--text-primary) !important;
+}
+html[data-theme="dark"] select option:hover,
+html[data-theme="dark"] select option:focus,
+html[data-theme="dark"] select option:checked {
+    background-color: #111827 !important;
+    color: #f59e0b !important;
+}
+
+/* ---- Scrollbars ---- */
+html[data-theme="dark"] #app { scrollbar-color: rgba(255, 255, 255, 0.18) transparent; }
+html[data-theme="dark"] #app::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.18); }
+
+/* ---- Subtle hover fills (were black-on-light) ---- */
+html[data-theme="dark"] .accordion-header:hover { background: rgba(255, 255, 255, 0.06); }
+html[data-theme="dark"] .accordion-icon { background: rgba(255, 255, 255, 0.08); }
+
+/* ---- Bottom sheet cart & other inline-white surfaces ---- */
+html[data-theme="dark"] #cartSheet,
+html[data-theme="dark"] #cashierQrContainer,
+html[data-theme="dark"] .modal-box {
+    background: var(--surface-glass) !important;
+}
+
+/* Smooth theme transition for the main surfaces */
+html[data-theme] body,
+html[data-theme] .main-panel,
+html[data-theme] nav,
+html[data-theme] .glass-panel,
+html[data-theme] .btn {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+/* ============================================================
+   Adjustments: login password panels grid + uniform admin buttons
+   ============================================================ */
+
+/* Login: only one role panel shows at a time, so keep it full-width */
+.login-panels-grid {
+    display: block;
+    margin-bottom: 4px;
+}
+
+/* Admin dashboard: keep all action buttons the same, consistent size */
+#adminDashboardView .btn {
+    min-height: 40px !important;
+    border-radius: 10px !important;
+    justify-content: center;
+}
+
+/* Admin Báo cáo header buttons: equal width */
+#adminAnalyticsTab > div:first-child > div:last-child .btn {
+    min-width: 92px !important;
+}
+
+/* On small screens keep the 3 header buttons in ONE horizontal row with equal size */
+@media (max-width: 560px) {
+    #adminAnalyticsTab > div:first-child > div:last-child {
+        flex-wrap: nowrap !important;
+        width: 100% !important;
+        gap: 6px !important;
+    }
+    #adminAnalyticsTab > div:first-child > div:last-child .btn {
+        flex: 1 1 0% !important;
+        min-width: 0 !important;
+        padding: 6px 6px !important;
+        font-size: 0.72rem !important;
+        white-space: nowrap !important;
+    }
+}
+/* ============================================================
+   ADMIN "Báo cáo & Phân tích" — 6 functions as a uniform
+   3-column x 2-row grid (each function button the same size)
+   ============================================================ */
+.dashboard-accordion {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 14px !important;
+}
+
+/* Remove the wider 2-col spans so the 6 tiles stay equal */
+.dashboard-accordion .col-span-2 {
+    grid-column: auto !important;
+}
+
+/* All 6 function cards have the same look and button height */
+.accordion-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 96px;
+}
+.accordion-header {
+    min-height: 60px;
+    text-align: left;
+}
+
+/* ============================================================
+   DARK MODE — force every white box to a theme-consistent color
+   ============================================================ */
+html[data-theme="dark"] #cashierQrContainer {
+    background: rgba(17, 24, 39, 0.85) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+}
+html[data-theme="dark"] #cashierQrContainer > div {
+    color: var(--text-primary) !important;
+}
+html[data-theme="dark"] #fixedCostModal input[type="number"] {
+    background: #1f2937 !important;
+    color: var(--text-primary) !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+}
+html[data-theme="dark"] #cartSheet {
+    background: #111827 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.14) !important;
+}
+/* ============================================================
+   ADMIN ANALYTICS — 6 SECTIONS AS A DROPDOWN MENU
+   The report sections (Doanh thu, Chi phí, ...) are chosen via a
+   dropdown; the selected panel is opened below.
+   ============================================================ */
+.dashboard-accordion {
+    display: block;
+    margin-bottom: 24px;
+}
+
+.dashboard-tabbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--surface-glass-border);
+    padding-bottom: 8px;
+}
+.dashboard-tab-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+.dashboard-tab-select {
+    flex: 1;
+    width: 100%;
+    min-height: 42px;
+    padding: 9px 14px;
+    border-radius: var(--radius-sm, 10px);
+    border: 1px solid var(--surface-glass-border);
+    background: rgba(255, 255, 255, 0.75);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.92rem;
+    cursor: pointer;
+}
+.dashboard-tab-select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+.dashboard-accordion .accordion-body {
+    display: none;
+}
+.dashboard-accordion .accordion-body.open {
+    display: block;
+}
+.dashboard-accordion .accordion-body-inner {
+    overflow: visible;
+}
+
+/* Dark theme: dropdown matches the dark background */
+html[data-theme="dark"] .dashboard-tab-select {
+    background: #1f2937 !important;
+    color: var(--text-primary) !important;
+    border-color: rgba(255, 255, 255, 0.14) !important;
+}
+html[data-theme="dark"] .dashboard-tab-select option {
+    background: #1f2937 !important;
+    color: var(--text-primary) !important;
+}
+/* ============================================================
+   ADMIN — MODULE DROPDOWN MENU (xổ xuống)
+   Replaces the row of module buttons with a single dropdown.
+   ============================================================ */
+.admin-module-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+    width: 100%;
+    border-bottom: 1px solid var(--surface-glass-border);
+    padding-bottom: 8px;
+}
+.admin-module-bar > i {
+    font-size: 1.05rem;
+}
+.admin-module-select {
+    flex: 1;
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm, 10px);
+    border: 1px solid var(--surface-glass-border);
+    background: rgba(255, 255, 255, 0.75);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.98rem;
+    cursor: pointer;
+}
+.admin-module-select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+html[data-theme="dark"] .admin-module-select {
+    background: #1f2937 !important;
+    color: var(--text-primary) !important;
+    border-color: rgba(255, 255, 255, 0.14) !important;
+}
+html[data-theme="dark"] .admin-module-select option {
+    background: #1f2937 !important;
+    color: var(--text-primary) !important;
+}
+
+/* ============================================================
+   ADMIN OPERATIONS — compact, task-oriented panels
+   ============================================================ */
+#adminDashboardView {
+    max-width: 1120px;
+    margin: 0 auto;
+}
+
+#adminDashboardView h1 {
+    font-size: clamp(1.15rem, 2vw, 1.45rem) !important;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+}
+
+#adminDashboardView > div:not(.hidden) > div:first-child:not(.dashboard-accordion):not(.admin-page-heading) {
+    gap: 14px;
+}
+
+.admin-page-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.admin-page-heading p,
+.section-title p,
+.printer-note {
+    color: var(--text-secondary);
+    font-size: 0.84rem;
+    margin-top: 4px;
+}
+
+.admin-module-bar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: color-mix(in srgb, var(--bg-surface) 92%, transparent);
+    padding-top: 4px;
+}
+
+.printer-layout {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.printer-card, .printer-results-panel {
+    padding: 18px;
+    border-radius: var(--radius-md);
+}
+
+.section-title {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.section-title > i {
+    display: grid;
+    place-items: center;
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    color: var(--primary-hover);
+    background: var(--primary-glow);
+}
+
+.section-title h3 { font-size: 0.98rem; line-height: 1.35; }
+.section-title p { margin: 2px 0 0; }
+
+.printer-card label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--text-secondary);
+    font-size: 0.78rem;
     font-weight: 700;
 }
 
-/* Custom Scrollbar */
-/* Hide Scrollbars Everywhere */
-*::-webkit-scrollbar {
-    display: none;
+.printer-card input {
+    width: 100%;
+    min-height: 40px;
+    padding: 9px 11px;
+    margin-bottom: 12px;
+    border: 1px solid var(--surface-border);
+    border-radius: 10px;
+    color: var(--text-primary);
+    background: var(--bg-surface);
+    font: inherit;
 }
 
+.printer-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.printer-actions .btn { min-height: 38px !important; padding: 8px 12px !important; font-size: 0.82rem; }
+.printer-note { display: flex; gap: 7px; align-items: flex-start; line-height: 1.45; }
+.printer-note i { color: var(--accent); margin-top: 2px; }
 
+.status-pill {
+    flex: 0 0 auto;
+    padding: 6px 9px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-size: 0.74rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+.status-pill-neutral { color: var(--text-secondary); background: var(--bg-surface-elevated); border-color: var(--surface-border); }
+.status-pill-success { color: #047857; background: var(--success-bg); border-color: rgba(16,185,129,.25); }
+.status-pill-danger { color: #b91c1c; background: var(--danger-bg); border-color: rgba(239,68,68,.25); }
 
+.printer-discovery-list { display: grid; gap: 8px; }
+.printer-device {
+    display: grid;
+    grid-template-columns: 34px 1fr auto;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+    padding: 10px;
+    text-align: left;
+    cursor: pointer;
+    color: var(--text-primary);
+    border: 1px solid var(--surface-border);
+    border-radius: 10px;
+    background: var(--bg-surface);
+    font: inherit;
+}
+.printer-device:hover { border-color: var(--primary); box-shadow: 0 3px 10px rgba(15,23,42,.06); }
+.printer-device-icon { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; color: var(--primary-hover); background: var(--primary-glow); }
+.printer-device strong, .printer-device small { display: block; }
+.printer-device strong { font-size: .86rem; }
+.printer-device small { margin-top: 2px; color: var(--text-secondary); font-size: .75rem; }
+.empty-state { padding: 18px; border: 1px dashed var(--surface-border); border-radius: 10px; color: var(--text-secondary); font-size: .84rem; text-align: center; }
 
-* {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+html[data-theme="dark"] .admin-module-bar { background: color-mix(in srgb, #111827 92%, transparent); }
+html[data-theme="dark"] .printer-card input,
+html[data-theme="dark"] .printer-device { background: #1f2937; border-color: rgba(255,255,255,.14); }
+html[data-theme="dark"] .status-pill-success { color: #6ee7b7; }
+html[data-theme="dark"] .status-pill-danger { color: #fca5a5; }
+
+@media (max-width: 640px) {
+    .admin-page-heading { flex-direction: column; gap: 8px; }
+    .printer-layout { grid-template-columns: 1fr; }
+    .printer-card, .printer-results-panel { padding: 15px; }
+    .admin-module-select { min-height: 40px; font-size: .88rem; }
 }
 
-
-/* Hidden elements */
-.hidden { display: none !important; }
-
-/* Status Styles */
-.empty { border: 2px solid var(--success); color: var(--success); background: rgba(16, 185, 129, 0.05); }
-.booked { border: 2px solid var(--warning); color: var(--warning); background: rgba(245, 158, 11, 0.05); }
-.occupied { border: 2px solid var(--danger); color: var(--danger); background: rgba(239, 68, 68, 0.05); }
-
-
-/* Animation Overlay */
-#cartOverlay {
-    transition: opacity 0.3s ease;
+/* Reusable grid/list switch for kitchen, cashier, and administration. */
+.collection-view-toggle {
+    display: inline-flex;
+    flex: 0 0 auto;
+    gap: 3px;
+    padding: 3px;
+    border: 1px solid var(--surface-border);
+    border-radius: 9px;
+    background: var(--bg-surface);
 }
-#cartOverlay.hidden {
-    opacity: 0;
-    pointer-events: none;
+.collection-view-toggle .btn {
+    min-width: 31px;
+    min-height: 30px !important;
+    padding: 5px 7px !important;
+    border: 0 !important;
+    border-radius: 6px !important;
+    background: transparent;
+    box-shadow: none !important;
+}
+.collection-view-toggle .btn.active {
+    color: var(--primary-hover);
+    background: var(--primary-glow);
+}
+
+#cashierTablesList.collection-view-list,
+.admin-grid-list.collection-view-list {
+    grid-template-columns: 1fr !important;
+}
+#cashierTablesList.collection-view-list .cashier-table-card {
+    min-height: 58px;
+    flex-direction: row;
+    align-items: center !important;
+}
+
+/* KDS grid condenses three status columns into compact card groups. */
+#kdsBoard.collection-view-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+#kdsBoard.collection-view-list {
+    grid-template-columns: 1fr;
+}
+#kdsBoard.collection-view-list .kds-column {
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr);
+    align-items: start;
+}
+#kdsBoard.collection-view-list .kds-column-header { min-height: 100%; }
+#kdsBoard.collection-view-list .kds-column-body { display: grid; grid-template-columns: 1fr; gap: 10px; }
+
+@media (max-width: 700px) {
+    #kdsBoard.collection-view-grid { grid-template-columns: 1fr; }
+    #kdsBoard.collection-view-list .kds-column { grid-template-columns: 1fr; }
+    #kdsBoard.collection-view-list .kds-column-header { min-height: auto; }
+    .collection-view-toggle .btn { min-width: 29px; }
+}
+
+/* ============================================================
+   LIGHT THEME CONTRAST + MENU/CASHIER DENSITY
+   ============================================================ */
+html[data-theme="light"] {
+    --surface-glass-border: rgba(15, 23, 42, 0.16);
+    --surface-border: rgba(15, 23, 42, 0.18);
+    --surface-glass-shine: rgba(15, 23, 42, 0.24);
+}
+html[data-theme="light"] .glass-panel,
+html[data-theme="light"] .menu-card,
+html[data-theme="light"] .btn,
+html[data-theme="light"] .admin-module-select {
+    border-color: rgba(15, 23, 42, 0.15);
+}
+html[data-theme="light"] .glass-panel,
+html[data-theme="light"] .menu-card {
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.055), 0 0 0 1px rgba(15, 23, 42, 0.018);
+}
+html[data-theme="light"] .view p,
+html[data-theme="light"] .menu-card-content h4 { color: #334155; }
+
+.menu-toolbar { display: flex; align-items: center; gap: 10px; }
+.menu-toolbar .categories { flex: 1; min-width: 0; }
+.menu-view-toggle { display: inline-flex; flex: 0 0 auto; gap: 4px; padding: 3px; border: 1px solid var(--surface-border); border-radius: 10px; background: var(--bg-surface); }
+.menu-view-toggle .btn { min-height: 32px; padding: 6px 9px; border: 0; box-shadow: none; border-radius: 7px; font-size: .78rem; }
+.menu-view-toggle .btn.active { color: var(--primary-hover); background: var(--primary-glow); }
+
+.menu-grid.menu-list { display: grid; grid-template-columns: 1fr; gap: 9px; }
+.menu-grid.menu-list .menu-card { display: grid; grid-template-columns: 72px minmax(0, 1fr); min-height: 72px; border-radius: 12px; }
+.menu-grid.menu-list .menu-card img,
+.menu-grid.menu-list .menu-card > div:first-child { width: 72px !important; height: 72px !important; min-height: 72px; aspect-ratio: auto !important; }
+.menu-grid.menu-list .menu-card-content { padding: 10px 12px; }
+.menu-grid.menu-list .menu-card-content h4 { margin-bottom: 4px !important; }
+.menu-grid.menu-list .price { font-size: .95rem; }
+
+.cashier-table-card {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch !important;
+    min-height: 88px;
+    padding: 13px !important;
+    text-align: left;
+    cursor: pointer;
+    background: var(--bg-surface) !important;
+    border: 1px solid var(--surface-border) !important;
+    box-shadow: none !important;
+}
+.cashier-table-card:hover { border-color: rgba(16, 185, 129, .62) !important; background: var(--success-bg) !important; }
+.cashier-table-card.active { border: 2px solid var(--success) !important; background: var(--success-bg) !important; }
+.cashier-table-name { font-weight: 800; font-size: 1rem; color: var(--text-primary); }
+.cashier-table-total { display: flex; justify-content: space-between; align-items: baseline; color: var(--primary-hover); font-size: 1rem; font-weight: 800; }
+.cashier-table-total small { color: var(--text-secondary); font-size: .72rem; font-weight: 600; }
+
+.qr-settings-card { max-width: 760px; padding: 20px; }
+.qr-settings-content { display: grid; grid-template-columns: 200px minmax(0, 1fr); align-items: center; gap: 20px; }
+#adminQrPreview { display: grid; place-items: center; min-height: 200px; padding: 12px; border: 1px dashed var(--surface-border); border-radius: 12px; background: var(--bg-surface); color: var(--text-secondary); font-size: .82rem; }
+#adminQrPreview img { display: block; width: 100%; max-width: 176px; max-height: 176px; object-fit: contain; }
+.upload-qr-label { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 9px; padding: 9px 12px; color: var(--primary-hover); border: 1px solid var(--primary); border-radius: 9px; font-size: .84rem; font-weight: 700; cursor: pointer; }
+#adminQrImageInput { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+@media (max-width: 640px) {
+    .menu-toolbar { align-items: flex-start; flex-direction: column; }
+    .menu-toolbar .categories { width: 100%; }
+    .menu-view-toggle { align-self: flex-end; }
+    .qr-settings-content { grid-template-columns: 1fr; }
+    #adminQrPreview { min-height: 160px; }
 }
