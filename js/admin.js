@@ -735,13 +735,36 @@ window.filterKds = function(filter, btn) {
 function updateKdsBadge() {
     const badge = document.getElementById('kdsPendingBadge');
     if (!badge) return;
-    const pendingCount = state.kitchenOrders.filter(o => o.status === 'pending').length;
-    badge.innerHTML = `<i class="fa-solid fa-bell"></i> ${pendingCount} món chờ`;
+    const pendingTables = new Set(state.kitchenOrders
+        .filter(o => o.status === 'pending')
+        .map(o => o.tableId)).size;
+    badge.innerHTML = `<i class="fa-solid fa-bell"></i> ${pendingTables} bàn chờ`;
 }
 
 function renderKitchenOrders() {
     const board = document.getElementById('kdsBoard');
     if (!board) return;
+    board.dataset.kdsFilter = 'summary';
+
+    // Kitchen permission is an overview-only screen: show table counts by
+    // stage, without exposing individual orders or table bills.
+    ['pending', 'cooking', 'ready'].forEach(status => {
+        const colBody = document.getElementById('col-' + status);
+        const colCount = document.getElementById('count-' + status);
+        const colEl = colBody ? colBody.closest('.kds-column') : null;
+        if (!colBody || !colEl) return;
+
+        const tableCount = new Set(state.kitchenOrders
+            .filter(order => order.status === status)
+            .map(order => order.tableId)).size;
+        const label = status === 'pending'
+            ? 'Bàn chờ nấu'
+            : (status === 'cooking' ? 'Bàn đang nấu' : 'Bàn đã xong');
+        colEl.style.display = '';
+        if (colCount) colCount.textContent = String(tableCount);
+        colBody.innerHTML = `<div class="kds-summary-card"><strong>${tableCount}</strong><span>${label}</span></div>`;
+    });
+    return;
 
     // Board column status keys, in display order
     const columnKeys = ['pending', 'cooking', 'ready'];

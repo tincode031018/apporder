@@ -3100,6 +3100,69 @@ html[data-theme] #receiptModal .modal-box { background: var(--bg-surface) !impor
     .mobile-bill-taskbar:active { transform: translateY(1px); }
 }
 
+/* Quyền Bếp: chỉ hiển thị tổng quan số lượng bàn theo trạng thái. */
+#kitchenView .collection-view-toggle[data-scope="kds"],
+#kitchenView > div:nth-child(2) { display: none !important; }
+#kdsBoard[data-kds-filter="summary"] { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+#kdsBoard[data-kds-filter="summary"] .kds-column { min-height: 0; padding: 12px; }
+#kdsBoard[data-kds-filter="summary"] .kds-column-body { display: block; }
+.kds-summary-card { display: grid; min-height: 142px; place-content: center; gap: 8px; text-align: center; border: 1px dashed var(--surface-glass-border); border-radius: 12px; background: var(--bg-surface-elevated); }
+.kds-summary-card strong { color: var(--text-primary); font-size: clamp(2rem, 4vw, 3.1rem); line-height: 1; }
+.kds-summary-card span { color: var(--text-secondary); font-size: .88rem; font-weight: 700; }
+
+@media (max-width: 767.98px) {
+    #kdsBoard[data-kds-filter="summary"] { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 7px !important; }
+    #kdsBoard[data-kds-filter="summary"] .kds-column { padding: 7px !important; }
+    #kdsBoard[data-kds-filter="summary"] .kds-column-header { padding: 7px 6px; font-size: .7rem; }
+    #kdsBoard[data-kds-filter="summary"] .kds-col-title i { display: none; }
+    .kds-summary-card { min-height: 96px; border-radius: 9px; }
+    .kds-summary-card strong { font-size: 1.75rem; }
+    .kds-summary-card span { font-size: .66rem; }
+}
+
+/* Bếp KDS: khi lọc Chờ nấu, danh sách 3 cột và lưới 5 cột trên desktop. */
+@media (min-width: 768px) {
+    #kdsBoard[data-kds-filter="pending"].collection-view-list,
+    #kdsBoard[data-kds-filter="cooking"].collection-view-list,
+    #kdsBoard[data-kds-filter="ready"].collection-view-list,
+    #kdsBoard[data-kds-filter="pending"].collection-view-grid,
+    #kdsBoard[data-kds-filter="cooking"].collection-view-grid,
+    #kdsBoard[data-kds-filter="ready"].collection-view-grid {
+        grid-template-columns: 1fr !important;
+    }
+    #kdsBoard[data-kds-filter="pending"].collection-view-list .kds-column,
+    #kdsBoard[data-kds-filter="cooking"].collection-view-list .kds-column,
+    #kdsBoard[data-kds-filter="ready"].collection-view-list .kds-column {
+        display: flex !important;
+        grid-template-columns: none !important;
+    }
+    #kdsBoard[data-kds-filter="pending"].collection-view-list .kds-column-header,
+    #kdsBoard[data-kds-filter="cooking"].collection-view-list .kds-column-header,
+    #kdsBoard[data-kds-filter="ready"].collection-view-list .kds-column-header {
+        min-height: auto !important;
+    }
+    #kdsBoard[data-kds-filter="pending"].collection-view-list .kds-column-body,
+    #kdsBoard[data-kds-filter="cooking"].collection-view-list .kds-column-body,
+    #kdsBoard[data-kds-filter="ready"].collection-view-list .kds-column-body {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
+    #kdsBoard[data-kds-filter="pending"].collection-view-grid .kds-column-body,
+    #kdsBoard[data-kds-filter="cooking"].collection-view-grid .kds-column-body,
+    #kdsBoard[data-kds-filter="ready"].collection-view-grid .kds-column-body {
+        display: grid !important;
+        grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+        align-items: start;
+        gap: 10px;
+    }
+    #kdsBoard[data-kds-filter="pending"] .kds-card,
+    #kdsBoard[data-kds-filter="cooking"] .kds-card,
+    #kdsBoard[data-kds-filter="ready"] .kds-card {
+        min-width: 0;
+        height: 100%;
+        box-sizing: border-box;
+    }
+}
+
 /* Nhóm nút thao tác luôn nằm ngang trên điện thoại. */
 @media (max-width: 767.98px) {
     .printer-actions,
