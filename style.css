@@ -2242,6 +2242,121 @@ html[data-theme="dark"] .admin-module-select option {
     .admin-grid-list.collection-view-list { grid-template-columns: 1fr !important; }
 }
 
+/* Phiếu hiển thị đúng tỷ lệ K80: rộng 80 mm, vùng in 74 mm sau lề 3 mm mỗi bên. */
+#receiptModal .modal-box {
+    width: min(80mm, calc(100% - 24px)) !important;
+    max-width: 80mm !important;
+    padding: 4mm 3mm !important;
+    border-radius: 2px !important;
+}
+#receiptModal #receiptItemsContainer { max-height: min(42dvh, 260px) !important; }
+.printer-card select { width: 100%; margin-top: 4px; }
+.printer-paper-hint { display: flex; gap: 7px; align-items: center; margin: 8px 0 12px; color: var(--text-secondary); font-size: .8rem; }
+.printer-paper-hint i { color: var(--primary-hover); }
+
+@media print {
+    @page { size: 80mm auto; margin: 0; }
+    html, body { width: 80mm !important; margin: 0 !important; padding: 0 !important; }
+    #receiptModal { width: 80mm !important; min-width: 80mm !important; padding: 3mm !important; }
+    #receiptModal .modal-box { width: 74mm !important; min-width: 74mm !important; max-width: 74mm !important; padding: 0 !important; }
+    #receiptModal #receiptItemsContainer { max-height: none !important; overflow: visible !important; }
+}
+
+/* Bill tạm tính: nền sáng cùng giao diện, không phủ tối/làm mờ màn hình. */
+#cartOverlay {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+#cartSheet,
+html[data-theme="dark"] #cartSheet {
+    color: var(--text-primary) !important;
+    background: var(--bg-surface) !important;
+    border: 1px solid var(--surface-border) !important;
+    border-radius: 10px 10px 0 0 !important;
+    box-shadow: 0 -8px 24px rgba(15, 23, 42, .12) !important;
+}
+#cartSheet h2 { color: var(--text-primary) !important; }
+#cartSheet .service-note-input { color: var(--text-primary); background: var(--bg-surface-elevated); border-color: var(--surface-border); }
+.cart-action-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.cart-action-row .btn { width: 100%; min-width: 0; margin: 0 !important; padding: 12px 8px !important; white-space: nowrap; }
+.cart-action-row #closeCartBtn { color: var(--text-secondary); }
+
+/* Mobile: khung ứng dụng sát viền trái/phải, không tạo viền ngoài dư thừa. */
+@media (max-width: 767.98px) {
+    .app-container { padding: 0 !important; }
+    .main-panel,
+    .main-panel:not(.login-mode),
+    .main-panel.login-mode,
+    body:has(#loginView.active) .main-panel,
+    .main-panel:has(#loginView.active) {
+        width: 100% !important;
+        min-height: 100dvh !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+    }
+}
+
+/* K80 luôn được áp dụng sau mọi quy tắc responsive cũ. */
+#receiptModal .modal-box {
+    width: min(80mm, calc(100% - 24px)) !important;
+    max-width: 80mm !important;
+    padding: 4mm 3mm !important;
+    border-radius: 2px !important;
+}
+#receiptModal #receiptItemsContainer { max-height: min(42dvh, 260px) !important; }
+
+@media print {
+    @page { size: 80mm auto; margin: 0; }
+    html, body { width: 80mm !important; margin: 0 !important; padding: 0 !important; }
+    #receiptModal { width: 80mm !important; min-width: 80mm !important; padding: 3mm !important; }
+    #receiptModal .modal-box { width: 74mm !important; min-width: 74mm !important; max-width: 74mm !important; padding: 0 !important; }
+    #receiptModal #receiptItemsContainer { max-height: none !important; overflow: visible !important; }
+}
+
+/* Bảng nguyên liệu: ba thông tin chính được chia cột, phần tồn kho giữ thao tác nhanh. */
+.inventory-table { overflow: hidden; border: 1px solid var(--surface-border); border-radius: 10px; background: var(--bg-surface); }
+.inventory-table-head,
+.inventory-table-row { display: grid; grid-template-columns: minmax(150px, 1.5fr) minmax(90px, .7fr) minmax(110px, 1fr) minmax(210px, 1.35fr); align-items: center; gap: 12px; }
+.inventory-table-head { min-height: 42px; padding: 0 14px; color: var(--text-secondary); border-bottom: 1px solid var(--surface-border); background: var(--bg-surface-elevated); font-size: .76rem; font-weight: 800; text-transform: uppercase; }
+.inventory-table-row { min-height: 64px; padding: 10px 14px; border-bottom: 1px solid var(--surface-border); color: var(--text-primary); }
+.inventory-table-row:last-child { border-bottom: 0; }
+.inventory-table-row.is-low { background: rgba(239, 68, 68, .045); }
+.inventory-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.inventory-cost { color: var(--primary-hover); white-space: nowrap; }
+.inventory-stock-actions { display: flex; align-items: center; justify-content: flex-end; gap: 7px; min-width: 0; }
+.inventory-qty { min-width: 28px; font-size: 1.08rem; font-weight: 800; text-align: right; }
+.inventory-stock-state { padding: 3px 7px; color: #047857; border-radius: 999px; background: rgba(16, 185, 129, .12); font-size: .72rem; font-weight: 800; white-space: nowrap; }
+.inventory-stock-state.low { color: #b91c1c; background: rgba(239, 68, 68, .12); }
+.inventory-row-actions { display: inline-flex; gap: 4px; }
+.inventory-row-actions .btn { min-width: 30px; min-height: 30px; padding: 4px 7px; font-size: .74rem; }
+.danger-icon { color: var(--danger) !important; }
+
+/* Thẻ nhân sự cùng chiều cao và cấu trúc sau khi bỏ tài khoản hệ thống. */
+#staffListContainer { align-items: stretch; }
+.staff-card { display: flex; flex-direction: column; min-height: 222px; box-sizing: border-box; }
+.staff-card-head { display: flex; align-items: center; gap: 10px; min-height: 48px; }
+.staff-avatar { display: grid; flex: 0 0 42px; width: 42px; height: 42px; place-items: center; color: var(--primary-hover); border-radius: 50%; background: var(--primary-glow); font-weight: 800; }
+.staff-identification { display: grid; min-width: 0; gap: 3px; }
+.staff-identification strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.staff-identification span { color: var(--text-secondary); font-size: .78rem; }
+.staff-role-badge { margin-left: auto; padding: 3px 7px; color: #a16207; border-radius: 999px; background: rgba(245, 158, 11, .14); font-size: .7rem; font-weight: 800; white-space: nowrap; }
+.staff-role-badge.cashier { color: #047857; background: rgba(16, 185, 129, .14); }
+.staff-card-details { display: grid; gap: 8px; margin: 16px 0; padding: 12px; border-radius: 9px; background: var(--bg-surface-elevated); }
+.staff-card-details div { display: flex; justify-content: space-between; gap: 12px; }
+.staff-card-details dt { color: var(--text-secondary); font-size: .8rem; }
+.staff-card-details dd { margin: 0; color: var(--text-primary); font-size: .8rem; font-weight: 700; text-align: right; }
+.staff-card-details div:last-child dd { color: #059669; }
+.staff-card-actions { display: flex; justify-content: flex-end; gap: 7px; margin-top: auto; }
+.staff-card-actions .btn { min-height: 34px; padding: 6px 10px; font-size: .78rem; }
+.empty-admin-list { padding: 20px; color: var(--text-secondary); text-align: center; }
+
+@media (max-width: 767.98px) {
+    .inventory-table { overflow-x: auto; }
+    .inventory-table-head,
+    .inventory-table-row { min-width: 650px; }
+}
+
 /* ============================================================
    ADMIN OPERATIONS — compact, task-oriented panels
    ============================================================ */
@@ -2815,6 +2930,58 @@ html[data-theme="light"] .menu-card-content h4 { color: #334155; }
     #receiptModal .modal-box { width: 100% !important; margin: 12px 0; padding: 18px !important; }
 }
 
+/* Chủ Quán: menu ba gạch sát lề trái, mở danh sách chức năng. */
+.admin-module-bar { position: relative; justify-content: flex-start; }
+.admin-module-bar > .admin-module-select { display: none; }
+.admin-menu-toggle { width: 42px; min-width: 42px; height: 42px; padding: 0 !important; border-radius: 8px; }
+.admin-module-menu { position: absolute; top: calc(100% + 6px); left: 0; z-index: 80; display: grid; min-width: 240px; padding: 6px; border: 1px solid var(--surface-border); border-radius: 8px; background: var(--bg-surface); box-shadow: 0 12px 28px rgba(15, 23, 42, .16); }
+.admin-module-menu.hidden { display: none; }
+.admin-module-menu button { display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 9px 10px; color: var(--text-primary); border: 0; border-radius: 6px; background: transparent; font: inherit; font-size: .88rem; font-weight: 700; text-align: left; cursor: pointer; }
+.admin-module-menu button:hover, .admin-module-menu button.active { color: var(--primary-hover); background: var(--primary-glow); }
+.admin-module-menu button i { width: 18px; text-align: center; }
+
+/* Các hàng nút xác nhận trong popup luôn nằm cùng một hàng. */
+#menuItemModal .modal-box > div > div:last-child,
+#categoryModal .modal-box > div > div:last-child,
+#moveTableModal .modal-box > div:last-child,
+#mergeTableModal .modal-box > div:last-child,
+#inventoryModal .modal-box > div > div:last-child,
+#staffModal .modal-box > div > div:last-child,
+#changePinModal .modal-box > div:last-child,
+#fixedCostModal .modal-box > div > div:last-child,
+#receiptModal .modal-box > div:last-child {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    align-items: stretch;
+    gap: 8px !important;
+}
+#actionButtonGroup, #tableActionSheet > div[style*="grid-template-columns: 1fr 1fr"] { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+#actionButtonGroup .btn, #tableActionSheet > div[style*="grid-template-columns: 1fr 1fr"] .btn { min-width: 0 !important; }
+
+/* Chi phí và lợi nhuận trình bày dạng bảng: hạng mục ở trái, giá trị ở phải. */
+#dash-panel-1 .accordion-content, #dash-panel-2 .accordion-content { gap: 0 !important; overflow: hidden; border: 1px solid var(--surface-border); border-radius: 8px; background: var(--bg-surface); }
+#dash-panel-1 .accordion-content > div, #dash-panel-2 .accordion-content > div { min-height: 44px; margin: 0 !important; padding: 10px 12px !important; border: 0 !important; border-bottom: 1px solid var(--surface-border); border-radius: 0 !important; background: transparent !important; }
+#dash-panel-1 .accordion-content > div:last-child, #dash-panel-2 .accordion-content > div:last-child { border-bottom: 0; background: var(--bg-surface-elevated) !important; }
+#dash-panel-1 .accordion-content > div span:first-child, #dash-panel-2 .accordion-content > div span:first-child { color: var(--text-secondary) !important; }
+
+/* Phiếu trên màn hình đồng bộ nền hiện tại; bản in đúng bề rộng K80. */
+html[data-theme] #receiptModal .modal-box { background: var(--bg-surface) !important; color: var(--text-primary) !important; }
+@media print {
+    @page { size: 80mm auto; margin: 0; }
+    #receiptModal { width: 80mm !important; padding: 3mm !important; color: #111827 !important; background: #ffffff !important; }
+    #receiptModal .modal-box { width: 74mm !important; max-width: 74mm !important; padding: 0 !important; color: #111827 !important; background: #ffffff !important; }
+    #receiptModal h2, #receiptModal p, #receiptModal #receiptTime, #receiptModal #receiptExtraInfo, #receiptModal #receiptSummaryBreakdown, #receiptModal #receiptItemsContainer { color: #111827 !important; }
+}
+
+@media (max-width: 767.98px) {
+    #adminDashboardView.active { padding-bottom: 24px; }
+    #adminDashboardView .admin-module-bar { display: flex; margin-left: calc(-1 * var(--page-gutter)); padding-left: 0; }
+    .admin-mobile-taskbar { display: none !important; }
+    .admin-module-menu { min-width: min(260px, calc(100vw - 24px)); }
+    #actionButtonGroup, #tableActionSheet > div[style*="grid-template-columns: 1fr 1fr"] { gap: 5px !important; }
+    #actionButtonGroup .btn, #tableActionSheet > div[style*="grid-template-columns: 1fr 1fr"] .btn { padding: 9px 4px !important; font-size: .7rem !important; }
+}
+
 /* Mobile bill taskbar: keep the bill one tap away while the menu can scroll. */
 .mobile-bill-taskbar { display: none; }
 
@@ -2853,4 +3020,19 @@ html[data-theme="light"] .menu-card-content h4 { color: #334155; }
     .mobile-bill-total { font-size: .98rem; font-weight: 800; white-space: nowrap; }
     .mobile-bill-taskbar > .fa-chevron-up { font-size: .8rem; opacity: .88; }
     .mobile-bill-taskbar:active { transform: translateY(1px); }
+}
+
+/* Quy tắc cuối cùng: điện thoại hiển thị nội dung sát viền màn hình. */
+@media (max-width: 767.98px) {
+    .app-container { padding: 0 !important; }
+    .main-panel,
+    .main-panel:not(.login-mode),
+    .main-panel.login-mode,
+    body:has(#loginView.active) .main-panel,
+    .main-panel:has(#loginView.active) {
+        width: 100% !important;
+        min-height: 100dvh !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+    }
 }

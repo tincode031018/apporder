@@ -298,6 +298,9 @@ function switchAdminModule(target) {
 
     const moduleSelect = document.getElementById('adminModuleSelect');
     if (moduleSelect) moduleSelect.value = target;
+    document.querySelectorAll('#adminModuleMenu [data-admin-module]').forEach(button => {
+        button.classList.toggle('active', button.dataset.adminModule === target);
+    });
     document.querySelectorAll('.admin-taskbar-item').forEach(button => {
         const active = button.dataset.adminModule === target;
         button.classList.toggle('active', active);
@@ -330,12 +333,30 @@ function switchAdminModule(target) {
         document.getElementById('adminPrinterTab').classList.remove('hidden');
         const input = document.getElementById('printerAddressInput');
         if (input) input.value = state.printerSettings?.address || '';
+        const paperWidthInput = document.getElementById('printerPaperWidth');
+        if (paperWidthInput) paperWidthInput.value = '80';
         setPrinterBridgeStatus('Chưa kiểm tra bridge', 'neutral');
     } else if (target === 'paymentqr') {
         document.getElementById('adminPaymentQrTab').classList.remove('hidden');
         renderPaymentQrAdmin();
     }
 }
+
+window.toggleAdminModuleMenu = function() {
+    const menu = document.getElementById('adminModuleMenu');
+    const toggle = document.getElementById('adminMenuToggle');
+    if (!menu || !toggle) return;
+    const isOpen = menu.classList.toggle('hidden') === false;
+    toggle.setAttribute('aria-expanded', String(isOpen));
+};
+
+window.selectAdminModule = function(target) {
+    switchAdminModule(target);
+    const menu = document.getElementById('adminModuleMenu');
+    const toggle = document.getElementById('adminMenuToggle');
+    if (menu) menu.classList.add('hidden');
+    if (toggle) toggle.setAttribute('aria-expanded', 'false');
+};
 
 // Kept for compatibility with any legacy <button> tab callers
 window.handleAdminTab = (tab) => {

@@ -130,6 +130,16 @@ window.openTableActions = function(tableId) {
         }
     }
 
+    // Chủ Quán chỉ thao tác quản trị bàn: đặt/hủy đặt, đổi, ghép và hủy ghép.
+    // Việc gọi món thuộc luồng phục vụ; khi có món bảng sẽ tự chuyển Có khách.
+    const isAdmin = state.role === 'admin';
+    const orderButtonGroup = document.getElementById('actionButtonGroup');
+    const orderDetailsBlock = document.getElementById('actionOrderDetails');
+    const totalBlock = document.getElementById('actionTotalInfo');
+    if (orderButtonGroup) orderButtonGroup.classList.toggle('hidden', isAdmin);
+    if (isAdmin && orderDetailsBlock) orderDetailsBlock.style.display = 'none';
+    if (isAdmin && totalBlock) totalBlock.style.display = 'none';
+
     const mergeTableBtn = document.getElementById('mergeTableBtn');
     const unmergeTableBtn = document.getElementById('unmergeTableBtn');
     if (mergeTableBtn && unmergeTableBtn) {
@@ -140,7 +150,12 @@ window.openTableActions = function(tableId) {
             mergeTableBtn.classList.remove('hidden');
             unmergeTableBtn.classList.add('hidden');
         }
+        mergeTableBtn.classList.toggle('hidden', !isAdmin || Boolean(table.mergedWith));
+        unmergeTableBtn.classList.toggle('hidden', !isAdmin || !table.mergedWith);
     }
+
+    const moveButton = document.querySelector('#tableActionSheet button[onclick="openMoveTableModal()"]');
+    if (moveButton) moveButton.classList.toggle('hidden', !isAdmin);
 
     const overlay = document.getElementById('tableActionOverlay');
     const sheet = document.getElementById('tableActionSheet');

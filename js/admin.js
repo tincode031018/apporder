@@ -30,11 +30,12 @@ function initCanvas() {
             const dy = mouseY - table.computedY;
             // Check if click is inside circle
             if (Math.sqrt(dx * dx + dy * dy) <= tableRadius) {
-                // Toggle status
-                let newStatus = 'empty';
-                if (table.status === 'empty') newStatus = 'booked';
-                else if (table.status === 'booked') newStatus = 'occupied';
-                else newStatus = 'empty';
+                // "Có khách" is set only after an order is confirmed.
+                if (table.status === 'occupied') {
+                    showToast('Bàn đang có khách; trạng thái được cập nhật theo món đã gọi.');
+                    return;
+                }
+                const newStatus = table.status === 'booked' ? 'empty' : 'booked';
                 
                 db.collection("tables").doc(table.id.toString()).update({ status: newStatus });
                 table.status = newStatus;
@@ -570,6 +571,7 @@ function renderCategoryFilters() {
 
 // --- Table Actions: Move Table & Merge Table ---
 window.openMoveTableModal = function() {
+    if (state.role !== 'admin') return alert('Chỉ Chủ Quán có quyền đổi bàn.');
     const currentId = state.currentTableId;
     const select = document.getElementById('targetMoveTableSelect');
     select.innerHTML = '';
@@ -596,6 +598,7 @@ window.closeMoveTableModal = function() {
 };
 
 window.confirmMoveTable = async function() {
+    if (state.role !== 'admin') return alert('Chỉ Chủ Quán có quyền đổi bàn.');
     const currentTable = state.tables.find(t => t.id === state.currentTableId);
     const targetId = parseInt(document.getElementById('targetMoveTableSelect').value);
     const targetTable = state.tables.find(t => t.id === targetId);
@@ -624,6 +627,7 @@ window.confirmMoveTable = async function() {
 };
 
 window.openMergeTableModal = function() {
+    if (state.role !== 'admin') return alert('Chỉ Chủ Quán có quyền ghép bàn.');
     const currentId = state.currentTableId;
     const select = document.getElementById('sourceMergeTableSelect');
     select.innerHTML = '';
@@ -651,6 +655,7 @@ window.closeMergeTableModal = function() {
 };
 
 window.confirmMergeTable = async function() {
+    if (state.role !== 'admin') return alert('Chỉ Chủ Quán có quyền ghép bàn.');
     const currentTable = state.tables.find(t => t.id === state.currentTableId);
     const sourceId = parseInt(document.getElementById('sourceMergeTableSelect').value);
     const sourceTable = state.tables.find(t => t.id === sourceId);
@@ -677,6 +682,7 @@ window.confirmMergeTable = async function() {
 };
 
 window.unmergeTable = async function() {
+    if (state.role !== 'admin') return alert('Chỉ Chủ Quán có quyền hủy ghép bàn.');
     const currentTable = state.tables.find(t => t.id === state.currentTableId);
     if (!currentTable || !currentTable.mergedWith) return;
 
@@ -1303,7 +1309,7 @@ function updateInventoryStats() {
     if (valueEl) valueEl.innerText = totalVal.toLocaleString() + 'đ';
 }
 
-function renderInventoryList() {
+function renderInventoryListLegacy() {
     const list = document.getElementById('inventoryList');
     if (!list) return;
     list.innerHTML = '';
@@ -1381,7 +1387,7 @@ window.deleteInventoryItem = async function(id) {
 };
 
 // --- Module 3: Quản lý Nhân sự & Phân quyền ---
-function renderStaffList() {
+function renderStaffListLegacy() {
     const container = document.getElementById('staffListContainer');
     if (!container) return;
     container.innerHTML = '';
@@ -1551,4 +1557,79 @@ window.saveFixedCostSettings = async function() {
     showToast('Đã lưu cài đặt Định phí & Khấu hao thành công!');
     renderAnalyticsData();
 };
+
+// Bảng nguyên liệu: giữ các trường quan trọng trên cùng một hàng để dễ đối chiếu.
+function renderInventoryList() {
+    const list = document.getElementById('inventoryList');
+    if (!list) return;
+
+    list.innerHTML = `
+        <div class="inventory-table" role="table" aria-label="Danh sách nguyên liệu">
+            <div class="inventory-table-head" role="row">
+                <span>Tên nguyên liệu</span>
+                <span>Đơn vị tính</span>
+                <span>Giá tiền</span>
+                <span>Tồn kho</span>
+            </div>
+        </div>`;
+    const table = list.querySelector('.inventory-table');
+
+    (state.inventory || []).forEach(item => {
+        const isLow = (item.qty || 0) <= (item.minStock || 5);
+        const row = document.createElement('div');
+        row.className = `inventory-table-row${isLow ? ' is-low' : ''}`;
+        row.innerHTML = `
+            <strong class="inventory-name">${item.name}</strong>
+            <span>${item.unit || 'kg'}</span>
+            <strong class="inventory-cost">${(item.cost || 0).toLocaleString('vi-VN')}đ</strong>
+            <div class="inventory-stock-actions">
+                <span class="inventory-qty">${item.qty || 0}</span>
+                <span class="inventory-stock-state ${isLow ? 'low' : ''}">${isLow ? 'Sắp hết' : 'Đủ kho'}</span>
+                <span class="inventory-row-actions">
+                    <button onclick="adjustInventoryQty('${item.id}', 5)" class="btn" title="Nhập thêm 5">+5</button>
+                    <button onclick="adjustInventoryQty('${item.id}', -1)" class="btn" title="Xuất dùng 1">-1</button>
+                    <button onclick="deleteInventoryItem('${item.id}')" class="btn danger-icon" title="Xóa"><i class="fa-solid fa-trash"></i></button>
+                </span>
+            </div>`;
+        table.appendChild(row);
+    });
+}
+
+// Không đưa tài khoản hệ thống Chủ Quán và Bếp KDS vào danh sách nhân sự vận hành.
+function renderStaffList() {
+    const container = document.getElementById('staffListContainer');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const employees = (state.staffMembers || [])
+        .filter(member => member.role !== 'admin' && member.role !== 'kitchen');
+    if (employees.length === 0) {
+        container.innerHTML = '<div class="empty-admin-list">Chưa có nhân sự để hiển thị.</div>';
+        return;
+    }
+
+    employees.forEach(member => {
+        const roleLabel = member.role === 'cashier' ? 'Thu ngân' : 'Phục vụ';
+        const card = document.createElement('article');
+        card.className = 'glass-panel staff-card';
+        card.innerHTML = `
+            <div class="staff-card-head">
+                <div class="staff-avatar">${(member.name || '?').charAt(0)}</div>
+                <div class="staff-identification">
+                    <strong>${member.name}</strong>
+                    <span>Mã PIN: <b>${member.pin || '****'}</b></span>
+                </div>
+                <span class="staff-role-badge ${member.role === 'cashier' ? 'cashier' : ''}">${roleLabel}</span>
+            </div>
+            <dl class="staff-card-details">
+                <div><dt>Ca làm việc</dt><dd>${member.shift || 'Cả ngày'}</dd></div>
+                <div><dt>Lương cơ bản</dt><dd>${(member.salary || 0).toLocaleString('vi-VN')}đ</dd></div>
+            </dl>
+            <div class="staff-card-actions">
+                <button onclick="openChangePinModal('${member.id}')" class="btn"><i class="fa-solid fa-key"></i> Đổi mã PIN</button>
+                <button onclick="deleteStaffMember('${member.id}')" class="btn danger-icon" title="Xóa nhân sự"><i class="fa-solid fa-trash"></i></button>
+            </div>`;
+        container.appendChild(card);
+    });
+}
 
