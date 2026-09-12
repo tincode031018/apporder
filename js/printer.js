@@ -67,8 +67,9 @@ window.discoverThermalPrinters = async function() {
 
 window.savePrinterSettings = function() {
     const address = document.getElementById('printerAddressInput')?.value.trim();
+    const paperWidth = 80;
     if (!address) return showToast('Nhập hoặc chọn địa chỉ máy in trước.');
-    state.printerSettings = { address, paperWidth: 80, savedAt: Date.now() };
+    state.printerSettings = { address, paperWidth, savedAt: Date.now() };
     localStorage.setItem(PRINTER_SETTINGS_KEY, JSON.stringify(state.printerSettings));
     showToast('Đã lưu máy in K80 trên máy thu ngân này.');
 };
@@ -76,7 +77,8 @@ window.savePrinterSettings = function() {
 async function sendToThermalPrinter(payload) {
     const address = state.printerSettings?.address;
     if (!address) throw new Error('NO_PRINTER_SELECTED');
-    const response = await fetch(`${PRINTER_BRIDGE_URL}/print`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ printer: address, paperWidth: 80, ...payload }) });
+    const paperWidth = 80;
+    const response = await fetch(`${PRINTER_BRIDGE_URL}/print`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ printer: address, paperWidth, ...payload }) });
     if (!response.ok) throw new Error('PRINT_FAILED');
     return response.json().catch(() => ({}));
 }
