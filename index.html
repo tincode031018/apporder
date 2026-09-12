@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GastroOrder - Hệ Thống Đặt Món & Quản Lý Nhà Hàng Cao Cấp</title>
+    <title>Quán Nhậu Lá - Hệ thống đặt món và quản lý quán</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -29,7 +29,7 @@
                 <div id="navUserBadge" style="display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.04); padding: 6px 14px; border-radius: 20px; border: 1px solid var(--surface-glass-border); font-size: 0.85rem;">
                     <span id="navRoleIcon"><i class="fa-solid fa-user"></i></span>
                     <span id="navStaffName" style="font-weight: 600; color: var(--text-primary);">Phục vụ</span>
-                    <span id="navRoleTag" style="font-size: 0.72rem; padding: 2px 8px; border-radius: 8px; background: var(--primary-glow); color: var(--primary); font-weight: 700;">STAFF</span>
+                    <span id="navRoleTag" style="font-size: 0.72rem; padding: 2px 8px; border-radius: 8px; background: var(--primary-glow); color: var(--primary); font-weight: 700;">PHỤC VỤ</span>
                 </div>
                 <button id="themeToggleBtn" onclick="window.toggleTheme()" class="btn theme-toggle-btn" title="Chế giao diện sáng/tối" style="padding: 9px 14px; border-radius: 12px;"><i class="fa-solid fa-moon"></i></button>
                 <button id="logoutBtn" onclick="handleLogout()" class="btn" title="Đăng xuất" style="padding: 9px 14px; border-radius: 12px;"><i class="fa-solid fa-right-from-bracket"></i></button>
@@ -40,7 +40,7 @@
         <section id="loginView" class="view active">
             <div style="display: flex; justify-content: flex-end; margin-bottom: 6px;">
                 <button id="themeToggleLogin" onclick="window.toggleTheme()" class="btn theme-toggle-btn" title="Chế giao diện sáng/tối" style="padding: 8px 13px; border-radius: 12px; font-size: 0.85rem;">
-                    <i class="fa-solid fa-moon"></i> <span>Dark</span>
+                    <i class="fa-solid fa-moon"></i> <span>Tối</span>
                 </button>
             </div>
             <div class="login-brand-header" style="text-align: center; margin-top: 10px; margin-bottom: 30px;">
@@ -69,7 +69,7 @@
                     </button>
                     <button class="btn glass-panel role-btn" data-role="admin" style="flex-direction: column; gap: 8px; padding: 18px 4px;">
                         <i class="fa-solid fa-user-shield" style="font-size: 1.3rem; color: var(--accent);"></i>
-                        <span style="font-size: 0.85rem;">Quản trị</span>
+                        <span style="font-size: 0.85rem;">Chủ Quán</span>
                     </button>
                 </div>
             </div>
@@ -88,15 +88,15 @@
             </div>
 
             <div id="kitchenLogin" class="glass-panel hidden">
-                <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-fire-burner" style="color: #f97316; margin-right: 8px;"></i>Mã truy cập Bếp (KDS)</h3>
+                <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-fire-burner" style="color: #f97316; margin-right: 8px;"></i>Mã truy cập Bếp</h3>
                 <input type="password" id="kitchenCode" placeholder="Nhập mã PIN" style="width: 100%; padding: 15px; border-radius: 12px; margin-bottom: 15px;">
                 <button id="loginKitchenBtn" class="btn btn-primary" style="width: 100%; background: linear-gradient(135deg, #f97316, #ea580c);">Vào màn hình Bếp</button>
             </div>
             
             <div id="adminLogin" class="glass-panel hidden">
-                <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-user-shield" style="color: var(--accent); margin-right: 8px;"></i>Mã truy cập Admin</h3>
+                <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-user-shield" style="color: var(--accent); margin-right: 8px;"></i>Mã truy cập Chủ Quán</h3>
                 <input type="password" id="adminCode" placeholder="Nhập mã PIN" style="width: 100%; padding: 15px; border-radius: 12px; margin-bottom: 15px;">
-                <button id="loginAdminBtn" class="btn btn-primary" style="width: 100%;">Truy cập Dashboard Quản trị</button>
+                <button id="loginAdminBtn" class="btn btn-primary" style="width: 100%;">Vào trang quản lý quán</button>
             </div>
         </div>
         </section>
@@ -182,9 +182,9 @@
                     </div>
                 </aside>
             </div>
-            <button id="mobileBillTaskbar" class="mobile-bill-taskbar" type="button" aria-label="Xem bill tạm tính">
+            <button id="mobileBillTaskbar" class="mobile-bill-taskbar" type="button" aria-label="Xem hóa đơn tạm tính">
                 <span class="mobile-bill-icon" aria-hidden="true"><i class="fa-solid fa-receipt"></i><span id="mobileBillCount" class="mobile-bill-count">0</span></span>
-                <span class="mobile-bill-copy"><strong>Bill tạm tính</strong><small id="mobileBillItems">Chưa có món</small></span>
+                <span class="mobile-bill-copy"><strong>Hóa đơn tạm tính</strong><small id="mobileBillItems">Chưa có món</small></span>
                 <span id="mobileBillTotal" class="mobile-bill-total">0đ</span>
                 <i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
             </button>
@@ -198,7 +198,7 @@
                         <i class="fa-solid fa-fire-burner"></i>
                     </div>
                     <div>
-                        <h1 style="margin-bottom: 0;">Màn hình Bếp (KDS)</h1>
+                        <h1 style="margin-bottom: 0;">Màn hình Bếp</h1>
                         <p style="font-size: 0.85rem; opacity: 0.7;">Tiếp nhận & chế biến đơn hàng theo thứ tự ưu tiên</p>
                     </div>
                 </div>
@@ -259,7 +259,7 @@
                         <i class="fa-solid fa-cash-register"></i>
                     </div>
                     <div>
-                        <h1 style="margin-bottom: 0;">Quầy Thu Ngân (Cashier Desk)</h1>
+                        <h1 style="margin-bottom: 0;">Quầy Thu Ngân</h1>
                         <p style="font-size: 0.85rem; opacity: 0.7;">Tiếp nhận thanh toán, xuất hóa đơn & đối soát doanh thu ca</p>
                     </div>
                 </div>
@@ -282,7 +282,7 @@
                 </div>
                 <div class="glass-panel" style="padding: 16px;">
                     <div style="display: flex; justify-content: space-between; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 6px;">
-                        <span>Tiền mặt (Cash)</span>
+                        <span>Tiền mặt</span>
                         <i class="fa-solid fa-money-bill-wave" style="color: #34d399;"></i>
                     </div>
                     <div id="cashierCashTotal" style="font-size: 1.5rem; font-weight: 800; color: #34d399;">0đ</div>
@@ -296,7 +296,7 @@
                 </div>
                 <div class="glass-panel" style="padding: 16px;">
                     <div style="display: flex; justify-content: space-between; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 6px;">
-                        <span>Số bill đã thanh toán</span>
+                        <span>Số hóa đơn đã thanh toán</span>
                         <i class="fa-solid fa-receipt" style="color: #f472b6;"></i>
                     </div>
                     <div id="cashierPaidBillsCount" style="font-size: 1.5rem; font-weight: 800; color: #f472b6;">0</div>
@@ -317,7 +317,7 @@
                 </div>
 
                 <!-- Right: Checkout Settlement Terminal -->
-                <div class="glass-panel" style="padding: 22px; position: sticky; top: 80px;" id="cashierCheckoutTerminal">
+                <div class="glass-panel cashier-bill-panel hidden" style="padding: 22px; position: sticky; top: 80px;" id="cashierCheckoutTerminal">
                     <div style="border-bottom: 1px dashed var(--surface-border); padding-bottom: 15px; margin-bottom: 15px;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <h2 id="cashierActiveTableTitle" style="margin: 0; font-size: 1.3rem; color: #ffffff;">Chọn một bàn</h2>
@@ -656,8 +656,14 @@
                     </div>
                 </div>
                 <p>Trạng thái bàn thời gian thực</p>
-                <div class="glass-panel" style="margin: 15px 0 20px; padding: 16px;">
-                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; text-align: center;">
+                <div class="floor-status-tabs" role="tablist" aria-label="Lọc trạng thái bàn">
+                    <button class="floor-status-tab active" type="button" data-floor-filter="all" onclick="setFloorPlanFilter('all')">Tất cả</button>
+                    <button class="floor-status-tab" type="button" data-floor-filter="occupied" onclick="setFloorPlanFilter('occupied')">Bàn có khách</button>
+                    <button class="floor-status-tab" type="button" data-floor-filter="booked" onclick="setFloorPlanFilter('booked')">Bàn đặt</button>
+                    <button class="floor-status-tab" type="button" data-floor-filter="empty" onclick="setFloorPlanFilter('empty')">Bàn trống</button>
+                </div>
+                <div class="floor-stats" style="margin: 12px 0 16px;">
+                    <div class="floor-stats-row">
                         <div><div style="font-size: 1.2rem; font-weight: 700;" id="floorStatTotal">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Tổng số bàn</div></div>
                         <div><div style="font-size: 1.2rem; font-weight: 700; color: #34d399;" id="floorStatEmpty">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Bàn trống</div></div>
                         <div><div style="font-size: 1.2rem; font-weight: 700; color: #fbbf24;" id="floorStatBooked">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Bàn đã đặt</div></div>
@@ -665,7 +671,7 @@
                     </div>
                 </div>
 
-                <div class="canvas-container" style="margin: 20px 0;">
+                <div class="canvas-container floor-plan-container" style="margin: 12px 0;">
                     <canvas id="floorPlanCanvas"></canvas>
                 </div>
 
@@ -692,7 +698,7 @@
                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center;">
                         <div><div style="font-size: 1.2rem; font-weight: 700;" id="menuStatTotal">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Tổng số món</div></div>
                         <div><div style="font-size: 1.2rem; font-weight: 700; color: #ef4444;" id="menuStatSoldOut">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Món hết</div></div>
-                        <div><div style="font-size: 1.2rem; font-weight: 700; color: #fbbf24;" id="menuStatSpecial">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Món đặc biệt</div></div>
+                        <div><div style="font-size: 1.2rem; font-weight: 700; color: #8b5cf6;" id="menuStatSpecial">0</div><div style="font-size: 0.7rem; color: var(--text-secondary);">Món bán chạy</div></div>
                     </div>
                 </div>
 
@@ -815,7 +821,7 @@
                     <!-- Admin only reserve table button -->
                     <div id="adminTableReserveBtn" class="hidden" style="margin-bottom: 10px;">
                         <button class="btn" onclick="handleActionBook()" style="width: 100%; padding: 10px; border-color: var(--warning); color: var(--warning); font-size: 0.85rem;">
-                            <i class="fa-solid fa-calendar-check" style="margin-right: 6px;"></i> Đặt bàn trước (Quyền Admin)
+                            <i class="fa-solid fa-calendar-check" style="margin-right: 6px;"></i> Đặt bàn trước (Quyền Chủ Quán)
                         </button>
                     </div>
 
@@ -842,7 +848,7 @@
             <!-- Menu Item Management Modal -->
             <div id="menuItemModal" class="hidden" style="position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: 1100; backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 20px;">
                 <div class="glass-panel modal-box">
-                    <h2 style="margin-bottom: 20px;">Thêm món mới</h2>
+                    <h2 id="menuItemModalTitle" style="margin-bottom: 20px;">Thêm món mới</h2>
                     <div style="display: grid; gap: 15px;">
                         <div>
                             <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Tên món</label>
@@ -850,7 +856,7 @@
                         </div>
                         <div>
                             <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Giá tiền (VNĐ)</label>
-                            <input type="number" id="editItemPrice" placeholder="VD: 55000" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--surface-border); margin-top: 5px;">
+                            <input type="text" inputmode="numeric" id="editItemPrice" placeholder="VD: 55.000" oninput="formatMenuItemPrice(this)" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--surface-border); margin-top: 5px;">
                         </div>
                         <div>
                             <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Danh mục</label>
@@ -979,9 +985,9 @@
                                 <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Vai trò</label>
                                 <select id="staffRoleInput" style="width: 100%; margin-top: 4px;">
                                     <option value="staff">Phục vụ bàn</option>
-                                    <option value="cashier">Thu ngân (Cashier)</option>
+                                    <option value="cashier">Thu ngân</option>
                                     <option value="kitchen">Bộ phận Bếp</option>
-                                    <option value="admin">Quản trị viên</option>
+                                    <option value="admin">Chủ Quán</option>
                                 </select>
                             </div>
                             <div>
@@ -995,7 +1001,7 @@
                                 <select id="staffShiftInput" style="width: 100%; margin-top: 4px;">
                                     <option value="Ca sáng (06:00 - 14:00)">Ca sáng (06h-14h)</option>
                                     <option value="Ca tối (14:00 - 22:00)">Ca tối (14h-22h)</option>
-                                    <option value="Cả ngày (Full-time)">Full-time</option>
+                                    <option value="Cả ngày">Cả ngày</option>
                                 </select>
                             </div>
                             <div>

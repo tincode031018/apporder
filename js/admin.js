@@ -1,5 +1,15 @@
 // --- Admin: Canvas Floor Plan ---
 let ctx;
+state.floorPlanFilter = state.floorPlanFilter || 'all';
+
+window.setFloorPlanFilter = function(filter) {
+    state.floorPlanFilter = filter;
+    document.querySelectorAll('[data-floor-filter]').forEach(button => {
+        button.classList.toggle('active', button.dataset.floorFilter === filter);
+    });
+    resizeCanvas();
+    drawFloorPlan();
+};
 function initCanvas() {
     const canvas = document.getElementById('floorPlanCanvas');
     if (!canvas) return;
@@ -43,6 +53,15 @@ function drawFloorPlan() {
     ctx.clearRect(0, 0, rect.width, rect.height);
 
     const { positioned, tableRadius } = getTablePositions(rect.width);
+
+    if (positioned.length === 0) {
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-secondary');
+        ctx.font = '600 14px "Plus Jakarta Sans", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('Không có bàn thuộc trạng thái này', rect.width / 2, rect.height / 2);
+        return;
+    }
     
     // Draw merge connector lines first
     const drawnMerges = new Set();
@@ -94,10 +113,15 @@ function drawFloorPlan() {
         ctx.textBaseline = 'middle';
         ctx.fillText(table.id, tx, ty);
         
-        // Draw status text below
+        // Draw a readable Vietnamese status below each table on the light plan.
+        const statusLabel = table.status === 'occupied'
+            ? 'Có khách'
+            : (table.status === 'booked' ? 'Đặt trước' : 'Trống');
         ctx.font = '700 11px "Plus Jakarta Sans", sans-serif';
-        ctx.fillStyle = 'rgba(255,255,255,0.9)';
-        ctx.fillText(table.status.toUpperCase(), tx, ty + tableRadius + 14);
+        ctx.fillStyle = table.status === 'occupied'
+            ? '#b91c1c'
+            : (table.status === 'booked' ? '#b45309' : '#047857');
+        ctx.fillText(statusLabel, tx, ty + tableRadius + 18);
     });
 }
 
@@ -124,7 +148,7 @@ function updateFloorStats() {
 function updateMenuStats() {
     const total = state.menu.length;
     const soldOut = state.menu.filter(item => item.isOutOfStock || item.outOfStock || item.status === 'out' || item.status === 'soldout').length;
-    const special = state.menu.filter(item => item.isSpecial || item.special || item.featured).length;
+    const special = state.menu.filter(item => getMenuItemSalesCount(item) > 20).length;
     
     const totalEl = document.getElementById('menuStatTotal');
     const soldOutEl = document.getElementById('menuStatSoldOut');
@@ -168,17 +192,25 @@ function resizeCanvas() {
     
     const container = canvas.parentElement;
     const rect = container.getBoundingClientRect();
-    const { requiredHeight } = getTablePositions(rect.width || 800);
+    const filter = state.floorPlanFilter || 'all';
+    const visibleCount = filter === 'all'
+        ? state.tables.length
+        : state.tables.filter(table => table.status === filter).length;
     const isMobile = rect.width < 600;
-    const neededHeight = Math.max(isMobile ? 320 : 420, requiredHeight);
+    const tableRadius = isMobile ? 24 : 34;
+    const paddingX = isMobile ? 18 : 48;
+    const columnPitch = isMobile ? 96 : 150;
+    const layoutWidth = Math.max(rect.width, paddingX * 2 + tableRadius * 2 + Math.max(0, visibleCount - 1) * columnPitch);
+    const { requiredHeight } = getTablePositions(layoutWidth || 800);
+    const neededHeight = Math.max(isMobile ? 220 : 250, requiredHeight);
     
     container.style.height = neededHeight + 'px';
     container.style.aspectRatio = 'auto';
     
     const dpr = window.devicePixelRatio || 1;
-    canvas.width = rect.width * dpr;
+    canvas.width = layoutWidth * dpr;
     canvas.height = neededHeight * dpr;
-    canvas.style.width = rect.width + 'px';
+    canvas.style.width = layoutWidth + 'px';
     canvas.style.height = neededHeight + 'px';
     
     ctx = canvas.getContext('2d');
@@ -187,33 +219,44 @@ function resizeCanvas() {
 
 
 // --- Admin: Menu Management ---
+function getMenuItemSalesCount(item) {
+    return (state.bills || []).reduce((total, bill) => total + (bill.items || []).reduce((sum, orderedItem) => {
+        const isSameItem = String(orderedItem.id || '') === String(item.id)
+            || (!orderedItem.id && orderedItem.name === item.name);
+        return sum + (isSameItem ? (Number(orderedItem.qty) || 0) : 0);
+    }, 0), 0);
+}
+
 function renderAdminMenu() {
     const list = document.getElementById('adminMenuList');
     list.innerHTML = '';
     state.menu.forEach(item => {
-        const isSpecial = !!(item.isSpecial || item.special || item.featured);
+        const salesCount = getMenuItemSalesCount(item);
+        const isBestSeller = salesCount > 20;
         const isOut = !!(item.isOutOfStock || item.outOfStock || item.status === 'out' || item.status === 'soldout');
         const row = document.createElement('div');
-        row.className = 'glass-panel';
+        row.className = 'glass-panel menu-admin-card';
         row.style.display = 'flex';
-        row.style.gap = '15px';
-        row.style.padding = '15px';
+        row.style.gap = '10px';
+        row.style.padding = '12px';
         row.style.alignItems = 'center';
         row.innerHTML = `
             <img src="${item.img}" style="width: 50px; height: 50px; border-radius: 10px; object-fit: cover;">
             <div style="flex: 1; min-width: 0;">
                 <div style="font-weight: 600;">${item.name}</div>
                 <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 2px;">${item.price.toLocaleString()}đ • ${item.cat}</div>
-                <div style="display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap;">
-                    <button class="btn" onclick="toggleMenuFlag('${item.id}', 'isOutOfStock')" style="padding: 5px 10px; border: 1px solid var(--danger); color: ${isOut ? 'white' : 'var(--danger)'}; background: ${isOut ? 'var(--danger)' : 'transparent'};">
-                        Hết món
+                <div class="menu-admin-actions">
+                    <span class="menu-status-dot ${isOut ? 'is-out' : 'is-available'}" title="${isOut ? 'Đang hết món' : 'Đang phục vụ'}"><i class="fa-solid ${isOut ? 'fa-ban' : 'fa-check'}"></i></span>
+                    ${isBestSeller ? `<span class="menu-status-dot is-best-seller" title="Bán chạy: ${salesCount} lượt"><i class="fa-solid fa-crown"></i></span>` : ''}
+                    <button class="menu-icon-button is-out-toggle ${isOut ? 'active' : ''}" onclick="toggleMenuFlag('${item.id}', 'isOutOfStock')" title="${isOut ? 'Mở bán lại' : 'Đánh dấu hết món'}" aria-label="${isOut ? 'Mở bán lại' : 'Đánh dấu hết món'}">
+                        <i class="fa-solid fa-ban"></i>
                     </button>
-                    <button class="btn" onclick="toggleMenuFlag('${item.id}', 'isSpecial')" style="padding: 5px 10px; border: 1px solid var(--warning); color: ${isSpecial ? 'white' : 'var(--warning)'}; background: ${isSpecial ? 'var(--warning)' : 'transparent'};">
-                        Đặc biệt
+                    <button class="menu-icon-button" onclick="editMenuItem('${item.id}')" title="Sửa món" aria-label="Sửa món">
+                        <i class="fa-solid fa-pen"></i>
                     </button>
                 </div>
             </div>
-            <button class="btn" onclick="deleteMenuItem(${item.id})" style="color: var(--danger); border: none; background: none; padding: 5px;">
+            <button class="menu-icon-button is-delete" onclick="deleteMenuItem('${item.id}')" title="Xóa món" aria-label="Xóa món">
                 <i class="fa-solid fa-trash"></i>
             </button>
         `;
@@ -253,11 +296,36 @@ function compressImage(file, maxDimension = 480, quality = 0.78) {
     });
 }
 
+let editingMenuItemId = null;
+
+function formatPriceInput(input) {
+    const digits = String(input.value || '').replace(/\D/g, '');
+    input.value = digits ? Number(digits).toLocaleString('vi-VN') : '';
+}
+
+window.formatMenuItemPrice = function(input) { formatPriceInput(input); };
+
+function setupMenuItemImageInput() {
+    const fileInput = document.getElementById('editItemFile');
+    const previewContainer = document.getElementById('imagePreview');
+    const previewImg = previewContainer.querySelector('img');
+    fileInput.onchange = async () => {
+        if (!fileInput.files?.[0]) return;
+        const compressed = await compressImage(fileInput.files[0]);
+        if (compressed && previewImg) {
+            previewImg.src = compressed;
+            previewContainer.style.display = 'block';
+        }
+    };
+}
+
 window.addMenuItem = function() {
     // Populate Categories select
     const select = document.getElementById('editItemCat');
     select.innerHTML = (state.categories || []).map(c => `<option value="${c.id}">${c.name}</option>`).join('');
 
+    editingMenuItemId = null;
+    document.getElementById('menuItemModalTitle').innerText = 'Thêm món mới';
     // Clear previous values
     document.getElementById('editItemName').value = '';
     document.getElementById('editItemPrice').value = '';
@@ -267,18 +335,29 @@ window.addMenuItem = function() {
     const previewImg = previewContainer.querySelector('img');
     previewContainer.style.display = 'none';
 
-    fileInput.onchange = async () => {
-        if (fileInput.files && fileInput.files[0]) {
-            const compressed = await compressImage(fileInput.files[0]);
-            if (compressed && previewImg) {
-                previewImg.src = compressed;
-                previewContainer.style.display = 'block';
-            }
-        } else {
-            previewContainer.style.display = 'none';
-        }
-    };
+    previewImg.src = '';
+    setupMenuItemImageInput();
     
+    document.getElementById('menuItemModal').classList.remove('hidden');
+};
+
+window.editMenuItem = function(id) {
+    const item = state.menu.find(menuItem => String(menuItem.id) === String(id));
+    if (!item) return;
+    editingMenuItemId = item.id;
+    const select = document.getElementById('editItemCat');
+    select.innerHTML = (state.categories || []).map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+    select.value = item.cat || '';
+    document.getElementById('menuItemModalTitle').innerText = 'Sửa thông tin món';
+    document.getElementById('editItemName').value = item.name || '';
+    document.getElementById('editItemPrice').value = Number(item.price || 0).toLocaleString('vi-VN');
+    const fileInput = document.getElementById('editItemFile');
+    fileInput.value = '';
+    const previewContainer = document.getElementById('imagePreview');
+    const previewImg = previewContainer.querySelector('img');
+    previewImg.src = item.img || '';
+    previewContainer.style.display = item.img ? 'block' : 'none';
+    setupMenuItemImageInput();
     document.getElementById('menuItemModal').classList.remove('hidden');
 };
 
@@ -288,7 +367,7 @@ window.closeMenuModal = () => {
 
 window.saveMenuItem = async () => {
     const name = document.getElementById('editItemName').value.trim();
-    const price = parseInt(document.getElementById('editItemPrice').value);
+    const price = parseInt(document.getElementById('editItemPrice').value.replace(/\D/g, ''), 10);
     const cat = document.getElementById('editItemCat').value;
     const fileInput = document.getElementById('editItemFile');
     
@@ -296,7 +375,8 @@ window.saveMenuItem = async () => {
         return alert('Vui lòng nhập đầy đủ tên và giá món');
     }
     
-    let imgUrl = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&auto=format&fit=crop&q=60';
+    const existingItem = state.menu.find(item => String(item.id) === String(editingMenuItemId));
+    let imgUrl = existingItem?.img || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&auto=format&fit=crop&q=60';
     if (fileInput.files && fileInput.files[0]) {
         showToast('Đang tối ưu ảnh món...');
         const compressed = await compressImage(fileInput.files[0]);
@@ -310,7 +390,7 @@ window.saveMenuItem = async () => {
         }
     }
 
-    const id = Date.now().toString();
+    const id = editingMenuItemId || Date.now().toString();
     const newItem = {
         id,
         name,
@@ -320,9 +400,9 @@ window.saveMenuItem = async () => {
     };
 
     try {
-        await db.collection("menu").doc(id).set(newItem);
+        await db.collection("menu").doc(id.toString()).set(newItem, { merge: true });
         closeMenuModal();
-        showToast('Đã thêm món mới thành công!');
+        showToast(editingMenuItemId ? 'Đã cập nhật món' : 'Đã thêm món mới thành công!');
     } catch (error) {
         console.error("Lỗi lưu Firestore:", error);
         alert('Lỗi lưu vào Firestore: ' + error.message);
@@ -343,9 +423,16 @@ window.toggleMenuFlag = async (id, field) => {
     const item = state.menu.find(m => m.id.toString() === id.toString());
     if (!item) return;
     const patch = {};
-    patch[field] = !item[field];
+    if (field === 'isOutOfStock') {
+        const isOut = !!(item.isOutOfStock || item.outOfStock || item.status === 'out' || item.status === 'soldout');
+        patch.isOutOfStock = !isOut;
+        patch.outOfStock = false;
+        patch.status = isOut ? 'available' : 'out';
+    } else {
+        patch[field] = !item[field];
+    }
     await db.collection("menu").doc(id.toString()).update(patch);
-    showToast(patch[field] ? 'Đã cập nhật món' : 'Đã bỏ trạng thái');
+    showToast(patch.isOutOfStock ? 'Đã đánh dấu hết món' : 'Món đã được mở bán lại');
     updateMenuStats();
 };
 
@@ -1303,7 +1390,7 @@ function renderStaffList() {
         const card = document.createElement('div');
         card.className = 'glass-panel';
         const roleBadge = member.role === 'admin' 
-            ? '<span style="background: rgba(99,102,241,0.2); color: #818cf8; padding: 3px 8px; border-radius: 8px; font-size: 0.75rem; font-weight: 700;">Quản trị viên</span>' 
+            ? '<span style="background: rgba(99,102,241,0.2); color: #818cf8; padding: 3px 8px; border-radius: 8px; font-size: 0.75rem; font-weight: 700;">Chủ Quán</span>'
             : (member.role === 'kitchen' 
                 ? '<span style="background: rgba(249,115,22,0.2); color: #f97316; padding: 3px 8px; border-radius: 8px; font-size: 0.75rem; font-weight: 700;">Bếp (KDS)</span>' 
                 : (member.role === 'cashier'

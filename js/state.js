@@ -10,7 +10,7 @@ function updateThemeToggleIcons(theme) {
     const labelEl = document.getElementById('themeToggleLogin');
     if (labelEl) {
         const span = labelEl.querySelector('span');
-        if (span) span.textContent = isDark ? 'Light' : 'Dark';
+        if (span) span.textContent = isDark ? 'Sáng' : 'Tối';
     }
 }
 
@@ -45,9 +45,9 @@ const INITIAL_TABLES = Array.from({ length: 12 }, (_, i) => ({
 // Default staff accounts & PINs (only created if a role is missing, e.g. on an empty DB).
 // Bếp (kitchen) = 2222, Thu ngân (cashier) = 3333, Quản trị viên (admin) = 1234
 const INITIAL_STAFF = [
-    { id: 'staff_admin',   name: 'Quản trị viên', role: 'admin',   pin: '1234', shift: 'Cả ngày (Full-time)', salary: 7500000, revenue: 0 },
-    { id: 'staff_kitchen', name: 'Bếp',           role: 'kitchen', pin: '2222', shift: 'Cả ngày (Full-time)', salary: 7500000, revenue: 0 },
-    { id: 'staff_cashier', name: 'Thu ngân',      role: 'cashier', pin: '3333', shift: 'Cả ngày (Full-time)', salary: 7500000, revenue: 0 }
+    { id: 'staff_admin',   name: 'Chủ Quán', role: 'admin',   pin: '1234', shift: 'Cả ngày', salary: 7500000, revenue: 0 },
+    { id: 'staff_kitchen', name: 'Bếp',      role: 'kitchen', pin: '2222', shift: 'Cả ngày', salary: 7500000, revenue: 0 },
+    { id: 'staff_cashier', name: 'Thu ngân', role: 'cashier', pin: '3333', shift: 'Cả ngày', salary: 7500000, revenue: 0 }
 ];
 
 // The web app talks only to a local Printer Bridge. Browsers do

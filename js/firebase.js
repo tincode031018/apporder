@@ -55,7 +55,7 @@ function syncWithFirebase() {
         INITIAL_STAFF.forEach(seed => { if (!state.staffMembers.some(member => member.role === seed.role)) db.collection('staff').doc(seed.id).set(seed); });
         renderStaffList(); renderAnalyticsData();
     });
-    db.collection('bills').onSnapshot(snapshot => { state.bills = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)); renderAnalyticsData(); if (views.cashier?.classList.contains('active')) updateCashierShiftSummary(); });
+    db.collection('bills').onSnapshot(snapshot => { state.bills = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)); renderAnalyticsData(); renderAdminMenu(); updateMenuStats(); if (views.cashier?.classList.contains('active')) updateCashierShiftSummary(); });
     db.collection('settings').doc('financial').onSnapshot(doc => { state.fixedCostSettings = doc?.exists ? doc.data() : {}; renderAnalyticsData(); });
     db.collection('settings').doc('payment_qr').onSnapshot(doc => { state.paymentQrSettings = doc?.exists ? doc.data() : {}; renderPaymentQrAdmin(); if (state.cashierPaymentMethod === 'qr' && state.cashierSelectedTableId) recalcCashierFinalTotal(); });
 }

@@ -83,7 +83,7 @@ async function sendToThermalPrinter(payload) {
 
 window.printThermalTest = async function() {
     try {
-        await sendToThermalPrinter({ type: 'test', text: 'GastroOrder\nIN THU K80\n\n' });
+        await sendToThermalPrinter({ type: 'test', text: 'QUÁN NHẬU LÁ\nIN THỬ K80\n\n' });
         showToast('Đã gửi lệnh in thử tới máy in K80.');
     } catch (error) {
         showToast(error.message === 'NO_PRINTER_SELECTED' ? 'Hãy chọn máy in trước.' : 'Không gửi được lệnh in. Kiểm tra bridge và thiết bị.');

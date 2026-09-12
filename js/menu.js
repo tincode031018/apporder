@@ -176,7 +176,7 @@ function renderMenu(category) {
         const card = document.createElement('div');
         card.className = 'menu-card';
         card.innerHTML = `
-            ${item.img ? `<img src="${item.img}" alt="${item.name}">` : `<div style="width: 100%; aspect-ratio: 1 / 1; background: #f1f5f9; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 0.8rem;">No image</div>`}
+            ${item.img ? `<img src="${item.img}" alt="${item.name}">` : `<div style="width: 100%; aspect-ratio: 1 / 1; background: #f1f5f9; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 0.8rem;">Chưa có ảnh</div>`}
             <div class="menu-card-content">
                 <h4 style="font-size: 0.9rem; margin-bottom: 5px;">${item.name}</h4>
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;">
@@ -474,30 +474,28 @@ window.checkout = async function() {
 // Responsive: on small/mobile widths it shrinks the table circles and adjusts
 // spacing so the whole floor plan always fits inside the canvas (no clipping).
 function getTablePositions(canvasWidth) {
-    const isMobile = canvasWidth < 600;
+    // Use viewport width rather than the scrollable canvas width: once a
+    // mobile plan grows horizontally, its canvas itself can be much wider.
+    const isMobile = window.innerWidth < 600;
     const tableRadius = isMobile ? 24 : 34;
-    const paddingX = isMobile ? 24 : 80;
-    const availableWidth = Math.max(140, canvasWidth - paddingX * 2);
-
-    // Choose optimal columns based on container width
-    let cols = Math.floor(availableWidth / (isMobile ? 100 : 150));
-    cols = Math.min(6, Math.max(isMobile ? 2 : 3, cols));
-
+    const paddingX = isMobile ? 18 : 48;
     const startY = isMobile ? 50 : 80;
-    const spacingY = isMobile ? 100 : 140;
+    const filter = state.floorPlanFilter || 'all';
+    const visibleTables = filter === 'all'
+        ? state.tables
+        : state.tables.filter(table => table.status === filter);
 
-    // Horizontal spacing sized so the last column circle stays inside the canvas
+    // Each table gets its own column. The container scrolls sideways instead
+    // of creating new rows as more tables are added.
+    const cols = Math.max(1, visibleTables.length);
     const usableXs = canvasWidth - paddingX * 2 - tableRadius * 2;
-    let spacingX = cols > 1 ? Math.max(usableXs / (cols - 1), tableRadius + 8) : 0;
+    const spacingX = cols > 1 ? Math.max(usableXs / (cols - 1), tableRadius + 8) : 0;
     const leftMargin = paddingX + tableRadius;
-
-    const positioned = state.tables.map((table, i) => {
-        const col = i % cols;
-        const row = Math.floor(i / cols);
+    const positioned = visibleTables.map((table, i) => {
         return {
             ...table,
-            computedX: leftMargin + col * spacingX,
-            computedY: startY + row * spacingY
+            computedX: leftMargin + i * spacingX,
+            computedY: startY
         };
     });
 
@@ -516,8 +514,8 @@ function getTablePositions(canvasWidth) {
         }
     });
 
-    const totalRows = Math.ceil(state.tables.length / cols) || 1;
-    const requiredHeight = startY + (totalRows - 1) * spacingY + tableRadius + 90;
+    const totalRows = 1;
+    const requiredHeight = startY + tableRadius + 56;
     return { positioned, cols, totalRows, tableRadius, requiredHeight };
 }
 

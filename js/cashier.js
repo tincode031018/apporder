@@ -110,6 +110,7 @@ window.selectCashierTable = function(tableId) {
     const badgeEl = document.getElementById('cashierActiveTableBadge');
     const staffEl = document.getElementById('cashierActiveStaff');
     const itemsEl = document.getElementById('cashierActiveItems');
+    document.getElementById('cashierCheckoutTerminal')?.classList.remove('hidden');
 
     if (titleEl) titleEl.innerText = `Bàn ${table.id.toString().padStart(2, '0')}`;
     if (badgeEl) {
@@ -147,6 +148,7 @@ function resetCashierTerminal() {
     const itemsEl = document.getElementById('cashierActiveItems');
     const subtotalEl = document.getElementById('cashierSubtotal');
     const finalTotalEl = document.getElementById('cashierFinalTotal');
+    document.getElementById('cashierCheckoutTerminal')?.classList.add('hidden');
 
     if (titleEl) titleEl.innerText = 'Chọn một bàn';
     if (badgeEl) {
@@ -239,7 +241,7 @@ function updateDynamicVietQr(tableId, amount) {
         const title = document.getElementById('cashierQrTitle');
         const caption = document.getElementById('cashierQrCaption');
         if (title) title.textContent = 'QUÉT MÃ QR ĐỂ THANH TOÁN';
-        if (caption) caption.textContent = 'Mã QR do quản trị viên cập nhật';
+        if (caption) caption.textContent = 'Mã QR do Chủ Quán cập nhật';
         return;
     }
 

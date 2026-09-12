@@ -203,7 +203,7 @@ window.handleActionOrder = () => {
 
 window.handleActionBook = async () => {
     if (state.role !== 'admin') {
-        return alert('Chỉ Quản trị viên (Admin) mới có quyền đặt bàn trước!');
+        return alert('Chỉ Chủ Quán mới có quyền đặt bàn trước!');
     }
     const table = state.tables.find(t => t.id === state.currentTableId);
     if (!table) return;
@@ -247,7 +247,7 @@ window.handleActionCheckout = async () => {
             itemCount: orders.reduce((acc, curr) => acc + curr.qty, 0),
             staffId: table.staffId || state.currentStaff?.id || 'nv1',
             staffName: table.staffName || state.currentStaff?.name || 'Phục vụ',
-            cashierName: state.currentStaff?.name || 'Quản trị viên',
+            cashierName: state.currentStaff?.name || 'Chủ Quán',
             timestamp: Date.now(),
             dateFormatted: new Date().toLocaleDateString('vi-VN') + ' ' + new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
         };
@@ -380,6 +380,7 @@ function switchView(viewName) {
     }
 
     if (viewName === 'cashier') {
+        resetCashierTerminal();
         renderCashierTables();
         updateCashierShiftSummary();
     }
@@ -408,17 +409,19 @@ function updateNavRoleIndicator() {
     const tagEl = document.getElementById('navRoleTag');
     if (!iconEl || !nameEl || !tagEl) return;
 
-    const staffName = state.currentStaff?.name || 'Nhân viên';
+    const staffName = state.role === 'admin' && state.currentStaff?.name === 'Quản trị viên'
+        ? 'Chủ Quán'
+        : (state.currentStaff?.name || 'Nhân viên');
     nameEl.innerText = staffName;
 
     if (state.role === 'admin') {
         iconEl.innerHTML = '<i class="fa-solid fa-user-shield" style="color: var(--accent);"></i>';
-        tagEl.innerText = 'ADMIN';
+        tagEl.innerText = 'CHỦ QUÁN';
         tagEl.style.background = 'rgba(99, 102, 241, 0.25)';
         tagEl.style.color = '#818cf8';
     } else if (state.role === 'kitchen') {
         iconEl.innerHTML = '<i class="fa-solid fa-fire-burner" style="color: #f97316;"></i>';
-        tagEl.innerText = 'BẾP (KDS)';
+        tagEl.innerText = 'BẾP';
         tagEl.style.background = 'rgba(249, 115, 22, 0.25)';
         tagEl.style.color = '#f97316';
     } else if (state.role === 'cashier') {

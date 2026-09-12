@@ -708,12 +708,12 @@ input:focus, select:focus {
 .canvas-container {
     width: 100%;
     min-height: 480px;
-    background: #0b0f17;
+    background: var(--bg-surface);
     border-radius: var(--radius-lg);
     overflow-y: auto;
     position: relative;
     border: 1px solid var(--surface-glass-border);
-    box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.5);
+    box-shadow: none;
 }
 
 #floorPlanCanvas {
@@ -2637,6 +2637,59 @@ html[data-theme="light"] .menu-card-content h4 { color: #334155; }
 .cashier-table-total { display: flex; justify-content: space-between; align-items: baseline; color: var(--primary-hover); font-size: 1rem; font-weight: 800; }
 .cashier-table-total small { color: var(--text-secondary); font-size: .72rem; font-weight: 600; }
 
+/* Thẻ quản lý món: trạng thái và thao tác gọn bằng biểu tượng. */
+.menu-admin-card { display: grid !important; grid-template-columns: 56px minmax(0, 1fr) auto; align-items: center; gap: 10px !important; }
+.menu-admin-card > img, .menu-admin-image-placeholder { width: 56px !important; height: 56px !important; border-radius: 12px; object-fit: cover; }
+.menu-admin-image-placeholder { display: grid; place-items: center; color: var(--text-secondary); background: var(--bg-surface-elevated); }
+.menu-admin-card > div:first-of-type { min-width: 0; }
+.menu-admin-card > div:first-of-type > div:first-child { overflow: hidden; color: var(--text-primary); font-weight: 700 !important; text-overflow: ellipsis; white-space: nowrap; }
+.menu-admin-actions { display: flex !important; flex: 0 0 auto; align-items: center; gap: 6px; margin: 0 !important; }
+.menu-status-dot, .menu-icon-button { display: inline-grid; width: 30px; height: 30px; place-items: center; padding: 0 !important; border-radius: 999px; font-size: .76rem; }
+.menu-status-dot { color: #ffffff; }
+.menu-status-dot.is-available { background: #10b981; }
+.menu-status-dot.is-out { background: #ef4444; }
+.menu-status-dot.is-best-seller { background: #8b5cf6; }
+.menu-icon-button { color: var(--text-secondary); border: 1px solid var(--surface-border); background: var(--bg-surface); cursor: pointer; }
+.menu-icon-button:hover { color: var(--primary-hover); border-color: var(--primary); background: var(--primary-glow); }
+.menu-icon-button.is-out-toggle { color: #dc2626; }
+.menu-icon-button.is-out-toggle.active { color: #ffffff; border-color: #ef4444; background: #ef4444; }
+.menu-icon-button.is-delete { color: #dc2626; }
+
+@media (max-width: 480px) {
+    .menu-admin-card { grid-template-columns: 46px minmax(0, 1fr) auto; gap: 7px !important; }
+    .menu-admin-card > img, .menu-admin-image-placeholder { width: 46px !important; height: 46px !important; }
+    .menu-admin-actions { gap: 4px; }
+    .menu-status-dot, .menu-icon-button { width: 27px; height: 27px; font-size: .69rem; }
+}
+
+/* Floor plan: use the page width, a light panel, and a compact single-row summary. */
+#adminFloorPlanTab { width: 100%; }
+.floor-status-tabs { display: flex; width: 100%; gap: 8px; overflow-x: auto; padding: 2px 0; scrollbar-width: none; }
+.floor-status-tabs::-webkit-scrollbar { display: none; }
+.floor-status-tab { flex: 1 0 max-content; min-height: 38px; padding: 8px 12px; color: var(--text-secondary); border: 1px solid var(--surface-border); border-radius: 10px; background: var(--bg-surface); font: inherit; font-size: .82rem; font-weight: 700; cursor: pointer; }
+.floor-status-tab.active { color: var(--primary-hover); border-color: var(--primary); background: var(--primary-glow); }
+.floor-stats { padding: 12px; border: 1px solid var(--surface-border); border-radius: 12px; background: var(--bg-surface); }
+.floor-stats-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; text-align: center; }
+.floor-stats-row > div { min-width: 0; white-space: nowrap; }
+.floor-stats-row > div:nth-child(2) { order: 4; }
+.floor-stats-row > div:nth-child(3) { order: 3; }
+.floor-stats-row > div:nth-child(4) { order: 2; }
+.floor-plan-container { min-height: 0; border-radius: 12px; background: var(--bg-surface); }
+
+/* The temporary bill only exists after the cashier selects a table. */
+#cashierCheckoutTerminal.hidden { display: none !important; }
+
+@media (max-width: 767.98px) {
+    :root { --page-gutter: 10px; }
+    .app-container { padding: 6px; }
+    .view { padding: 16px var(--page-gutter); }
+    #adminFloorPlanTab .canvas-container { width: 100%; margin-inline: 0 !important; }
+    .floor-stats { padding: 9px 4px; }
+    .floor-stats-row { gap: 2px; }
+    .floor-stats-row > div > div:last-child { overflow: hidden; font-size: .64rem !important; text-overflow: ellipsis; }
+    .floor-status-tab { padding-inline: 10px; }
+}
+
 .qr-settings-card { max-width: 760px; padding: 20px; }
 .qr-settings-content { display: grid; grid-template-columns: 200px minmax(0, 1fr); align-items: center; gap: 20px; }
 #adminQrPreview { display: grid; place-items: center; min-height: 200px; padding: 12px; border: 1px dashed var(--surface-border); border-radius: 12px; background: var(--bg-surface); color: var(--text-secondary); font-size: .82rem; }
@@ -2703,6 +2756,27 @@ html[data-theme="light"] .menu-card-content h4 { color: #334155; }
 
     #desktopCartList {
         max-height: min(42dvh, 360px) !important;
+    }
+}
+
+/* Desktop: every operational screen uses the same outer frame and gutters.
+   Individual screens must not introduce a second, narrower centered column. */
+@media (min-width: 768px) {
+    .app-container { padding: 20px; }
+    .main-panel,
+    .main-panel:not(.login-mode) {
+        width: min(1440px, calc(100vw - 40px));
+        max-width: none;
+        margin: 0;
+    }
+    .view {
+        width: 100%;
+        align-self: stretch;
+        box-sizing: border-box;
+    }
+    #adminDashboardView {
+        max-width: none;
+        margin: 0;
     }
 }
 
