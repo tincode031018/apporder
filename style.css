@@ -2349,6 +2349,32 @@ html[data-theme="dark"] #cartSheet {
     }
 }
 
+/* Mobile: #app là vùng cuộn chính để mọi nội dung dài đều vuốt được. */
+@media (max-width: 767.98px) {
+    html, body { height: 100%; overflow: hidden; }
+    .app-container { height: 100dvh !important; min-height: 100dvh !important; overflow: hidden; }
+    .main-panel,
+    .main-panel:not(.login-mode),
+    .main-panel.login-mode,
+    body:has(#loginView.active) .main-panel,
+    .main-panel:has(#loginView.active) {
+        height: 100dvh !important;
+        min-height: 0 !important;
+        max-height: 100dvh !important;
+        overflow: hidden !important;
+    }
+    #app {
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
+        overscroll-behavior-y: contain;
+    }
+    .view.active { flex: 0 0 auto; min-height: 100%; }
+}
+
 /* Luôn ưu tiên toàn bề ngang cho các thẻ quản trị ở mobile. */
 @media (max-width: 767.98px) {
     #adminDashboardView,
@@ -3098,6 +3124,32 @@ html[data-theme] #receiptModal .modal-box { background: var(--bg-surface) !impor
     .mobile-bill-total { font-size: .98rem; font-weight: 800; white-space: nowrap; }
     .mobile-bill-taskbar > .fa-chevron-up { font-size: .8rem; opacity: .88; }
     .mobile-bill-taskbar:active { transform: translateY(1px); }
+}
+
+/* Final mobile scrolling override. */
+@media (max-width: 767.98px) {
+    html, body { height: 100%; overflow: hidden; }
+    .app-container { height: 100dvh !important; min-height: 100dvh !important; overflow: hidden; }
+    .main-panel,
+    .main-panel:not(.login-mode),
+    .main-panel.login-mode,
+    body:has(#loginView.active) .main-panel,
+    .main-panel:has(#loginView.active) {
+        height: 100dvh !important;
+        min-height: 0 !important;
+        max-height: 100dvh !important;
+        overflow: hidden !important;
+    }
+    #app {
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
+        overscroll-behavior-y: contain;
+    }
+    .view.active { flex: 0 0 auto; min-height: 100%; }
 }
 
 /* Quyền Bếp: chỉ hiển thị tổng quan số lượng bàn theo trạng thái. */
