@@ -39,6 +39,7 @@ function renderTableSelection() {
                 // Chuẩn POS: Bàn trống 1-chạm vào thẳng Menu gọi món ngay lập tức
                 state.currentTableId = table.id;
                 state.cart = [];
+                state.serviceNote = table.serviceNote || '';
                 document.getElementById('userTableTitle').innerText = `Bàn ${table.id.toString().padStart(2, '0')}`;
                 switchView('userMenu');
             } else {
@@ -165,6 +166,8 @@ function renderMenu(category) {
     menuContainer.classList.toggle('menu-list', state.menuView === 'list');
     document.getElementById('menuGridViewBtn')?.classList.toggle('active', state.menuView === 'grid');
     document.getElementById('menuListViewBtn')?.classList.toggle('active', state.menuView === 'list');
+    document.getElementById('menuGridViewBtn')?.setAttribute('aria-pressed', String(state.menuView === 'grid'));
+    document.getElementById('menuListViewBtn')?.setAttribute('aria-pressed', String(state.menuView === 'list'));
     menuContainer.innerHTML = '';
     const items = category === 'all' ? state.menu : state.menu.filter(m => m.cat === category);
     
@@ -191,6 +194,16 @@ window.setMenuView = function(view) {
     localStorage.setItem('gastroorder_menu_view', state.menuView);
     renderMenu(state.currentMenuCategory || 'all');
 };
+
+// Keep the view selector reliable even when the menu is re-rendered or an
+// embedded browser does not resolve inline handlers against window.
+document.addEventListener('click', (event) => {
+    const button = event.target.closest('#menuGridViewBtn, #menuListViewBtn');
+    if (!button) return;
+
+    event.preventDefault();
+    window.setMenuView(button.id === 'menuListViewBtn' ? 'list' : 'grid');
+});
 
 window.addToCart = (id) => {
     const item = state.menu.find(m => String(m.id) === String(id));
@@ -338,8 +351,16 @@ function updateCartUI() {
     }
 
     if (desktopCartList) desktopCartList.innerHTML = desktopHtml;
+    if (cartItemsList) cartItemsList.innerHTML = desktopHtml;
     if (desktopCartTotal) desktopCartTotal.innerText = grandTotal.toLocaleString() + 'đ';
     if (cartTotalPrice) cartTotalPrice.innerText = grandTotal.toLocaleString() + 'đ';
+
+    const mobileBillCount = document.getElementById('mobileBillCount');
+    const mobileBillItems = document.getElementById('mobileBillItems');
+    const mobileBillTotal = document.getElementById('mobileBillTotal');
+    if (mobileBillCount) mobileBillCount.innerText = totalItemsCount;
+    if (mobileBillItems) mobileBillItems.innerText = totalItemsCount ? `${totalItemsCount} mÃ³n trong bill` : 'ChÆ°a cÃ³ mÃ³n';
+    if (mobileBillTotal) mobileBillTotal.innerText = grandTotal.toLocaleString() + 'Ä‘';
 
     // Update Checkout Button State
     const checkoutBtn = document.querySelector('.desktop-cart-panel button[onclick="checkout()"]');
@@ -372,6 +393,9 @@ window.changeQty = (id, delta) => {
 };
 
 function openCart() {
+    const currentTable = state.tables.find(t => t.id === state.currentTableId);
+    if (!state.serviceNote && currentTable?.serviceNote) state.serviceNote = currentTable.serviceNote;
+    document.querySelectorAll('.service-note-input').forEach(input => { input.value = state.serviceNote || ''; });
     cartOverlay.classList.remove('hidden');
     setTimeout(() => cartSheet.style.transform = 'translateY(0)', 10);
 }
@@ -390,6 +414,7 @@ window.checkout = async function() {
     const updatedOrders = [...(table.orders || [])];
     const newItemsToKitchen = [];
     const timestamp = Date.now();
+    const serviceNote = (state.serviceNote || '').trim();
 
     state.cart.forEach(cartItem => {
         const existing = updatedOrders.find(o => o.id === cartItem.id);
@@ -413,6 +438,7 @@ window.checkout = async function() {
             status: 'pending', // pending -> cooking -> ready
             timestamp: timestamp,
             staffName: state.currentStaff?.name || 'Phục vụ',
+            note: serviceNote,
             createdAt: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
         });
     });
@@ -422,7 +448,8 @@ window.checkout = async function() {
         orders: updatedOrders,
         status: 'occupied',
         staffId: state.currentStaff?.id || 'nv1',
-        staffName: state.currentStaff?.name || 'Phục vụ'
+        staffName: state.currentStaff?.name || 'Phục vụ',
+        serviceNote
     });
 
     // 2. Dispatch Each Item into Kitchen Queue (Truyền đến màn hình Bếp KDS)
@@ -431,6 +458,7 @@ window.checkout = async function() {
     }
     
     state.cart = [];
+    state.serviceNote = '';
     updateCartUI();
     closeCart();
     showToast(`Đã xác nhận & chuyển ${newItemsToKitchen.length} món đến Bếp & Thu ngân!`);

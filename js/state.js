@@ -73,6 +73,7 @@ let state = {
     fixedCostSettings: {},
     printerSettings: {},
     paymentQrSettings: {},
+    serviceNote: '',
     menuView: localStorage.getItem('gastroorder_menu_view') || 'grid',
     currentMenuCategory: 'all'
 };

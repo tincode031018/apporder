@@ -2190,6 +2190,58 @@ html[data-theme="dark"] .admin-module-select option {
     color: var(--text-primary) !important;
 }
 
+/* Mobile-only admin taskbar replaces the native dropdown with direct actions. */
+.admin-mobile-taskbar { display: none; }
+
+@media (max-width: 767.98px) {
+    #adminDashboardView.active { padding-bottom: calc(88px + env(safe-area-inset-bottom)); }
+    #adminDashboardView .admin-module-bar { display: none; }
+
+    body:has(#adminDashboardView.active) .admin-mobile-taskbar {
+        position: fixed !important;
+        top: auto !important;
+        right: 24px;
+        bottom: calc(12px + env(safe-area-inset-bottom));
+        left: 24px;
+        z-index: 2100 !important;
+        display: grid !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+        align-items: center;
+        gap: 2px;
+        min-height: 62px;
+        padding: 5px;
+        border: 1px solid var(--surface-glass-border);
+        border-radius: 18px;
+        background: color-mix(in srgb, var(--bg-surface) 94%, transparent);
+        box-shadow: 0 12px 28px rgba(15, 23, 42, .18);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+    }
+
+    .admin-taskbar-item {
+        display: grid;
+        place-items: center;
+        gap: 3px;
+        min-width: 0;
+        min-height: 50px;
+        padding: 4px 1px;
+        color: var(--text-secondary);
+        border: 0;
+        border-radius: 12px;
+        background: transparent;
+        font: inherit;
+        cursor: pointer;
+    }
+    .admin-taskbar-item i { font-size: .95rem; }
+    .admin-taskbar-item span { overflow: hidden; max-width: 100%; font-size: .58rem; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+    .admin-taskbar-item.active { color: #ffffff; background: var(--primary-gradient); box-shadow: 0 4px 10px var(--primary-glow); }
+
+    .admin-grid-list.collection-view-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+    .admin-grid-list.collection-view-list { grid-template-columns: 1fr !important; }
+}
+
 /* ============================================================
    ADMIN OPERATIONS — compact, task-oriented panels
    ============================================================ */
@@ -2598,4 +2650,98 @@ html[data-theme="light"] .menu-card-content h4 { color: #334155; }
     .menu-view-toggle { align-self: flex-end; }
     .qr-settings-content { grid-template-columns: 1fr; }
     #adminQrPreview { min-height: 160px; }
+}
+
+/* Keep the full border of the app frame visible on phones. This comes last
+   so it intentionally wins over the earlier full-bleed mobile rules. */
+@media (max-width: 767.98px) {
+    .app-container { padding: 12px; }
+
+    .main-panel,
+    .main-panel:not(.login-mode),
+    .main-panel.login-mode,
+    body:has(#loginView.active) .main-panel,
+    .main-panel:has(#loginView.active) {
+        width: 100% !important;
+        min-height: calc(100dvh - 24px) !important;
+        height: auto !important;
+        max-width: none !important;
+        max-height: none !important;
+        margin: 0 !important;
+        border: 1px solid var(--surface-glass-border) !important;
+        border-radius: var(--radius-lg) !important;
+        overflow: hidden;
+    }
+}
+
+/* Shared note field in the desktop bill and mobile bill sheet. */
+.service-note-field { display: grid; gap: 6px; margin: 0 0 14px; }
+.service-note-field > span { color: var(--text-secondary); font-size: .8rem; font-weight: 700; }
+.service-note-input { min-height: 58px; resize: vertical; line-height: 1.4; }
+
+/* List view must override the mobile/desktop column count as well. */
+.menu-grid.menu-list { grid-template-columns: 1fr !important; }
+
+/* On narrow screens the temporary bill moves below the menu instead of being
+   hidden. Keeping the same element means totals and quantity controls stay in
+   sync with the desktop sidebar. */
+@media (max-width: 1199.98px) {
+    .desktop-cart-panel {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        min-width: 0;
+        position: static;
+        max-height: none;
+        margin-top: 4px;
+        padding: 16px;
+        background: var(--bg-surface);
+        border: 1px solid var(--surface-glass-border);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-subtle);
+    }
+
+    #desktopCartList {
+        max-height: min(42dvh, 360px) !important;
+    }
+}
+
+/* Mobile bill taskbar: keep the bill one tap away while the menu can scroll. */
+.mobile-bill-taskbar { display: none; }
+
+@media (max-width: 767.98px) {
+    #userMenuView.active { padding-bottom: calc(92px + env(safe-area-inset-bottom)); }
+    #cartStatus,
+    .desktop-cart-panel { display: none; }
+
+    .mobile-bill-taskbar {
+        position: fixed;
+        right: 24px;
+        bottom: calc(12px + env(safe-area-inset-bottom));
+        left: 24px;
+        z-index: 200;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto auto;
+        align-items: center;
+        gap: 10px;
+        min-height: 62px;
+        padding: 10px 14px;
+        color: #ffffff;
+        text-align: left;
+        border: 1px solid rgba(255, 255, 255, .28);
+        border-radius: 18px;
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        box-shadow: 0 12px 28px rgba(180, 83, 9, .34);
+        font: inherit;
+        cursor: pointer;
+    }
+
+    .mobile-bill-icon { position: relative; display: grid; place-items: center; width: 38px; height: 38px; font-size: 1.15rem; }
+    .mobile-bill-count { position: absolute; top: -4px; right: -5px; display: grid; place-items: center; min-width: 18px; height: 18px; padding: 0 4px; color: var(--danger); border: 2px solid #f59e0b; border-radius: 999px; background: #ffffff; font-size: .68rem; font-weight: 800; }
+    .mobile-bill-copy { display: grid; min-width: 0; gap: 1px; }
+    .mobile-bill-copy strong { font-size: .9rem; }
+    .mobile-bill-copy small { overflow: hidden; font-size: .72rem; text-overflow: ellipsis; white-space: nowrap; opacity: .88; }
+    .mobile-bill-total { font-size: .98rem; font-weight: 800; white-space: nowrap; }
+    .mobile-bill-taskbar > .fa-chevron-up { font-size: .8rem; opacity: .88; }
+    .mobile-bill-taskbar:active { transform: translateY(1px); }
 }

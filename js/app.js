@@ -26,6 +26,14 @@ window.setCollectionView = function(scope, view) {
     });
 };
 
+document.addEventListener('click', (event) => {
+    const button = event.target.closest('.collection-view-toggle [data-view]');
+    if (!button) return;
+    event.preventDefault();
+    const scope = button.closest('.collection-view-toggle')?.dataset.scope;
+    if (scope) window.setCollectionView(scope, button.dataset.view);
+});
+
 function createAdminViewControls(scope) {
     const config = {
         inventory: '#adminInventoryTab > div:first-child',

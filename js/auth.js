@@ -127,6 +127,7 @@ function setupEventListeners() {
                     table.status = 'occupied';
                     saveState();
                 }
+                state.serviceNote = table.serviceNote || '';
                 document.getElementById('userTableTitle').innerText = `B?n ${state.currentTableId.toString().padStart(2, '0')}`;
                 window.switchView('userMenu');
 
@@ -149,8 +150,17 @@ function setupEventListeners() {
 
     // Cart Controls
     document.getElementById('cartStatus').addEventListener('click', openCart);
+    document.getElementById('mobileBillTaskbar').addEventListener('click', openCart);
     document.getElementById('closeCartBtn').addEventListener('click', closeCart);
     document.getElementById('checkoutBtn').addEventListener('click', checkout);
+    document.querySelectorAll('.service-note-input').forEach(input => {
+        input.addEventListener('input', () => {
+            state.serviceNote = input.value;
+            document.querySelectorAll('.service-note-input').forEach(other => {
+                if (other !== input) other.value = input.value;
+            });
+        });
+    });
 
     // Table Management
     document.getElementById('addTableBtn').addEventListener('click', addTable);
@@ -286,6 +296,14 @@ function switchAdminModule(target) {
         if (el) el.classList.add('hidden');
     });
 
+    const moduleSelect = document.getElementById('adminModuleSelect');
+    if (moduleSelect) moduleSelect.value = target;
+    document.querySelectorAll('.admin-taskbar-item').forEach(button => {
+        const active = button.dataset.adminModule === target;
+        button.classList.toggle('active', active);
+        button.setAttribute('aria-current', active ? 'page' : 'false');
+    });
+
     if (target === 'analytics') {
         document.getElementById('adminAnalyticsTab').classList.remove('hidden');
         renderAnalyticsData();
@@ -331,6 +349,12 @@ window.handleAdminTab = (tab) => {
 window.handleAdminTabSelect = (value) => {
     switchAdminModule(value);
 };
+
+document.addEventListener('click', (event) => {
+    const button = event.target.closest('.admin-taskbar-item');
+    if (!button) return;
+    switchAdminModule(button.dataset.adminModule);
+});
 
 // --- View Controller ---
 function switchView(viewName) {
