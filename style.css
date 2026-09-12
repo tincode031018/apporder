@@ -2339,6 +2339,142 @@ html[data-theme="dark"] .status-pill-danger { color: #fca5a5; }
     .admin-module-select { min-height: 40px; font-size: .88rem; }
 }
 
+/* ============================================================
+   RESPONSIVE FOUNDATION — mobile first
+   Base rules serve phones. Tablet and desktop enhancements are below.
+   ============================================================ */
+:root {
+    --page-gutter: 16px;
+    --content-gap: 16px;
+}
+
+html { font-size: clamp(14px, 3.8vw, 16px); }
+
+.app-container {
+    align-items: stretch;
+    min-height: 100dvh;
+    padding: 0;
+}
+
+.main-panel,
+.main-panel:not(.login-mode) {
+    width: 100%;
+    min-height: 100dvh;
+    height: auto;
+    max-width: none;
+    max-height: none;
+    border: 0;
+    border-radius: 0;
+}
+
+#app { min-height: 100dvh; }
+
+nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    padding: 12px var(--page-gutter);
+}
+
+.brand {
+    flex: 1 1 100%;
+    justify-content: center;
+    min-width: 0;
+    text-align: center;
+}
+
+.brand img {
+    width: auto;
+    height: clamp(28px, 9vw, 38px) !important;
+    max-width: 22vw;
+}
+
+.brand span { font-size: clamp(.95rem, 4vw, 1.15rem) !important; }
+.nav-actions { display: flex; flex: 1 1 100%; justify-content: center; flex-wrap: wrap; }
+
+.view { padding: 20px var(--page-gutter); }
+.glass-panel { padding: 16px; }
+
+h1 { font-size: clamp(1.45rem, 6vw, 1.9rem) !important; }
+h2 { font-size: clamp(1.2rem, 5vw, 1.45rem) !important; }
+p { font-size: .95rem; }
+
+/* Touch targets: primary actions fill their available mobile column. */
+.login-panels-grid .btn,
+.role-btn,
+#actionButtonGroup .btn,
+.printer-actions .btn { min-width: 100%; min-height: 48px !important; }
+
+.role-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+.role-btn { flex-direction: row !important; justify-content: flex-start; padding: 14px 16px !important; }
+.role-btn i { width: 1.5rem; font-size: 1.2rem !important; }
+.role-btn span { font-size: 1rem !important; }
+
+#tableGrid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 12px !important; }
+#tableGrid .btn { min-height: 96px; }
+.menu-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 12px !important; }
+.admin-grid-list,
+.admin-stats-grid,
+.cashier-layout-grid,
+.printer-layout { grid-template-columns: 1fr !important; }
+
+.user-menu-layout { gap: var(--content-gap); }
+.desktop-cart-panel { display: none; }
+
+@media (min-width: 768px) {
+    :root { --page-gutter: 28px; --content-gap: 20px; }
+
+    .app-container { padding: 20px; align-items: center; }
+    .main-panel,
+    .main-panel:not(.login-mode) {
+        width: 100%;
+        max-width: 1180px;
+        min-height: min(860px, calc(100dvh - 40px));
+        height: calc(100dvh - 40px);
+        border: 1px solid var(--surface-glass-border);
+        border-radius: var(--radius-xl);
+    }
+    #app { min-height: 0; }
+
+    nav {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        align-items: center;
+    }
+    .brand { grid-column: 2; flex: 0 1 auto; justify-content: center; }
+    .nav-actions { grid-column: 3; flex: 0 1 auto; justify-content: flex-end; justify-self: end; }
+
+    .role-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+    .role-btn { min-width: 0; flex-direction: column !important; justify-content: center; }
+    .login-panels-grid .btn,
+    #actionButtonGroup .btn,
+    .printer-actions .btn { min-width: 0; }
+
+    #tableGrid { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+    .menu-grid { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+    .admin-stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+    .printer-layout { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+}
+
+@media (min-width: 1200px) {
+    :root { --page-gutter: 36px; --content-gap: 28px; }
+
+    .main-panel,
+    .main-panel:not(.login-mode) { max-width: 1440px; }
+    .view { padding: 28px 36px; }
+
+    .role-grid { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+    #tableGrid { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+    .menu-grid { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+    .admin-stats-grid { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+    .admin-grid-list { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+
+    .user-menu-layout { flex-direction: row; align-items: flex-start; }
+    .desktop-cart-panel { display: flex; }
+    .dashboard-accordion { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
 /* Reusable grid/list switch for kitchen, cashier, and administration. */
 .collection-view-toggle {
     display: inline-flex;
