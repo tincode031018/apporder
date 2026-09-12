@@ -500,17 +500,18 @@ function getTablePositions(canvasWidth) {
         ? state.tables
         : state.tables.filter(table => table.status === filter);
 
-    // Each table gets its own column. The container scrolls sideways instead
-    // of creating new rows as more tables are added.
-    const cols = Math.max(1, visibleTables.length);
+    // Mobile is a true responsive grid: all tables remain visible in three
+    // columns. Desktop preserves the wide, one-row floor-plan layout.
+    const cols = isMobile ? Math.min(3, Math.max(1, visibleTables.length)) : Math.max(1, visibleTables.length);
     const usableXs = canvasWidth - paddingX * 2 - tableRadius * 2;
     const spacingX = cols > 1 ? Math.max(usableXs / (cols - 1), tableRadius + 8) : 0;
+    const rowPitch = isMobile ? 82 : 0;
     const leftMargin = paddingX + tableRadius;
     const positioned = visibleTables.map((table, i) => {
         return {
             ...table,
-            computedX: leftMargin + i * spacingX,
-            computedY: startY
+            computedX: leftMargin + (i % cols) * spacingX,
+            computedY: startY + Math.floor(i / cols) * rowPitch
         };
     });
 
@@ -529,8 +530,8 @@ function getTablePositions(canvasWidth) {
         }
     });
 
-    const totalRows = 1;
-    const requiredHeight = startY + tableRadius + 56;
+    const totalRows = Math.max(1, Math.ceil(visibleTables.length / cols));
+    const requiredHeight = startY + (totalRows - 1) * rowPitch + tableRadius + 42;
     return { positioned, cols, totalRows, tableRadius, requiredHeight };
 }
 

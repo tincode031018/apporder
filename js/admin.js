@@ -44,6 +44,17 @@ function initCanvas() {
             }
         });
     };
+
+    if (!window.floorPlanResizeBound) {
+        window.floorPlanResizeBound = true;
+        window.addEventListener('resize', () => {
+            const activeTab = document.getElementById('adminFloorPlanTab');
+            if (activeTab && !activeTab.classList.contains('hidden')) {
+                resizeCanvas();
+                drawFloorPlan();
+            }
+        });
+    }
 }
 
 function drawFloorPlan() {
@@ -201,12 +212,16 @@ function resizeCanvas() {
     const tableRadius = isMobile ? 24 : 34;
     const paddingX = isMobile ? 18 : 48;
     const columnPitch = isMobile ? 96 : 150;
-    const layoutWidth = Math.max(rect.width, paddingX * 2 + tableRadius * 2 + Math.max(0, visibleCount - 1) * columnPitch);
+    const layoutWidth = isMobile
+        ? rect.width
+        : Math.max(rect.width, paddingX * 2 + tableRadius * 2 + Math.max(0, visibleCount - 1) * columnPitch);
     const { requiredHeight } = getTablePositions(layoutWidth || 800);
-    const neededHeight = Math.max(isMobile ? 220 : 250, requiredHeight);
+    const neededHeight = Math.max(isMobile ? 155 : 250, requiredHeight);
     
     container.style.height = neededHeight + 'px';
     container.style.aspectRatio = 'auto';
+    container.style.overflowX = isMobile ? 'hidden' : 'auto';
+    container.style.overflowY = 'hidden';
     
     const dpr = window.devicePixelRatio || 1;
     canvas.width = layoutWidth * dpr;

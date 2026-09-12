@@ -1854,6 +1854,58 @@ input:focus, select:focus {
     }
 }
 
+/* Mobile: mọi nội dung quản trị căng hết bề ngang panel, không căn giữa thành cột hẹp. */
+@media (max-width: 767.98px) {
+    #adminDashboardView,
+    #adminDashboardView.active {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding-inline: 0 !important;
+        box-sizing: border-box !important;
+        align-self: stretch !important;
+    }
+    #adminDashboardView > div,
+    #adminDashboardView > div:not(.hidden),
+    #adminDashboardView .admin-page-heading,
+    #adminDashboardView .admin-grid-list,
+    #adminDashboardView .floor-plan-container,
+    #adminDashboardView .floor-stats {
+        width: 100% !important;
+        max-width: none !important;
+        box-sizing: border-box !important;
+    }
+    #adminDashboardView > div:not(.hidden) { padding-inline: 8px; }
+    #adminDashboardView .admin-module-bar { margin-left: 0 !important; }
+    #adminDashboardView .glass-panel { width: 100%; box-sizing: border-box; }
+}
+
+/* Mobile dùng lưới 3 cột, không còn cuộn ngang hoặc che bàn. */
+@media (max-width: 767.98px) {
+    .floor-plan-container {
+        overflow-x: hidden !important;
+        overflow-y: hidden !important;
+    }
+    #floorPlanCanvas { width: 100% !important; }
+}
+
+/* Sơ đồ bàn một hàng: không cắt bàn ở bên phải, cho phép vuốt ngang rõ ràng. */
+.floor-plan-container {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    overscroll-behavior-x: contain;
+    scrollbar-color: var(--surface-border) transparent;
+    scrollbar-width: thin;
+}
+.floor-plan-container::-webkit-scrollbar { height: 7px; }
+.floor-plan-container::-webkit-scrollbar-thumb { background: var(--surface-border); border-radius: 999px; }
+.floor-plan-scroll-hint { display: flex; align-items: center; justify-content: center; gap: 6px; margin: -4px 0 10px; color: var(--text-secondary); font-size: .74rem; }
+.floor-plan-scroll-hint i { color: var(--primary-hover); }
+
+@media (min-width: 768px) {
+    .floor-plan-scroll-hint { display: none; }
+}
+
 /* ============================================================
    DARK THEME  (data-theme="dark")
    All colors flow from CSS variables, so text automatically
@@ -2295,6 +2347,32 @@ html[data-theme="dark"] #cartSheet {
         border: 0 !important;
         border-radius: 0 !important;
     }
+}
+
+/* Luôn ưu tiên toàn bề ngang cho các thẻ quản trị ở mobile. */
+@media (max-width: 767.98px) {
+    #adminDashboardView,
+    #adminDashboardView.active {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding-inline: 0 !important;
+        box-sizing: border-box !important;
+        align-self: stretch !important;
+    }
+    #adminDashboardView > div,
+    #adminDashboardView > div:not(.hidden),
+    #adminDashboardView .admin-page-heading,
+    #adminDashboardView .admin-grid-list,
+    #adminDashboardView .floor-plan-container,
+    #adminDashboardView .floor-stats {
+        width: 100% !important;
+        max-width: none !important;
+        box-sizing: border-box !important;
+    }
+    #adminDashboardView > div:not(.hidden) { padding-inline: 8px; }
+    #adminDashboardView .admin-module-bar { margin-left: 0 !important; }
+    #adminDashboardView .glass-panel { width: 100%; box-sizing: border-box; }
 }
 
 /* K80 luôn được áp dụng sau mọi quy tắc responsive cũ. */
@@ -3020,6 +3098,63 @@ html[data-theme] #receiptModal .modal-box { background: var(--bg-surface) !impor
     .mobile-bill-total { font-size: .98rem; font-weight: 800; white-space: nowrap; }
     .mobile-bill-taskbar > .fa-chevron-up { font-size: .8rem; opacity: .88; }
     .mobile-bill-taskbar:active { transform: translateY(1px); }
+}
+
+/* Nhóm nút thao tác luôn nằm ngang trên điện thoại. */
+@media (max-width: 767.98px) {
+    .printer-actions,
+    .cart-action-row,
+    .staff-card-actions,
+    #adminAnalyticsTab > div:first-child > div:last-child,
+    #adminFloorPlanTab > div:first-child > div:last-child,
+    #adminInventoryTab > div:first-child > div:last-child,
+    #adminStaffTab > div:first-child > div:last-child {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+        width: 100% !important;
+    }
+    .printer-actions .btn,
+    .cart-action-row .btn,
+    .staff-card-actions .btn,
+    #adminAnalyticsTab > div:first-child > div:last-child .btn,
+    #adminFloorPlanTab > div:first-child > div:last-child .btn,
+    #adminInventoryTab > div:first-child > div:last-child .btn,
+    #adminStaffTab > div:first-child > div:last-child .btn {
+        width: 100% !important;
+        min-width: 0 !important;
+        min-height: 40px !important;
+        margin: 0 !important;
+        padding: 8px 6px !important;
+        white-space: nowrap;
+    }
+}
+
+/* Final mobile width override for the administration content. */
+@media (max-width: 767.98px) {
+    #adminDashboardView,
+    #adminDashboardView.active {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding-inline: 0 !important;
+        box-sizing: border-box !important;
+        align-self: stretch !important;
+    }
+    #adminDashboardView > div,
+    #adminDashboardView > div:not(.hidden),
+    #adminDashboardView .admin-page-heading,
+    #adminDashboardView .admin-grid-list,
+    #adminDashboardView .floor-plan-container,
+    #adminDashboardView .floor-stats {
+        width: 100% !important;
+        max-width: none !important;
+        box-sizing: border-box !important;
+    }
+    #adminDashboardView > div:not(.hidden) { padding-inline: 8px; }
+    #adminDashboardView .admin-module-bar { margin-left: 0 !important; }
+    #adminDashboardView .glass-panel { width: 100%; box-sizing: border-box; }
 }
 
 /* Quy tắc cuối cùng: điện thoại hiển thị nội dung sát viền màn hình. */
