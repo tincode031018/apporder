@@ -2768,6 +2768,9 @@ html[data-theme="light"] .menu-card-content h4 { color: #334155; }
         width: min(1440px, calc(100vw - 40px));
         max-width: none;
         margin: 0;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
     }
     .view {
         width: 100%;
@@ -2778,6 +2781,38 @@ html[data-theme="light"] .menu-card-content h4 { color: #334155; }
         max-width: none;
         margin: 0;
     }
+}
+
+/* Phiếu hóa đơn: cùng nền giao diện, hình chữ nhật rõ ràng, không phủ mờ trang. */
+#receiptModal {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+#receiptModal .modal-box {
+    width: min(520px, calc(100% - 32px)) !important;
+    max-width: 520px !important;
+    padding: 24px !important;
+    color: var(--text-primary) !important;
+    background: var(--bg-surface) !important;
+    border: 1px solid var(--surface-border) !important;
+    border-radius: 4px !important;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.14) !important;
+}
+#receiptModal h2 { color: var(--text-primary) !important; }
+#receiptModal p,
+#receiptModal #receiptTime,
+#receiptModal #receiptExtraInfo,
+#receiptModal #receiptSummaryBreakdown { color: var(--text-secondary) !important; }
+#receiptModal > .modal-box > div:first-child,
+#receiptModal #receiptExtraInfo,
+#receiptModal #receiptItemsContainer { border-color: var(--surface-border) !important; }
+#receiptModal #receiptItemsContainer { color: var(--text-primary); }
+#receiptModal #receiptTotalAmount { color: var(--primary-hover); }
+
+@media (max-width: 767.98px) {
+    #receiptModal { padding: 12px !important; align-items: flex-start !important; overflow-y: auto; }
+    #receiptModal .modal-box { width: 100% !important; margin: 12px 0; padding: 18px !important; }
 }
 
 /* Mobile bill taskbar: keep the bill one tap away while the menu can scroll. */
