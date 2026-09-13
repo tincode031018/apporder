@@ -32,6 +32,14 @@ button:disabled { opacity:.5; cursor:wait; }
 #kdsBoard .kds-column[style*="display: none"] { display:none !important; }
 #kdsBoard .kds-empty { grid-column:1 / -1; }
 
+/* Ba thao tác báo cáo luôn là nút icon; tên vẫn có qua title/aria-label. */
+.analytics-actions .analytics-action {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+}
+.analytics-actions .analytics-action span { display: none; }
+
 @media screen and (max-width: 767.98px) {
     #adminAnalyticsTab > div:first-child > .analytics-actions {
         display: grid !important;
@@ -218,4 +226,10 @@ button:disabled { opacity:.5; cursor:wait; }
     }
     #adminAnalyticsTab .analytics-actions .analytics-action span { display: none; }
     #adminAnalyticsTab .analytics-actions .analytics-action i { margin: 0; font-size: .95rem; }
+    #adminAnalyticsTab .dashboard-tabbar,
+    #adminAnalyticsTab .dashboard-tab-select {
+        min-width: 0 !important;
+        max-width: 100% !important;
+        box-sizing: border-box;
+    }
 }

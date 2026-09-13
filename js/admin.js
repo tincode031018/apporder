@@ -908,7 +908,8 @@ function initDashboardTabs() {
             const title = header.querySelector('.accordion-title');
             const opt = document.createElement('option');
             opt.value = 'dash-panel-' + index;
-            opt.textContent = title ? title.textContent.trim() : ('Mục ' + (index + 1));
+            const reportNames = ['Doanh thu', 'Chi phí', 'Lợi nhuận', 'Top món', 'Hóa đơn', 'Biểu đồ'];
+            opt.textContent = reportNames[index] || (title ? title.textContent.trim() : ('Mục ' + (index + 1)));
             select.appendChild(opt);
         }
 

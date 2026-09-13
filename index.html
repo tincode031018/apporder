@@ -418,10 +418,10 @@
                         <h1 style="font-size: 1.25rem;">Báo cáo & Phân tích Kinh doanh</h1>
                         <p style="font-size: 0.8rem; color: var(--text-secondary);">Hiệu suất doanh thu, lợi nhuận, chi phí nguyên liệu và bán hàng</p>
                     </div>
-                    <div class="analytics-actions" style="display: flex; gap: 8px;">
-                        <button class="btn analytics-action" onclick="exportReportData()" aria-label="Xuất file" title="Xuất file"><i class="fa-solid fa-file-export"></i><span>Xuất file</span></button>
-                        <button class="btn analytics-action" onclick="openFixedCostModal()" aria-label="Định phí" title="Định phí" style="background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); color: #38bdf8;"><i class="fa-solid fa-sliders"></i><span>Định phí</span></button>
-                        <button class="btn btn-primary analytics-action" onclick="refreshAnalytics()" aria-label="Cập nhật" title="Cập nhật"><i class="fa-solid fa-arrows-rotate"></i><span>Cập nhật</span></button>
+                    <div class="analytics-actions" style="display: flex; flex-wrap: nowrap; gap: 8px;">
+                        <button class="btn analytics-action" onclick="exportReportData()" aria-label="Xuất file" title="Xuất file" style="flex: 0 0 40px; width: 40px; height: 40px; min-width: 40px; padding: 0;"><i class="fa-solid fa-file-export"></i><span>Xuất file</span></button>
+                        <button class="btn analytics-action" onclick="openFixedCostModal()" aria-label="Định phí" title="Định phí" style="flex: 0 0 40px; width: 40px; height: 40px; min-width: 40px; padding: 0; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); color: #38bdf8;"><i class="fa-solid fa-sliders"></i><span>Định phí</span></button>
+                        <button class="btn btn-primary analytics-action" onclick="refreshAnalytics()" aria-label="Cập nhật" title="Cập nhật" style="flex: 0 0 40px; width: 40px; height: 40px; min-width: 40px; padding: 0;"><i class="fa-solid fa-arrows-rotate"></i><span>Cập nhật</span></button>
                     </div>
                 </div>
 
@@ -1154,10 +1154,10 @@
     <script charset="utf-8" src="js/auth.js?v=20260913-operations"></script>
     <script charset="utf-8" src="js/menu.js?v=20260913-theme-surfaces"></script>
     <script charset="utf-8" src="js/cashier.js?v=20260913-operations"></script>
-    <script charset="utf-8" src="js/admin.js?v=20260913-operations"></script>
+    <script charset="utf-8" src="js/admin.js?v=20260913-compact-dashboard-tabs"></script>
     <script charset="utf-8" src="js/printer.js?v=20260913-k80-fix"></script>
     <script src="js/operations.js?v=20260913-shift-money"></script>
     <script charset="utf-8" src="js/app.js?v=20260912-utf8fix"></script>
-    <link rel="stylesheet" href="operations.css?v=20260913-analytics-icons">
+    <link rel="stylesheet" href="operations.css?v=20260913-analytics-icons-fixed">
 </body>
 </html>
