@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=20260913-mobile-scroll">
+    <link rel="stylesheet" href="style.css?v=20260913-shared-theme">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -133,7 +133,7 @@
                     </div>
                 </div>
                 <div id="cartStatus" style="position: relative; cursor: pointer;">
-                    <i class="fa-solid fa-cart-shopping" style="font-size: 1.5rem;"></i>
+                    <i class="fa-solid fa-clipboard-list" style="font-size: 1.5rem;" title="Món chờ gửi bếp" aria-label="Món chờ gửi bếp"></i>
                     <span id="cartCount" style="position: absolute; top: -8px; right: -8px; background: var(--danger); color: white; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700;">0</span>
                 </div>
             </div>
@@ -159,7 +159,7 @@
                 <!-- Right Sticky Cart Sidebar for Desktop POS -->
                 <aside class="desktop-cart-panel">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--surface-border); padding-bottom: 10px;">
-                        <h3 style="margin: 0; font-size: 1.15rem;"><i class="fa-solid fa-receipt" style="color: var(--primary); margin-right: 8px;"></i>Đơn hiện tại</h3>
+                        <h3 style="margin: 0; font-size: 1.15rem;"><i class="fa-solid fa-receipt" style="color: var(--primary); margin-right: 8px;"></i>Món chờ gửi bếp</h3>
                         <span id="desktopCartBadge" style="background: var(--primary-glow); color: var(--primary); font-weight: 700; font-size: 0.85rem; padding: 4px 10px; border-radius: 12px;">0 món</span>
                     </div>
 
@@ -177,7 +177,7 @@
                             <span id="desktopCartTotal" style="font-size: 1.4rem; font-weight: 700; color: var(--primary);">0đ</span>
                         </div>
                         <button onclick="checkout()" class="btn btn-primary" style="width: 100%; padding: 14px; font-size: 1rem; font-weight: 700;">
-                            <i class="fa-solid fa-circle-check"></i> Xác nhận
+                            <i class="fa-solid fa-circle-check"></i> Gửi bếp
                         </button>
                     </div>
                 </aside>
@@ -418,10 +418,10 @@
                         <h1 style="font-size: 1.25rem;">Báo cáo & Phân tích Kinh doanh</h1>
                         <p style="font-size: 0.8rem; color: var(--text-secondary);">Hiệu suất doanh thu, lợi nhuận, chi phí nguyên liệu và bán hàng</p>
                     </div>
-                    <div style="display: flex; gap: 8px;">
-                        <button class="btn" onclick="exportReportData()" style="font-size: 0.82rem; padding: 8px 14px;"><i class="fa-solid fa-file-export"></i> Xuất file</button>
-                        <button class="btn" onclick="openFixedCostModal()" style="font-size: 0.82rem; padding: 8px 14px; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); color: #38bdf8;"><i class="fa-solid fa-sliders"></i> Định phí</button>
-                        <button class="btn btn-primary" onclick="refreshAnalytics()" style="font-size: 0.82rem; padding: 8px 14px;"><i class="fa-solid fa-arrows-rotate"></i> Cập nhật</button>
+                    <div class="analytics-actions" style="display: flex; gap: 8px;">
+                        <button class="btn analytics-action" onclick="exportReportData()" aria-label="Xuất file" title="Xuất file"><i class="fa-solid fa-file-export"></i><span>Xuất file</span></button>
+                        <button class="btn analytics-action" onclick="openFixedCostModal()" aria-label="Định phí" title="Định phí" style="background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); color: #38bdf8;"><i class="fa-solid fa-sliders"></i><span>Định phí</span></button>
+                        <button class="btn btn-primary analytics-action" onclick="refreshAnalytics()" aria-label="Cập nhật" title="Cập nhật"><i class="fa-solid fa-arrows-rotate"></i><span>Cập nhật</span></button>
                     </div>
                 </div>
 
@@ -444,12 +444,15 @@
                                 <div class="accordion-content" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                                     <div>
                                         <div style="font-size: 0.72rem; color: var(--text-secondary);">Tổng doanh thu</div>
+                                        <div id="accTotalRevenue" style="font-size: 1rem; font-weight: 800; color: var(--primary-hover);">0đ</div>
                                     </div>
                                     <div>
                                         <div style="font-size: 0.72rem; color: var(--text-secondary);">Giá trị TB / đơn</div>
+                                        <div id="accAvgBill" style="font-size: 1rem; font-weight: 800; color: var(--text-primary);">0đ</div>
                                     </div>
                                     <div>
                                         <div style="font-size: 0.72rem; color: var(--text-secondary);">Số hóa đơn chốt</div>
+                                        <div id="accTotalBills" style="font-size: 1rem; font-weight: 800; color: var(--text-primary);">0</div>
                                     </div>
                                     <div>
                                         <div style="font-size: 0.72rem; color: var(--text-secondary);">Xu hướng</div>
@@ -849,7 +852,7 @@
             <div id="cartOverlay" class="hidden" style="position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; backdrop-filter: blur(4px);">
                 <div id="cartSheet" style="position: absolute; bottom: 0; left: 0; right: 0; background: #ffffff; border-top: 1px solid var(--surface-border); border-radius: 24px 24px 0 0; padding: 25px; transform: translateY(100%); transition: transform 0.3s ease;">
                     <div style="width: 40px; height: 4px; background: var(--surface-border); border-radius: 2px; margin: 0 auto 20px;"></div>
-                    <h2>Giỏ hàng của bạn</h2>
+                    <h2>Món chờ gửi bếp</h2>
                     <div id="cartItemsList" style="max-height: 300px; overflow-y: auto; margin-bottom: 20px;"></div>
                     <label class="service-note-field"><span>Ghi chú phục vụ</span><textarea class="service-note-input" rows="2" placeholder="Ví dụ: ít đá, ra món cùng lúc..."></textarea></label>
                     <div style="border-top: 1px solid var(--surface-border); padding-top: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
@@ -857,7 +860,7 @@
                         <span id="cartTotalPrice" style="font-size: 1.4rem; font-weight: 700; color: var(--primary);">0đ</span>
                     </div>
                     <div class="cart-action-row">
-                        <button id="checkoutBtn" onclick="checkout()" class="btn btn-primary"><i class="fa-solid fa-circle-check"></i> Xác nhận</button>
+                        <button id="checkoutBtn" onclick="checkout()" class="btn btn-primary"><i class="fa-solid fa-circle-check"></i> Gửi bếp</button>
                         <button id="closeCartBtn" class="btn">Quay lại</button>
                     </div>
                 </div>
@@ -1148,11 +1151,13 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
     <script charset="utf-8" src="js/firebase.js?v=20260912-utf8fix"></script>
     <script charset="utf-8" src="js/state.js?v=20260912-utf8fix"></script>
-    <script charset="utf-8" src="js/auth.js?v=20260912-layout-fix"></script>
-    <script charset="utf-8" src="js/menu.js?v=20260913-floorplan-responsive"></script>
-    <script charset="utf-8" src="js/cashier.js?v=20260912-utf8fix"></script>
-    <script charset="utf-8" src="js/admin.js?v=20260913-kds-summary"></script>
+    <script charset="utf-8" src="js/auth.js?v=20260913-operations"></script>
+    <script charset="utf-8" src="js/menu.js?v=20260913-theme-surfaces"></script>
+    <script charset="utf-8" src="js/cashier.js?v=20260913-operations"></script>
+    <script charset="utf-8" src="js/admin.js?v=20260913-operations"></script>
     <script charset="utf-8" src="js/printer.js?v=20260913-k80-fix"></script>
+    <script src="js/operations.js?v=20260913-shift-money"></script>
     <script charset="utf-8" src="js/app.js?v=20260912-utf8fix"></script>
+    <link rel="stylesheet" href="operations.css?v=20260913-analytics-icons">
 </body>
 </html>

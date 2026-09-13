@@ -38,8 +38,8 @@ function renderTableSelection() {
             if (table.status === 'empty') {
                 // Chuẩn POS: Bàn trống 1-chạm vào thẳng Menu gọi món ngay lập tức
                 state.currentTableId = table.id;
-                state.cart = [];
-                state.serviceNote = table.serviceNote || '';
+                restoreTableDraft(table.id);
+                state.serviceNote = state.serviceNote || table.serviceNote || '';
                 document.getElementById('userTableTitle').innerText = `Bàn ${table.id.toString().padStart(2, '0')}`;
                 switchView('userMenu');
             } else {
@@ -237,6 +237,7 @@ window.addToCart = (id) => {
 };
 
 function updateCartUI() {
+    if (window.persistTableDraft) persistTableDraft();
     const currentTable = state.tables.find(t => t.id === state.currentTableId);
     const existingOrders = currentTable ? (currentTable.orders || []) : [];
     const newItemsCount = state.cart.reduce((acc, curr) => acc + (curr.qty || 0), 0);
@@ -381,7 +382,7 @@ function updateCartUI() {
     const checkoutBtn = document.querySelector('.desktop-cart-panel button[onclick="checkout()"]');
     if (checkoutBtn) {
         if (state.cart.length > 0) {
-            checkoutBtn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Xác nhận`;
+            checkoutBtn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Gửi bếp`;
             checkoutBtn.style.opacity = '1';
             checkoutBtn.style.pointerEvents = 'auto';
         } else if (existingOrders.length > 0) {
@@ -389,7 +390,7 @@ function updateCartUI() {
             checkoutBtn.style.opacity = '0.7';
             checkoutBtn.style.pointerEvents = 'none';
         } else {
-            checkoutBtn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Xác nhận`;
+            checkoutBtn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Gửi bếp`;
             checkoutBtn.style.opacity = '0.5';
             checkoutBtn.style.pointerEvents = 'none';
         }
@@ -421,7 +422,7 @@ function closeCart() {
 }
 
 window.checkout = async function() {
-    if (state.cart.length === 0) return alert('Giỏ hàng trống!');
+    if (state.cart.length === 0) return alert('Chưa có món chờ gửi bếp!');
     
     const table = state.tables.find(t => t.id === state.currentTableId);
     if (!table) return alert('Không xác định được bàn.');

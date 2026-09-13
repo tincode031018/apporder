@@ -414,6 +414,6 @@ function updateCashierShiftSummary() {
 }
 
 // Start the app
-init();
+// Initialized once by app.js after all feature modules are available.
 
 // Window resize handler for responsive canvas

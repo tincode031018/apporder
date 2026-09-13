@@ -744,7 +744,9 @@ function updateKdsBadge() {
 function renderKitchenOrders() {
     const board = document.getElementById('kdsBoard');
     if (!board) return;
-    board.dataset.kdsFilter = 'summary';
+    board.dataset.kdsFilter = currentKdsFilter === 'all' ? 'summary' : currentKdsFilter;
+    document.querySelector('#kitchenView .collection-view-toggle').style.visibility = currentKdsFilter === 'all' ? 'hidden' : 'visible';
+    if (currentKdsFilter === 'all') {
 
     // Kitchen permission is an overview-only screen: show table counts by
     // stage, without exposing individual orders or table bills.
@@ -765,6 +767,7 @@ function renderKitchenOrders() {
         colBody.innerHTML = `<div class="kds-summary-card"><strong>${tableCount}</strong><span>${label}</span></div>`;
     });
     return;
+    }
 
     // Board column status keys, in display order
     const columnKeys = ['pending', 'cooking', 'ready'];

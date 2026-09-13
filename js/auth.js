@@ -196,7 +196,7 @@ function setupEventListeners() {
 
 window.handleActionOrder = () => {
     closeTableActions();
-    state.cart = []; // Reset giỏ hàng tạm của lượt chọn mới
+    restoreTableDraft(state.currentTableId);
     document.getElementById('userTableTitle').innerText = `Bàn ${state.currentTableId.toString().padStart(2, '0')}`;
     switchView('userMenu');
 };

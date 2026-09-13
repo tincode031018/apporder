@@ -1,0 +1,221 @@
+#kitchenView > div:nth-child(2), #kitchenView .collection-view-toggle[data-scope="kds"] { display: flex !important; }
+#kdsBoard[data-kds-filter="summary"] .kds-column { display:flex; flex-direction:column; }
+#kdsBoard[data-kds-filter="summary"] .kds-column-header { min-height:0; }
+.operation-status { padding:8px 12px; background:var(--bg-surface); color:var(--text-primary); font-size:.85rem; }
+.operation-status[data-status="error"], .operation-status[data-status="offline"] { color:#ef4444; }
+.shift-panel { box-sizing:border-box; width:100%; min-width:0; margin:12px 0; padding:12px; border:1px solid var(--surface-border); border-radius:8px; background:var(--bg-surface); }
+.shift-panel h3, .shift-panel h4 { margin:0; }
+.shift-panel #shiftInfo { margin:6px 0 0; color:var(--text-secondary); font-size:.82rem; line-height:1.5; overflow-wrap:anywhere; }
+.shift-panel .shift-fields, .shift-panel .shift-actions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin:12px 0 0; }
+.shift-panel .shift-fields label { display:flex; flex-direction:column; justify-content:space-between; gap:6px; min-width:0; margin:0; font-size:.8rem; color:var(--text-secondary); }
+.shift-panel .shift-fields input { box-sizing:border-box; width:100%; min-width:0; height:44px; margin:0; padding:10px; font:inherit; color:var(--text-primary); background:var(--bg-surface-elevated); border:1px solid var(--surface-border); border-radius:8px; }
+.shift-panel .shift-actions .btn { box-sizing:border-box; width:100%; min-width:0; min-height:44px; margin:0 !important; padding:10px !important; white-space:nowrap; }
+.shift-panel .shift-history { margin-top:14px; padding-top:12px; border-top:1px solid var(--surface-border); }
+.shift-panel #shiftHistory, .shift-panel #shiftResult { font-size:.82rem; line-height:1.5; overflow-wrap:anywhere; }
+.shift-panel #shiftHistory { margin-top:6px; color:var(--text-secondary); }
+.shift-panel #shiftResult:not(:empty) { margin-top:12px; }
+.shift-panel .shift-section { margin-top:8px; padding-top:8px; border-top:1px solid var(--surface-border); }
+.shift-panel .shift-fields > .btn { align-self:end; min-height:44px; width:100%; margin:0 !important; }
+.shift-panel .shift-hint { margin:8px 0 0; font-size:.78rem; line-height:1.5; color:var(--text-secondary); }
+.shift-panel .shift-section .shift-fields { margin:0; gap:8px; align-items:end; }
+.shift-panel .shift-opening .shift-fields { grid-template-columns:minmax(0,1fr) 76px; }
+.shift-panel .shift-closing .shift-fields { grid-template-columns:repeat(2,minmax(0,1fr)) 76px; }
+.shift-panel .shift-fields label { gap:4px; font-size:.75rem; }
+.shift-panel .shift-fields > .btn { min-width:0; padding:8px 4px !important; font-size:.78rem; white-space:nowrap; }
+.shift-panel .shift-history { margin-top:8px; padding-top:4px; }
+.shift-panel .shift-history summary { padding:8px 0; cursor:pointer; font-size:.8rem; font-weight:600; }
+.shift-panel .shift-hint { margin-top:4px; }
+.shift-panel table { width:100%; border-collapse:collapse; }
+.shift-panel td,.shift-panel th { padding:8px; text-align:right; border-bottom:1px solid var(--surface-border); }
+.shift-panel td:first-child,.shift-panel th:first-child { text-align:left; }
+button:disabled { opacity:.5; cursor:wait; }
+#kdsBoard .kds-column[style*="display: none"] { display:none !important; }
+#kdsBoard .kds-empty { grid-column:1 / -1; }
+
+@media screen and (max-width: 767.98px) {
+    #adminAnalyticsTab > div:first-child > .analytics-actions {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        gap: 6px !important;
+    }
+    #adminAnalyticsTab .analytics-actions > .btn {
+        width: 100% !important;
+        min-width: 0 !important;
+        min-height: 40px;
+        margin: 0 !important;
+        padding: 8px 4px !important;
+        gap: 4px;
+        font-size: .75rem !important;
+        white-space: nowrap;
+    }
+}
+
+/* Screen surfaces follow the active theme; thermal printing keeps its own colors. */
+@media screen {
+    html[data-theme] { color-scheme: light; }
+    html[data-theme="dark"] { color-scheme: dark; }
+    html[data-theme] .glass-panel,
+    html[data-theme] .menu-card,
+    html[data-theme] .printer-card {
+        background: var(--bg-surface);
+        color: var(--text-primary);
+        border-color: var(--surface-border);
+    }
+    html[data-theme] .btn {
+        border-radius: 8px;
+        box-sizing: border-box;
+        font-family: inherit;
+    }
+    html[data-theme] .btn.btn-primary {
+        background: var(--primary-gradient) !important;
+        color: #171717 !important;
+    }
+    html[data-theme] .btn:focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+    html[data-theme] .modal-box input,
+    html[data-theme] .modal-box textarea {
+        background-color: var(--bg-surface-elevated) !important;
+        color: var(--text-primary) !important;
+        border-color: var(--surface-border) !important;
+    }
+    html[data-theme] .desktop-cart-panel,
+    html[data-theme] .modal-box,
+    html[data-theme] #cartSheet {
+        background: var(--bg-surface) !important;
+        color: var(--text-primary) !important;
+        border-color: var(--surface-border) !important;
+    }
+}
+
+@media screen {
+    html[data-theme] #receiptModal {
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        padding: 12px !important;
+        overflow: auto !important;
+        align-items: safe center !important;
+        justify-content: center !important;
+    }
+    html[data-theme] #receiptModal .modal-box {
+        box-sizing: border-box;
+        width: 80mm !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        flex-shrink: 0;
+        margin: auto !important;
+        padding: 3mm !important;
+        border-radius: 0 !important;
+    }
+    html[data-theme] #receiptItemsContainer {
+        max-height: none !important;
+        overflow: visible !important;
+    }
+}
+
+@media print {
+    @page { size: auto; margin: 0; }
+    /* Remove non-receipt layout, including fixed bottom navigation. */
+    body > :not(.app-container),
+    .app-container > :not(.main-panel),
+    .main-panel > :not(#app),
+    #app > :not(#receiptModal) { display: none !important; }
+    html, body, .app-container, .main-panel, #app {
+        display: block !important;
+        position: static !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        transform: none !important;
+        background: white !important;
+        border: 0 !important;
+        box-shadow: none !important;
+    }
+    html[data-theme] #receiptModal {
+        display: block !important;
+        position: static !important;
+        width: 80mm !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        height: auto !important;
+        margin: 0 auto !important;
+        padding: 3mm !important;
+        box-sizing: border-box;
+        overflow: visible !important;
+    }
+    html[data-theme] #receiptModal .modal-box {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 2mm !important;
+        box-sizing: border-box;
+        border: .2mm solid black !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        background: white !important;
+    }
+    html[data-theme] #receiptModal * {
+        color: black !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+    html[data-theme] #receiptItemsContainer { max-height: none !important; overflow: visible !important; }
+    html[data-theme] #receiptModal .modal-box > div:last-child { display: none !important; }
+}
+
+/* Báo cáo trên mobile: ba thao tác luôn cùng một hàng, không rơi nút xuống dòng. */
+@media (max-width: 767.98px) {
+    #adminAnalyticsTab > div:first-child {
+        display: block !important;
+        margin-bottom: 12px !important;
+    }
+    #adminAnalyticsTab .analytics-actions {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 6px !important;
+        width: 100% !important;
+        margin-top: 10px;
+    }
+    #adminAnalyticsTab .analytics-actions .btn {
+        display: inline-flex !important;
+        min-width: 0 !important;
+        min-height: 38px;
+        margin: 0 !important;
+        padding: 7px 3px !important;
+        justify-content: center;
+        gap: 4px;
+        font-size: .68rem !important;
+        line-height: 1 !important;
+        white-space: nowrap;
+    }
+    #adminAnalyticsTab .analytics-actions .btn i { font-size: .72rem; }
+    #adminAnalyticsTab .analytics-actions {
+        display: flex !important;
+        flex-flow: row nowrap !important;
+        align-items: center;
+        justify-content: flex-start;
+    }
+    #adminAnalyticsTab .analytics-actions .analytics-action {
+        display: inline-flex !important;
+        flex: 0 0 40px !important;
+        width: 40px !important;
+        height: 40px !important;
+        min-height: 40px !important;
+        padding: 0 !important;
+        border-radius: 8px;
+    }
+    #adminAnalyticsTab .analytics-actions .analytics-action span { display: none; }
+    #adminAnalyticsTab .analytics-actions .analytics-action i { margin: 0; font-size: .95rem; }
+}
