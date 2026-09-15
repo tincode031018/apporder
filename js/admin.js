@@ -922,6 +922,53 @@ function initDashboardTabs() {
 
     select.value = 'dash-panel-0';
 
+    // Native select popups can exceed the emulated phone viewport in Chrome.
+    // Keep it for desktop and provide a bounded HTML picker on mobile.
+    const picker = document.createElement('div');
+    picker.className = 'dashboard-tab-picker';
+    const trigger = document.createElement('button');
+    trigger.type = 'button';
+    trigger.className = 'dashboard-tab-picker-trigger';
+    trigger.textContent = select.options[select.selectedIndex].textContent;
+    trigger.setAttribute('aria-label', 'Chọn mục báo cáo');
+    trigger.setAttribute('aria-haspopup', 'listbox');
+    trigger.setAttribute('aria-expanded', 'false');
+    const menu = document.createElement('div');
+    menu.className = 'dashboard-tab-picker-menu hidden';
+    menu.setAttribute('role', 'listbox');
+    const closePicker = () => {
+        menu.classList.add('hidden');
+        trigger.setAttribute('aria-expanded', 'false');
+    };
+    trigger.addEventListener('click', () => {
+        const opens = menu.classList.contains('hidden');
+        menu.classList.toggle('hidden', !opens);
+        trigger.setAttribute('aria-expanded', String(opens));
+    });
+    Array.from(select.options).forEach(option => {
+        const choice = document.createElement('button');
+        choice.type = 'button';
+        choice.className = 'dashboard-tab-picker-option';
+        choice.setAttribute('role', 'option');
+        choice.textContent = option.textContent;
+        choice.setAttribute('aria-selected', String(option.selected));
+        choice.addEventListener('click', () => {
+            select.value = option.value;
+            trigger.textContent = option.textContent;
+            menu.querySelectorAll('.dashboard-tab-picker-option').forEach(item => item.setAttribute('aria-selected', 'false'));
+            choice.setAttribute('aria-selected', 'true');
+            closePicker();
+            switchDashboardTab(option.value);
+        });
+        menu.appendChild(choice);
+    });
+    picker.appendChild(trigger);
+    picker.appendChild(menu);
+    bar.appendChild(picker);
+    document.addEventListener('click', event => {
+        if (!picker.contains(event.target)) closePicker();
+    });
+
     accordion.innerHTML = '';
     accordion.appendChild(bar);
     accordion.appendChild(stack);

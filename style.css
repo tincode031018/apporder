@@ -2154,6 +2154,10 @@ html[data-theme="dark"] #cartSheet {
     box-shadow: 0 0 0 3px var(--primary-glow);
 }
 
+/* The bounded picker replaces the browser-native select on phones only. */
+.dashboard-tab-picker { display: none; }
+.dashboard-tab-picker-menu.hidden { display: none; }
+
 .dashboard-accordion .accordion-body {
     display: none;
 }
@@ -2325,6 +2329,121 @@ html[data-theme="dark"] #cartSheet {
         border: 0 !important;
         border-radius: 0 !important;
     }
+}
+
+/* Mobile analytics: compact icon actions and a viewport-safe report selector. */
+@media (max-width: 767.98px) {
+    #adminAnalyticsTab > div:first-child {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    #adminAnalyticsTab > div:first-child > div:last-child.analytics-actions {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        width: 100% !important;
+        gap: 6px !important;
+    }
+
+    #adminAnalyticsTab > div:first-child > div:last-child.analytics-actions .analytics-action {
+        display: grid !important;
+        place-items: center;
+        width: 100% !important;
+        min-width: 0 !important;
+        height: 40px !important;
+        min-height: 40px !important;
+        padding: 0 !important;
+    }
+
+    #adminAnalyticsTab .analytics-action span { display: none; }
+
+    #adminAnalyticsTab .dashboard-tabbar {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    #adminAnalyticsTab .dashboard-tab-select {
+        min-width: 0;
+        max-width: calc(100vw - 56px);
+        width: 0;
+        appearance: auto;
+        -webkit-appearance: auto;
+        background-image: none !important;
+        padding-right: 10px !important;
+    }
+
+    #adminAnalyticsTab .dashboard-tab-select option {
+        padding: 4px 8px !important;
+    }
+
+    #adminAnalyticsTab .dashboard-tab-select { display: none; }
+    #adminAnalyticsTab .dashboard-tab-picker {
+        position: relative;
+        display: block;
+        flex: 1 1 0;
+        min-width: 0;
+        max-width: 100%;
+    }
+    #adminAnalyticsTab .dashboard-tab-picker-trigger {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        min-height: 42px;
+        padding: 9px 38px 9px 14px;
+        overflow: hidden;
+        color: var(--text-primary);
+        border: 1px solid var(--surface-glass-border);
+        border-radius: var(--radius-sm, 10px);
+        background: var(--bg-surface);
+        font: inherit;
+        font-size: .92rem;
+        font-weight: 600;
+        text-align: left;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
+    }
+    #adminAnalyticsTab .dashboard-tab-picker-trigger::after {
+        position: absolute;
+        top: 50%;
+        right: 14px;
+        width: 7px;
+        height: 7px;
+        border-right: 2px solid var(--primary-hover);
+        border-bottom: 2px solid var(--primary-hover);
+        content: '';
+        pointer-events: none;
+        transform: translateY(-70%) rotate(45deg);
+    }
+    #adminAnalyticsTab .dashboard-tab-picker-menu {
+        position: absolute;
+        top: calc(100% + 4px);
+        right: 0;
+        left: 0;
+        z-index: 100;
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        box-sizing: border-box;
+        border: 1px solid var(--surface-border);
+        border-radius: 10px;
+        background: var(--bg-surface);
+        box-shadow: 0 12px 24px rgba(15, 23, 42, .16);
+    }
+    #adminAnalyticsTab .dashboard-tab-picker-menu.hidden { display: none; }
+    #adminAnalyticsTab .dashboard-tab-picker-option {
+        display: block;
+        width: 100%;
+        min-height: 38px;
+        padding: 8px 12px;
+        color: var(--text-primary);
+        border: 0;
+        background: transparent;
+        font: inherit;
+        font-size: .9rem;
+        text-align: left;
+    }
+    #adminAnalyticsTab .dashboard-tab-picker-option[aria-selected="true"] { background: var(--primary-glow); }
 }
 
 /* Mobile: #app là vùng cuộn chính để mọi nội dung dài đều vuốt được. */
